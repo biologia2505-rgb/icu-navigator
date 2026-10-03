@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ICU Navigator v8</title>
+<title>ICU Navigator v8.1</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root{
     --bg:#f4f7fb; --card:#ffffff; --acc:#1e6fb8; --acc2:#0d4a80;
     --ok:#2e7d32; --okbg:#e8f5e9; --warn:#e65100; --warnbg:#fff3e0;
     --bad:#c62828; --badbg:#ffebee; --txt:#1a2332; --mut:#607080;
-    --border:#d8e0ea; --accent-line:#1e6fb8;
+    --border:#d8e0ea;
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,sans-serif;padding:16px;}
@@ -27,7 +27,6 @@
   .row:last-child{border:none;}
   .row span:last-child{font-weight:700;color:var(--acc2);}
   .row.section-header{background:#eef4fa;margin:8px -8px 4px;padding:6px 8px;border-radius:6px;color:var(--acc);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;border:none;}
-  .row.section-header span:last-child{display:none;}
   .tag{display:inline-block;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:700;margin:3px 3px 3px 0;}
   .tag.ok{background:var(--okbg);color:var(--ok);}
   .tag.warn{background:var(--warnbg);color:var(--warn);}
@@ -37,7 +36,7 @@
   button:hover{background:var(--acc2);}
   button.ghost{background:#fff;border:2px solid var(--acc);color:var(--acc);}
   button.ghost:hover{background:#eef4fa;}
-  canvas{max-height:360px;}
+  .chart-box{height:560px;position:relative;width:100%;}
   .diag{margin-top:12px;padding:14px;background:#fbfcfe;border-radius:9px;border:1px solid var(--border);font-size:13.5px;line-height:1.65;color:var(--txt);}
   .diag h3{font-size:13px;color:var(--acc);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.5px;}
   .diag h3:first-child{margin-top:0;}
@@ -59,11 +58,10 @@
   .expl .note{color:var(--mut);font-size:12.5px;margin-top:6px;font-style:italic;}
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:12px 24px;border-radius:9px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.15);}
   .toast.show{opacity:1;}
-  .stewart-intro{background:#eef4fa;padding:12px 14px;border-radius:8px;font-size:13px;color:#0d3a5c;margin-bottom:12px;line-height:1.6;border-left:3px solid var(--acc);}
 </style>
 </head>
 <body>
-<h1>🧭 ICU Navigator v8</h1>
+<h1>🧭 ICU Navigator v8.1</h1>
 <div class="sub">КОС · Стюарт · Winter's · SBE-разбивка · ΔΔ · АП-аномалии</div>
 
 <div class="grid">
@@ -118,9 +116,12 @@
   <div class="expl" id="explanations"></div>
 </div>
 
-<div class="grid" style="margin-top:16px;">
-  <div class="card"><h2>Диаграмма Гэмбла</h2><canvas id="gamble"></canvas></div>
-  <div class="card"><h2>Номограмма Сиггаарда-Андерсена</h2><canvas id="siggaard"></canvas></div>
+<div class="grid" style="margin-top:16px; grid-template-columns:1fr;">
+  <div class="card"><h2>Диаграмма Гэмбла</h2><div class="chart-box"><canvas id="gamble"></canvas></div></div>
+</div>
+
+<div class="grid" style="margin-top:16px; grid-template-columns:1fr;">
+  <div class="card"><h2>Номограмма Сиггаарда-Андерсена</h2><div class="chart-box"><canvas id="siggaard"></canvas></div></div>
 </div>
 
 <div class="toast" id="toast">✓ Скопировано</div>
@@ -146,22 +147,18 @@ function calc(){
 
   const PF = pO2 / (FiO2/100);
 
-  // === АП без K⁺ (классический) ===
   const AG = NaCorr - (Cl + HCO3);
   const AGcorr = AG + 0.25 * (40 - Alb);
   const deltaAG = AGcorr - 12;
   const deltaHCO3 = 24 - HCO3;
-  // ΔΔ — только при истинном метаболическом ацидозе (HCO3 < 22)
   const deltaDelta = (HCO3 < 22 && deltaHCO3 > 0) ? deltaAG / deltaHCO3 : NaN;
 
-  // SBE-разбивка
   const SBE_FW  = 0.3 * (Na - 140);
   const SBE_Cl  = 104 - (Cl * 140 / Na);
   const SBE_Alb = (0.148 * pH - 0.818) * (40 - Alb);
   const SBE_UA  = SBE - SBE_FW - SBE_Cl - SBE_Alb;
   const deltaAP_from_SBE = -SBE_UA;
 
-  // Стюарт
   const SIDa = NaCorr + K + Mg - Cl - Lac;
   const AlbGdl = Alb/10;
   const AlbCh = AlbGdl * (0.123*pH - 0.631) * 10;
@@ -169,7 +166,6 @@ function calc(){
   const SIDe = HCO3 + AlbCh + PO4Ch;
   const SIG = SIDa - SIDe;
 
-  // === ОЦЕНКА НОРМЫ ===
   const pHnorm = pH >= 7.35 && pH <= 7.45;
   const pCO2norm = pCO2 >= 35 && pCO2 <= 45;
   const HCO3norm = HCO3 >= 22 && HCO3 <= 26;
@@ -205,47 +201,44 @@ function calc(){
   }).join('');
 
   const logs = [];
-  const diagnoses = [];       // независимые нарушения (для подсчёта)
-  const compensations = [];   // компенсаторные сдвиги (в «Компенсацию», не в диагноз)
-  const findings = [];        // дополнительные находки (не КОС)
+  const diagnoses = [];
+  const compensations = [];
+  const findings = [];
   const explain = [];
 
   let primary = pH < 7.35 ? "acidemia" : pH > 7.45 ? "alkalemia" : "normal";
   logs.push(`<b>Шаг 1. Вектор pH:</b> ${fixed(pH,3)} → ${primary==='acidemia'?'ацидемия':primary==='alkalemia'?'алкалемия':'норма'}.`);
 
-  // === АНОМАЛИЯ АП ===
   if (AG < 8 || AGcorr < 8) {
     findings.push({
       name:"Аномально низкий / отрицательный АП",
       detail:`АП = ${fixed(AG)}, АП_корр = ${fixed(AGcorr)} мЭкв/л. Норма 8–12 (АП_корр 8–14).`,
       causes:[
-        "Повышение неизмеряемых катионов: IgG-парапротеинемия (миелома, моноклональная гаммапатия)",
+        "Повышение неизмеряемых катионов: IgG-парапротеинемия (миелома)",
         "Гиперкальциемия (Ca²⁺ не входит в стандартный АП)",
         "Гипермагниемия",
         "Токсичность лития",
-        "Бромиды (ложно завышают Cl⁻, снижая АП)",
+        "Бромиды",
         "Лабораторная ошибка"
       ],
       recommendation:"Электрофорез белков, иммунофиксация, общий белок, Ca²⁺, Mg²⁺, литий, исключить лабораторную ошибку."
     });
-    logs.push(`<b>Аномалия АП:</b> АП = ${fixed(AG)}, АП_корр = ${fixed(AGcorr)} → ниже нормы (8–12).`);
+    logs.push(`<b>Аномалия АП:</b> АП = ${fixed(AG)}, АП_корр = ${fixed(AGcorr)} → ниже нормы.`);
   }
 
-  // === КОМПОНЕНТЫ ===
   const respAcid = pCO2 > 45;
   const respAlk  = pCO2 < 35;
   const metAcid  = HCO3 < 22 || SBE < -2;
   const metAlk   = HCO3 > 26 || SBE > 2;
 
-  // === РЕСПИРАТОРНЫЙ (разделяем компенсаторный и патологический) ===
   let respIsCompensatory = false;
   let respDiagName = "";
   let respDiagDetail = "";
+
   if (respAcid) {
     let mode = chronicMode;
     if (chronicMode === 'auto') mode = (HCO3 > 28) ? 'chronic' : 'acute';
     const expHCO3 = mode === 'acute' ? 24 + 0.1*(pCO2-40) : 24 + 0.35*(pCO2-40);
-    // Если мет. алкалоз есть — это компенсаторный ответ
     if (metAlk) {
       respIsCompensatory = true;
       compensations.push(`Респираторный ацидоз — компенсаторный ответ на метаболический алкалоз. Ожидаемый HCO₃⁻ = ${fixed(expHCO3,1)}.`);
@@ -255,7 +248,7 @@ function calc(){
     }
     explain.push({
       title:"Респираторный ацидоз",
-      why:`pCO₂ = ${fixed(pCO2,1)} мм рт.ст. > 45 → альвеолярная гиповентиляция.`,
+      why:`pCO₂ = ${fixed(pCO2,1)} > 45 → альвеолярная гиповентиляция.`,
       formula:`pCO₂ > 45 мм рт.ст.`,
       details:mode === 'acute'
         ? `Острая форма: ожид. HCO₃⁻ = 24 + 0.1×(${fixed(pCO2,1)}−40) = ${fixed(24+0.1*(pCO2-40),1)}.`
@@ -266,14 +259,12 @@ function calc(){
     let mode = chronicMode;
     if (chronicMode === 'auto') mode = (HCO3 < 20) ? 'chronic' : 'acute';
     const expHCO3 = mode === 'acute' ? 24 - 0.2*(40-pCO2) : 24 - 0.4*(40-pCO2);
-    // Респ. алкалоз компенсаторный, если это ответ на мет. ацидоз (Winter's)
     if (metAcid) {
       const lo = 1.5*HCO3 + 8 - 2, hi = 1.5*HCO3 + 8 + 2;
       if (pCO2 >= lo && pCO2 <= hi) {
         respIsCompensatory = true;
         compensations.push(`Респираторный алкалоз — компенсаторный ответ на метаболический ацидоз (Winter's: ${fixed(lo,1)}–${fixed(hi,1)}).`);
       } else if (pCO2 < lo) {
-        // Алкалоз сильнее ожидаемого — это сопутствующее нарушение
         respDiagName = "Сопутствующий респираторный алкалоз";
         respDiagDetail = `pCO₂ = ${fixed(pCO2,1)} < ожидаемого Winter's (${fixed(lo,1)}).`;
       }
@@ -286,7 +277,7 @@ function calc(){
     }
     explain.push({
       title:"Респираторный алкалоз",
-      why:`pCO₂ = ${fixed(pCO2,1)} мм рт.ст. < 35 → гипервентиляция.`,
+      why:`pCO₂ = ${fixed(pCO2,1)} < 35 → гипервентиляция.`,
       formula:`pCO₂ < 35 мм рт.ст.`,
       details:mode === 'acute'
         ? `Острая форма: ожид. HCO₃⁻ = 24 − 0.2×(40−${fixed(pCO2,1)}) = ${fixed(24-0.2*(40-pCO2),1)}.`
@@ -295,13 +286,11 @@ function calc(){
     });
   }
 
-  // Добавляем респираторный в диагноз, если он НЕ компенсаторный
   if (respDiagName) {
     diagnoses.push({name:respDiagName, detail:respDiagDetail});
     logs.push(`<b>Респираторное нарушение:</b> ${respDiagName}. ${respDiagDetail}`);
   }
 
-  // === HAGMA ===
   if (AGcorr > 14) {
     let d = `АП_корр = ${fixed(AGcorr)} мЭкв/л (>14).`;
     if (Lac > 2) d += ` Лактат = ${fixed(Lac,1)} ммоль/л → <b>лактат-ацидоз</b>.`;
@@ -309,8 +298,8 @@ function calc(){
     logs.push(`<b>HAGMA:</b> ${d}`);
     explain.push({
       title:"HAGMA — метаболический ацидоз с увеличенным АП",
-      why:`АП_корр = ${fixed(AGcorr)} > 14 → накопление нелетучих кислот.`,
-      formula:`АП = Na⁺ − (Cl⁻ + HCO₃⁻) = ${fixed(NaCorr,1)} − (${fixed(Cl,1)} + ${fixed(HCO3,1)}) = ${fixed(AG)}\nАП_корр = АП + 0.25 × (40 − Alb) = ${fixed(AG)} + 0.25 × (40 − ${fixed(Alb,1)}) = ${fixed(AGcorr)}`,
+      why:`АП_корр = ${fixed(AGcorr)} > 14.`,
+      formula:`АП = Na⁺ − (Cl⁻ + HCO₃⁻) = ${fixed(NaCorr,1)} − (${fixed(Cl,1)} + ${fixed(HCO3,1)}) = ${fixed(AG)}\nАП_корр = АП + 0.25 × (40 − Alb) = ${fixed(AGcorr)}`,
       details:Lac > 2 ? `Лактат ${fixed(Lac,1)} — ведущий источник.` : `Источник — эндогенные кислоты.`,
       note:`Норма АП: 8–12. Норма АП_корр: ≤14.`
     });
@@ -318,26 +307,23 @@ function calc(){
     logs.push(`<b>HAGMA:</b> АП_корр = ${fixed(AGcorr)} ≤ 14 — норма.`);
   }
 
-  // === SBE_UA / ΔАП — только как подтверждение (не дублируем HAGMA) ===
   if (deltaAP_from_SBE > 2 && AGcorr <= 14) {
     diagnoses.push({name:"Метаболический ацидоз по SBE_UA / ΔАП (неизмеряемые анионы)",
       detail:`ΔАП = ${fixed(deltaAP_from_SBE)} ммоль/л (>2).`});
-    logs.push(`<b>SBE_UA → ΔАП:</b> SBE_UA = ${fixed(SBE_UA)}, ΔАП = ${fixed(deltaAP_from_SBE)} (>2).`);
+    logs.push(`<b>SBE_UA → ΔАП:</b> ΔАП = ${fixed(deltaAP_from_SBE)} > 2.`);
     explain.push({
       title:"Метаболический ацидоз по SBE_UA / ΔАП",
-      why:`ΔАП = ${fixed(deltaAP_from_SBE)} > 2 ммоль/л.`,
-      formula:`SBE_FW = 0.3×(Na−140) = ${fixed(SBE_FW)}\nSBE_Cl = 104 − Cl×140/Na = ${fixed(SBE_Cl)}\nSBE_Alb = (0.148×pH − 0.818)×(40−Alb) = ${fixed(SBE_Alb)}\nSBE_UA = ${fixed(SBE_UA)}\nΔАП ≈ −SBE_UA = ${fixed(deltaAP_from_SBE)}`,
-      details:`Модуль SBE_UA отражает ΔАП — накопление неизмеряемых анионов.`,
-      note:`Норма ΔАП: −2…+2. > 2 — HAGMA по Стюарту.`
+      why:`ΔАП = ${fixed(deltaAP_from_SBE)} > 2.`,
+      formula:`SBE_FW = ${fixed(SBE_FW)}\nSBE_Cl = ${fixed(SBE_Cl)}\nSBE_Alb = ${fixed(SBE_Alb)}\nSBE_UA = ${fixed(SBE_UA)}\nΔАП ≈ −SBE_UA = ${fixed(deltaAP_from_SBE)}`,
+      details:`Модуль SBE_UA отражает ΔАП.`,
+      note:`Норма ΔАП: −2…+2.`
     });
   } else if (deltaAP_from_SBE > 2 && AGcorr > 14) {
-    // Подтверждение HAGMA, не отдельный пункт
-    logs.push(`<b>SBE_UA → ΔАП:</b> ΔАП = ${fixed(deltaAP_from_SBE)} > 2 — подтверждает HAGMA (не отдельный пункт).`);
+    logs.push(`<b>SBE_UA → ΔАП:</b> ΔАП = ${fixed(deltaAP_from_SBE)} — подтверждает HAGMA.`);
   } else {
     logs.push(`<b>SBE_UA → ΔАП:</b> ΔАП = ${fixed(deltaAP_from_SBE)} ≤ 2 — норма.`);
   }
 
-  // === ΔΔ / NAGMA — теперь БЕЗ проверки AGcorr (разрешён при HAGMA) ===
   if (!isNaN(deltaDelta)) {
     if (deltaDelta < 1) {
       diagnoses.push({name:"Метаболический ацидоз с нормальным АП (гиперхлоремический, NAGMA)",
@@ -346,18 +332,18 @@ function calc(){
       explain.push({
         title:"NAGMA — гиперхлоремический метаболический ацидоз",
         why:`ΔΔ = ${fixed(deltaDelta,2)} < 1 при HCO₃⁻ = ${fixed(HCO3,1)}.`,
-        formula:`ΔAG = АП_корр − 12 = ${fixed(deltaAG)}\nΔHCO₃⁻ = 24 − HCO₃⁻ = ${fixed(deltaHCO3)}\nΔΔ = ΔAG / ΔHCO₃⁻ = ${fixed(deltaDelta,2)}`,
-        details:`ΔΔ < 1 → часть ацидоза обусловлена гиперхлоремией.`,
-        note:`Причины: диарея, RTA, инфузия NaCl, ацетазоламид. Норма ΔΔ: 1–2.`
+        formula:`ΔAG = ${fixed(deltaAG)}\nΔHCO₃⁻ = ${fixed(deltaHCO3)}\nΔΔ = ${fixed(deltaDelta,2)}`,
+        details:`ΔΔ < 1 → гиперхлоремический компонент.`,
+        note:`Причины: диарея, RTA, инфузия NaCl.`
       });
     } else if (deltaDelta > 2) {
       diagnoses.push({name:"Сопутствующий метаболический алкалоз (по ΔΔ)",
-        detail:`ΔΔ = ${fixed(deltaDelta,2)} (>2) → скрытый метаболический алкалоз.`});
+        detail:`ΔΔ = ${fixed(deltaDelta,2)} (>2).`});
       logs.push(`<b>ΔΔ:</b> ${fixed(deltaDelta,2)} (>2) → мет. алкалоз.`);
       explain.push({
         title:"Сопутствующий метаболический алкалоз (по ΔΔ)",
-        why:`ΔΔ = ${fixed(deltaDelta,2)} > 2 → АП вырос сильнее, чем упал HCO₃⁻.`,
-        formula:`ΔΔ = ΔAG / ΔHCO₃⁻ = ${fixed(deltaAG)} / ${fixed(deltaHCO3)} = ${fixed(deltaDelta,2)}`,
+        why:`ΔΔ = ${fixed(deltaDelta,2)} > 2.`,
+        formula:`ΔΔ = ${fixed(deltaDelta,2)}`,
         details:`Есть параллельный метаболический алкалоз.`,
         note:`Причины: рвота, диуретики, гипокалиемия.`
       });
@@ -365,47 +351,41 @@ function calc(){
       logs.push(`<b>ΔΔ:</b> ${fixed(deltaDelta,2)} (1–2) — изолированный HAGMA.`);
     }
   } else {
-    logs.push(`<b>ΔΔ:</b> не применимо (HCO₃⁻ ≥ 22 или нет метаболического ацидоза).`);
+    logs.push(`<b>ΔΔ:</b> не применимо.`);
   }
 
-  // === Метаболический алкалоз (если не является компенсацией) ===
-  if (metAlk && !respIsCompensatory) {
+  if (metAlk && !respIsCompensatory && !diagnoses.some(d=>d.name.includes("алкалоз"))) {
     diagnoses.push({name:"Метаболический алкалоз",
       detail:`SBE = ${fixed(SBE,1)} (>2) и/или HCO₃⁻ = ${fixed(HCO3,1)} (>26).`});
     logs.push(`<b>Метаболический алкалоз:</b> SBE = ${fixed(SBE,1)}.`);
     explain.push({
       title:"Метаболический алкалоз",
       why:`SBE = ${fixed(SBE,1)} > 2 и/или HCO₃⁻ = ${fixed(HCO3,1)} > 26.`,
-      formula:`SBE > 2 ммоль/л\nHCO₃⁻ > 26 ммоль/л`,
+      formula:`SBE > 2\nHCO₃⁻ > 26`,
       details:`Избыток оснований.`,
       note:`Причины: рвота, диуретики, гипокалиемия, гиперальдостеронизм.`
     });
-  } else if (metAlk && respIsCompensatory) {
-    compensations.push(`Метаболический алкалоз (SBE = ${fixed(SBE,1)}) — первичное нарушение, компенсируется респираторным ацидозом.`);
   }
 
-  // === Компенсация (Winter's) ===
   let winterInfo = "—";
   let compCheck = [];
   if (metAcid) {
     const lo = 1.5*HCO3 + 8 - 2, hi = 1.5*HCO3 + 8 + 2;
     winterInfo = `Winter's: ожидаемый pCO₂ = 1.5×${fixed(HCO3,1)} + 8 ± 2 = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
-    if (pCO2 > hi) compCheck.push(`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)} → сопутствующий респ. ацидоз (некомпенсированный)`);
-    else if (pCO2 < lo) compCheck.push(`pCO₂ ${fixed(pCO2,1)} < ${fixed(lo,1)} → сопутствующий респ. алкалоз (избыточный)`);
-    else compCheck.push(`✅ pCO₂ в норме компенсации — респираторный ответ адекватный`);
+    if (pCO2 > hi) compCheck.push(`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)} → сопутствующий респ. ацидоз`);
+    else if (pCO2 < lo) compCheck.push(`pCO₂ ${fixed(pCO2,1)} < ${fixed(lo,1)} → сопутствующий респ. алкалоз`);
+    else compCheck.push(`✅ pCO₂ в норме компенсации`);
   } else if (metAlk) {
     const lo = 0.7*HCO3 + 21 - 2, hi = 0.7*HCO3 + 21 + 2;
-    winterInfo = `Ожидаемый pCO₂ при мет. алкалозе = 0.7×${fixed(HCO3,1)} + 21 ± 2 = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
-    compCheck.push(pCO2 > hi ? `pCO₂ выше → респ. ацидоз компенсаторный` : pCO2 < lo ? `pCO₂ ниже → респ. алкалоз избыточный` : `✅ компенсация адекватна`);
+    winterInfo = `Ожидаемый pCO₂ при мет. алкалозе = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
+    compCheck.push(pCO2 > hi ? `pCO₂ выше → респ. ацидоз` : pCO2 < lo ? `pCO₂ ниже → респ. алкалоз` : `✅ компенсация адекватна`);
   }
 
-  // === Оксигенация ===
   let oxyTag = PF > 300 ? `<span class="tag ok">P/F = ${fixed(PF,0)} — норма</span>`
     : PF >= 200 ? `<span class="tag warn">P/F = ${fixed(PF,0)} — ОРДС лёгкая</span>`
     : PF >= 100 ? `<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС средняя</span>`
     : `<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС тяжёлая</span>`;
 
-  // === Классификация по числу НЕЗАВИСИМЫХ нарушений ===
   const n = diagnoses.length;
   let multi = "";
   if (n === 0) multi = "Расстройств КОС нет";
@@ -413,7 +393,6 @@ function calc(){
   else if (n === 2) multi = "Смешанное нарушение КОС";
   else if (n >= 3) multi = "⚠ Тройное (множественное) нарушение КОС";
 
-  // === ИТОГ ===
   let finalHTML = "";
   if (allNormal && diagnoses.length === 0) {
     finalHTML = "<b>Расстройств КОС нет.</b> pH, pCO₂, HCO₃⁻, SBE — в пределах нормы.";
@@ -423,7 +402,6 @@ function calc(){
     finalHTML = "<b>Расстройств КОС нет.</b>";
   }
 
-  // === Дополнительные находки ===
   let findingsHTML = "";
   if (findings.length > 0) {
     findingsHTML = `<div class="findings"><h3>⚠ Дополнительные находки (не КОС)</h3><ul>`;
@@ -446,7 +424,6 @@ function calc(){
     ${findingsHTML}
   `;
 
-  // === Пояснения ===
   let explHTML = `<h3>Пояснения к диагнозу (формулы и логика)</h3>`;
   if (explain.length === 0) {
     explHTML += `<div class="note">Нарушений не выявлено — все показатели в норме.</div>`;
@@ -462,41 +439,36 @@ function calc(){
     });
   }
 
-  // === Пояснение к методу Стюарта ===
   explHTML += `<details style="margin-top:14px;background:#eef4fa;border:1px solid var(--acc);">
     <summary style="color:var(--acc2);font-size:14px;">📚 Что такое метод Стюарта (SID_a, SID_e, SIG)?</summary>
     <div style="margin-top:10px;line-height:1.65;font-size:13px;">
       <p><b>Физико-химический подход Стюарта</b> объясняет нарушения КОС через <b>три независимые переменные:</b></p>
       <ol style="margin:8px 0 8px 20px;">
         <li><b>pCO₂</b> — респираторный компонент.</li>
-        <li><b>SID (сильная ионная разница)</b> — разница между полностью диссоциированными катионами и анионами. В норме SID_a ≈ 40–44 мЭкв/л.</li>
+        <li><b>SID (сильная ионная разница)</b> — разница между полностью диссоциированными катионами и анионами.</li>
         <li><b>A_tot</b> — общая концентрация слабых кислот (альбумин, фосфаты).</li>
       </ol>
       <p><b>Ключевые показатели:</b></p>
       <ul style="margin:8px 0 8px 20px;">
-        <li><b>SID_a (видимая)</b> — рассчитывается из измеряемых ионов:<br>
-          <code style="background:#fff;padding:2px 6px;border-radius:4px;">SID_a = (Na⁺ + K⁺ + Mg²⁺) − (Cl⁻ + Лактат⁻)</code></li>
-        <li><b>SID_e (эффективная)</b> — рассчитывается из HCO₃⁻ и зарядов слабых кислот:<br>
-          <code style="background:#fff;padding:2px 6px;border-radius:4px;">SID_e = HCO₃⁻ + заряд альбумина + заряд фосфата</code></li>
-        <li><b>SIG (интервал сильных ионов)</b> — «неизмеряемые» анионы:<br>
-          <code style="background:#fff;padding:2px 6px;border-radius:4px;">SIG = SID_a − SID_e</code></li>
+        <li><b>SID_a (видимая)</b> — из измеряемых ионов: <code style="background:#fff;padding:2px 6px;border-radius:4px;">(Na⁺ + K⁺ + Mg²⁺) − (Cl⁻ + Лактат⁻)</code></li>
+        <li><b>SID_e (эффективная)</b> — из HCO₃⁻ + заряд альбумина + заряд фосфата: <code style="background:#fff;padding:2px 6px;border-radius:4px;">HCO₃⁻ + Alb_charge + PO₄_charge</code></li>
+        <li><b>SIG</b> — неизмеряемые анионы: <code style="background:#fff;padding:2px 6px;border-radius:4px;">SIG = SID_a − SID_e</code></li>
       </ul>
       <p><b>Интерпретация SIG:</b></p>
       <ul style="margin:8px 0 8px 20px;">
-        <li><b>SIG &lt; 0</b> — аномалия (проверить лабораторию, гиперпротеинемия, гиперкальциемия).</li>
+        <li><b>SIG &lt; 0</b> — аномалия (проверить лабораторию, гиперпротеинемия).</li>
         <li><b>SIG 0–2</b> — норма.</li>
-        <li><b>SIG &gt; 2</b> — накопление неизмеряемых анионов (кетоны, лактат, сульфаты, цитрат, D-лактат).</li>
+        <li><b>SIG &gt; 2</b> — накопление неизмеряемых анионов (кетоны, лактат, сульфаты).</li>
       </ul>
-      <p style="color:var(--mut);font-size:12.5px;font-style:italic;">В отличие от АП, метод Стюарта <b>учитывает альбумин и фосфаты</b>, поэтому точнее работает при гипоальбуминемии и ХПН.</p>
+      <p style="color:var(--mut);font-size:12.5px;font-style:italic;">Метод Стюарта <b>учитывает альбумин и фосфаты</b> — точнее при гипоальбуминемии и ХПН.</p>
     </div>
   </details>`;
 
   document.getElementById('explanations').innerHTML = explHTML;
 
-  // === Текст для копирования ===
   const stripTags = (s)=> s.replace(/<[^>]+>/g,'');
   const lines = [];
-  lines.push("═══ ICU NAVIGATOR v8 — ОТЧЁТ ═══");
+  lines.push("═══ ICU NAVIGATOR v8.1 — ОТЧЁТ ═══");
   lines.push("");
   lines.push("── ВХОДНЫЕ ДАННЫЕ ──");
   lines.push(`pH: ${fixed(pH,3)}   pCO₂: ${fixed(pCO2,1)}   HCO₃⁻: ${fixed(HCO3,1)}   SBE: ${fixed(SBE,1)}`);
@@ -549,7 +521,7 @@ function calc(){
     lines.push(`   Note: ${stripTags(e.note)}`);
   });
   lines.push("");
-  lines.push("Сформировано: ICU Navigator v8");
+  lines.push("Сформировано: ICU Navigator v8.1");
 
   lastReport = lines.join("\n");
 
@@ -597,66 +569,169 @@ function drawGamble(Na,K,Ca,Mg,Cl,HCO3,Lac,SIG){
     {label:'HCO₃⁻', data:[0,HCO3], backgroundColor:'#ffb74d'},
     {label:'Лактат', data:[0,Lac], backgroundColor:'#ba68c8'},
     {label:'SIG', data:[0,SIG], backgroundColor:'#90a4ae'},
-  ]}, options:{responsive:true, plugins:{legend:{labels:{color:'#1a2332', font:{size:11}}}}, scales:{x:{stacked:true, ticks:{color:'#607080'}}, y:{stacked:true, ticks:{color:'#607080'}, grid:{color:'#e4ebf3'}, title:{display:true, text:'мЭкв/л', color:'#607080'}}}}});
+  ]}, options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#1a2332', font:{size:12}}}},
+    scales:{
+      x:{stacked:true, ticks:{color:'#607080', font:{size:12}}},
+      y:{stacked:true, ticks:{color:'#607080', font:{size:12}}, grid:{color:'#e4ebf3'}, title:{display:true, text:'мЭкв/л', color:'#607080', font:{size:12}}}
+    }
+  }});
 }
 
 function drawSiggaard(pH,pCO2){
   const ctx = document.getElementById('siggaard');
   if (sChart) sChart.destroy();
 
-  // === ПОНЯТНАЯ НОМОГРАММА ===
-  // Ось X — pH, ось Y — pCO₂ (не логарифм, для понятности)
-  // Рисуем:
-  // 1. Нормальная буферная линия (HCO₃ = 24)
-  // 2. Линии HCO₃ = 15 и 35 (пунктир)
-  // 3. Зона нормы (прямоугольник)
-  // 4. Линии компенсации (острая / хроническая)
-  // 5. Точка пациента с подписью
+  // === ТРЁХОСЕВАЯ НОМОГРАММА ===
+  // X снизу — pH (7.0–7.8)
+  // Y слева — pCO₂ (0–150)
+  // Y справа — HCO₃⁻ (0–45), но рисуем как отдельную шкалу
 
-  function pco2FromHCO3(h,p){return h/(0.03*Math.pow(10,p-6.1));}
-  const phRange=[];
-  for(let p=7.0;p<=7.8;p+=0.02) phRange.push(p);
+  function pco2FromHCO3(h, p){ return h / (0.03 * Math.pow(10, p - 6.1)); }
+  const phRange = [];
+  for (let p = 7.0; p <= 7.8; p += 0.02) phRange.push(parseFloat(p.toFixed(3)));
 
-  const normalLine = phRange.map(p=>({x:p, y:pco2FromHCO3(24,p)}));
-  const bufLow  = phRange.map(p=>({x:p, y:pco2FromHCO3(15,p)}));
-  const bufHigh = phRange.map(p=>({x:p, y:pco2FromHCO3(35,p)}));
-  const bufLow10  = phRange.map(p=>({x:p, y:pco2FromHCO3(10,p)}));
-  const bufHigh40 = phRange.map(p=>({x:p, y:pco2FromHCO3(40,p)}));
+  // Буферные линии (HCO3 = const)
+  const hco3List = [5, 10, 15, 20, 24, 30, 35, 40];
+  const colors = ['#bbdefb','#90caf9','#64b5f6','#42a5f5','#2196f3','#1e88e5','#1976d2','#1565c0'];
+
+  const datasets = [];
+
+  hco3List.forEach((h, i)=>{
+    const isNormal = (h === 24);
+    datasets.push({
+      label: `HCO₃⁻ = ${h}`,
+      data: phRange.map(p=>({x:p, y: pco2FromHCO3(h, p)})),
+      borderColor: isNormal ? '#2e7d32' : colors[i],
+      borderWidth: isNormal ? 3 : 1.6,
+      borderDash: isNormal ? [] : [5,4],
+      pointRadius: 0,
+      tension: 0.05,
+      fill: false,
+      order: isNormal ? 1 : 5
+    });
+  });
+
+  // Точка пациента
+  datasets.push({
+    label: 'Пациент',
+    data: [{x: pH, y: pCO2}],
+    borderColor: '#c62828',
+    backgroundColor: '#c62828',
+    pointRadius: 11,
+    pointBorderColor: '#fff',
+    pointBorderWidth: 2.5,
+    showLine: false,
+    order: 0
+  });
+
+  // Пунктирные проекции к осям
+  datasets.push({
+    label: '— проекция на pH —',
+    data: [{x: pH, y: pCO2}, {x: pH, y: 0}],
+    borderColor: 'rgba(198,40,40,.4)',
+    borderWidth: 1.2,
+    borderDash: [4,3],
+    pointRadius: 0,
+    fill: false,
+    order: 2
+  });
+  datasets.push({
+    label: '— проекция на pCO₂ —',
+    data: [{x: pH, y: pCO2}, {x: 7.0, y: pCO2}],
+    borderColor: 'rgba(198,40,40,.4)',
+    borderWidth: 1.2,
+    borderDash: [4,3],
+    pointRadius: 0,
+    fill: false,
+    order: 2
+  });
 
   sChart = new Chart(ctx, {
     type:'line',
-    data:{
-      datasets:[
-        // Зона нормы (заливка)
-        {label:'Зона нормы', data:[
-          {x:7.35,y:35},{x:7.45,y:35},{x:7.45,y:45},{x:7.35,y:45},{x:7.35,y:35}
-        ], borderColor:'transparent', backgroundColor:'rgba(46,125,50,.12)', fill:true, pointRadius:0, tension:0, order:10},
-
-        // Буферные линии
-        {label:'HCO₃⁻ = 10', data:bufLow10, borderColor:'#b0bec5', borderWidth:1, borderDash:[2,3], pointRadius:0, tension:0, order:5},
-        {label:'HCO₃⁻ = 15', data:bufLow, borderColor:'#ffb74d', borderWidth:1.2, borderDash:[5,4], pointRadius:0, tension:0, order:4},
-        {label:'HCO₃⁻ = 24 (норма)', data:normalLine, borderColor:'#2e7d32', borderWidth:2.5, pointRadius:0, tension:0, order:3},
-        {label:'HCO₃⁻ = 35', data:bufHigh, borderColor:'#4fc3f7', borderWidth:1.2, borderDash:[5,4], pointRadius:0, tension:0, order:4},
-        {label:'HCO₃⁻ = 40', data:bufHigh40, borderColor:'#b0bec5', borderWidth:1, borderDash:[2,3], pointRadius:0, tension:0, order:5},
-
-        // Точка пациента
-        {label:'Пациент', data:[{x:pH, y:pCO2}], borderColor:'#c62828', backgroundColor:'#c62828', pointRadius:9, pointBorderColor:'#fff', pointBorderWidth:2, showLine:false, order:0},
-      ]
-    },
+    data:{ datasets },
     options:{
       responsive:true,
+      maintainAspectRatio:false,
+      interaction:{mode:'nearest', intersect:false},
       plugins:{
-        legend:{labels:{color:'#1a2332', font:{size:11}, usePointStyle:true, boxWidth:10}},
-        tooltip:{callbacks:{label:(ctx)=>{
-          if(ctx.dataset.label === 'Пациент') return `Пациент: pH ${pH.toFixed(3)}, pCO₂ ${pCO2.toFixed(1)}`;
-          return `${ctx.dataset.label}: pH ${ctx.parsed.x.toFixed(2)}, pCO₂ ${ctx.parsed.y.toFixed(0)}`;
-        }}}
+        legend:{
+          labels:{color:'#1a2332', font:{size:12}, usePointStyle:true, boxWidth:14, padding:12}
+        },
+        tooltip:{
+          callbacks:{
+            label:(context)=>{
+              const p = context.parsed.x;
+              const pc = context.parsed.y;
+              const h = 0.03 * pc * Math.pow(10, p - 6.1);
+              if (context.dataset.label === 'Пациент') {
+                return `Пациент: pH ${pH.toFixed(3)}, pCO₂ ${pCO2.toFixed(1)}, HCO₃⁻ ${fixed(0.03*pCO2*Math.pow(10,pH-6.1),1)}`;
+              }
+              if (context.dataset.label.includes('проекция')) return '';
+              return `${context.dataset.label} | pH ${p.toFixed(2)}, pCO₂ ${pc.toFixed(0)}, HCO₃⁻ ${h.toFixed(1)}`;
+            }
+          }
+        }
       },
       scales:{
-        x:{type:'linear', min:7.0, max:7.8, title:{display:true, text:'pH', color:'#1a2332', font:{size:13, weight:'bold'}}, ticks:{color:'#607080', font:{size:11}, stepSize:0.1}, grid:{color:'#e4ebf3'}},
-        y:{type:'linear', min:0, max:100, title:{display:true, text:'pCO₂ (мм рт.ст.)', color:'#1a2332', font:{size:13, weight:'bold'}}, ticks:{color:'#607080', font:{size:11}, stepSize:20}, grid:{color:'#e4ebf3'}}
+        x:{
+          type:'linear', min:7.0, max:7.8,
+          title:{
+            display:true,
+            text:'pH   (ось X — снизу)',
+            color:'#1a2332',
+            font:{size:14, weight:'bold'},
+            padding:{top:10, bottom:10}
+          },
+          ticks:{color:'#607080', font:{size:12}, stepSize:0.1, callback:(v)=>v.toFixed(2)},
+          grid:{color:'#e4ebf3'}
+        },
+        y:{
+          type:'linear', min:0, max:150,
+          position:'left',
+          title:{
+            display:true,
+            text:'pCO₂ (мм рт.ст.)   —   ось слева',
+            color:'#1a2332',
+            font:{size:14, weight:'bold'},
+            padding:{right:10}
+          },
+          ticks:{color:'#607080', font:{size:12}, stepSize:20},
+          grid:{color:'#e4ebf3'}
+        }
       }
-    }
+    },
+    plugins:[{
+      id:'rightAxisHco3',
+      afterDraw:(chart)=>{
+        const {ctx, chartArea:{top, bottom, right}} = chart;
+        const yScale = chart.scales.y;
+        ctx.save();
+        // Заголовок оси справа
+        ctx.save();
+        ctx.translate(right + 55, (top + bottom) / 2);
+        ctx.rotate(Math.PI / 2);
+        ctx.fillStyle = '#1a2332';
+        ctx.font = 'bold 14px -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('HCO₃⁻ (ммоль/л)   —   ось справа', 0, 0);
+        ctx.restore();
+
+        // Метки HCO3 справа: для каждого значения pCO2 на левой оси рисуем соответствующее HCO3 (при нормальном pH 7.4)
+        ctx.font = '12px -apple-system, sans-serif';
+        ctx.fillStyle = '#1565c0';
+        ctx.textAlign = 'left';
+        for (let v = 0; v <= 150; v += 20) {
+          const y = yScale.getPixelForValue(v);
+          // HCO3 при pH 7.4, pCO2 = v: HCO3 = 0.03 * v * 10^(7.4-6.1) = 0.03 * v * 19.95
+          const hco3 = 0.03 * v * Math.pow(10, 7.4 - 6.1);
+          ctx.fillText(hco3.toFixed(0), right + 6, y + 4);
+        }
+        ctx.restore();
+      }
+    }]
   });
 }
 
