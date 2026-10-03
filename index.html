@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v10.1</title>
+<title>ICU Navigator v10.1 Fixed</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--acc:#1e6fb8;--acc2:#0d4a80;--ok:#2e7d32;--okbg:#e8f5e9;--warn:#e65100;--warnbg:#fff3e0;--bad:#c62828;--badbg:#ffebee;--txt:#1a2332;--mut:#607080;--border:#d8e0ea;--shadow:0 1px 3px rgba(30,111,184,.06);}
@@ -217,8 +217,14 @@ const presets={
 '4.8':{pH:7.18,pCO2:20,HCO3in:8,SBE:-20,Lac:5,pO2:80,FiO2:21,Na:130,Cl:105,K:3.0,Ca:1.2,Mg:0.9,Alb:23,PO4:1.6,Gluc:5.5},
 '4.9':{pH:7.19,pCO2:48,HCO3in:18,SBE:-10.1,Lac:3.7,pO2:90,FiO2:21,Na:145,Cl:111,K:4.5,Ca:1.17,Mg:0.57,Alb:10,PO4:1.7,Gluc:5.5}
 };
-function loadPreset(n){if(n==='clear'){clearAll();return}const p=presets[n];if(!p)return;for(const k in p){const el=document.getElementById(k);if(el)el.value=p[k]}showToast('✓ Пример '+n)}
-function clearAll(){['pH','pCO2','HCO3in','SBE','Lac','pO2','FiO2','Na','Cl','K','Ca','Mg','Alb','PO4','Gluc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});const n=document.getElementById('notes');if(n)n.value=''}
+function loadPreset(n){
+  if(n==='clear'){clearAll();return}
+  const p=presets[n];if(!p)return;
+  for(const k in p){const el=document.getElementById(k);if(el)el.value=p[k]}
+  showToast('✓ Пример '+n);
+  calc();
+}
+function clearAll(){['pH','pCO2','HCO3in','SBE','Lac','pO2','FiO2','Na','Cl','K','Ca','Mg','Alb','PO4','Gluc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});const n=document.getElementById('notes');if(n)n.value=''; calc();}
 
 function num(id){const el=document.getElementById(id);return el?parseFloat(el.value):NaN}
 function fixed(x,n=2){return(isNaN(x)||!isFinite(x))?"—":x.toFixed(n)}
@@ -341,7 +347,7 @@ else sigHTML=`SIG = ${fixed(SIG)} (>2) → неизмер. анионы.`;
 
 let winterInfo="—",compCheck=[];
 if(metAcid){const lo=1.5*HCO3+8-2,hi=1.5*HCO3+8+2;winterInfo=`Winter's: pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)}`;if(pCO2>hi)compCheck.push(`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)} → сопутствующий респ. ацидоз`);else if(pCO2<lo)compCheck.push(`pCO₂ ${fixed(pCO2,1)} < ${fixed(lo,1)} → сопутствующий респ. алкалоз`);else compCheck.push('✅ Компенсация адекватна')}
-else if(metAlk){const lo=0.7*HCO3+21-2,hi=0.7*HCO3+21+2;winterInfo=`Ожидаемый pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)}`;if(pCO2>hi)compCheck.push(`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)}`);else if(pCO2<lo)compCheck.push(`pCO₂ ${fixed(pCO2,1)} < ${fixed(lo,1)}`);else compCheck.push('✅ Компенсация адекватна')}
+else if(metAlk){const lo=0.7*HCO3+21-2,hi=0.7*HCO3+21+2;winterInfo=`Ожидаемый pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)}`;if(pCO2>hi)compCheck.push(`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)}`);else if(pCO2<lo)compCheck.push(`pCO₂ ${fixed(pCO2,1)} < ${fixed(hi,1)}`);else compCheck.push('✅ Компенсация адекватна')}
 
 let oxyTag=PF>300?`<span class="tag ok">P/F = ${fixed(PF,0)} — норма</span>`:PF>=200?`<span class="tag warn">P/F = ${fixed(PF,0)} — ОРДС лёгкая</span>`:PF>=100?`<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС средняя</span>`:`<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС тяжёлая</span>`;
 
@@ -349,7 +355,7 @@ if(PF<=300)recs.push(`<b>ОРДС (P/F ${fixed(PF,0)}):</b><ul style="margin:6px
 
 const n=diagnoses.length;
 let multi=n===0?"Расстройств КОС нет":n===1?"Изолированное нарушение":n===2?"Смешанное нарушение":"⚠ Тройное (множественное)";
-let finalHTML=allNormal&&diagnoses.length===0?"<b>Расстройств КОС нет.</b>":diagnoses.length>0?`<b>${multi}</b><ul>${diagnoses.map((d,i)=>`<li><b>${i+1}. ${d.name}.</b> ${d.detail}</li>`).join('')}</ul>`:"<b>Расстройств КОС нет.</b>";
+let finalHTML=allNormal&&diagnoses.length===0?"<b>Расстройств КОС нет.</b>":diagnoses.length>0?`<b>${multi}</b><ul>${diagnoses.map((d,i)=>`<li><b>${i+1}. ${d.name}.</b>${d.detail}</li>`).join('')}</ul>`:"<b>Расстройств КОС нет.</b>";
 
 let findingsHTML="";if(findings.length>0){findingsHTML=`<div class="findings"><h3>⚠ Доп. находки</h3><ul>`;findings.forEach(f=>{findingsHTML+=`<li><b>${f.name}.</b><br>${f.detail}<br><i>Причины:</i><ul>${f.causes.map(c=>`<li>${c}</li>`).join('')}</ul><b>Рек:</b> ${f.recommendation}</li>`});findingsHTML+='</ul></div>'}
 
@@ -364,7 +370,6 @@ explHTML+=`<details style="margin-top:14px;background:var(--okbg)" open><summary
 const explEl=document.getElementById('explanations');
 if(explEl)explEl.innerHTML=explHTML;
 
-// отчёт
 const strip=s=>s.replace(/<[^>]+>/g,'');
 const L=[];
 L.push("═══ ICU NAVIGATOR v10.1 ═══","","── ВХОД ──");
@@ -389,7 +394,6 @@ lastReport=L.join("\n");
 
 try{drawGamble(NaCorr,K,Ca,Mg,Cl,HCO3,Lac,SIG>0?SIG:0)}catch(e){}
 try{drawSiggaard(pH,pCO2)}catch(e){}
-switchTab('results');
 }
 
 function copyResult(){if(!lastReport){try{calc()}catch(e){}}const ta=document.createElement("textarea");ta.value=lastReport;ta.style.position="fixed";ta.style.top="-1000px";document.body.appendChild(ta);ta.focus();ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);if(!ok&&navigator.clipboard){navigator.clipboard.writeText(lastReport).then(()=>showToast('✓')).catch(()=>showToast('Не удалось'))}else showToast(ok?"✓ Скопировано":"Не удалось")}
@@ -425,7 +429,10 @@ ds.push({label:'— pCO₂ —',data:[{x:pH,y:pCO2},{x:7.0,y:pCO2}],borderColor:
 sChart=new Chart(ctx,{type:'line',data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:40,right:70}},interaction:{mode:'nearest',intersect:false},plugins:{legend:{labels:{font:{size:11.5},usePointStyle:true,boxWidth:14,filter:i=>!i.text.startsWith('—')&&!i.text.includes('Зона')}},tooltip:{filter:i=>!i.dataset.label.startsWith('—')&&!i.dataset.label.includes('Зона'),callbacks:{label:c=>{const p=c.parsed.x,pc=c.parsed.y;const h=0.03*pc*Math.pow(10,p-6.1);if(c.dataset.label==='Пациент')return`Пациент: pH ${pH.toFixed(3)}, pCO₂ ${pCO2.toFixed(1)}`;return`${c.dataset.label} | pH ${p.toFixed(2)}, pCO₂ ${pc.toFixed(0)}, HCO₃⁻ ${h.toFixed(1)}`}}}},scales:{x:{type:'linear',min:7.0,max:7.8,title:{display:true,text:'pH (снизу)',font:{size:14,weight:'bold'}},ticks:{stepSize:0.1,callback:v=>v.toFixed(2)}},y:{type:'linear',min:0,max:120,position:'left',title:{display:true,text:'pCO₂ (слева)',font:{size:14,weight:'bold'}},ticks:{stepSize:20}}}},plugins:[{id:'topA',afterDraw:chart=>{const{ctx,chartArea:{left,right,top}}=chart;ctx.save();ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText('pCO₂ — ось сверху',(left+right)/2,top-24);ctx.font='12px sans-serif';for(let v=0;v<=120;v+=40){const y=chart.scales.y.getPixelForValue(v);ctx.fillText(v.toString(),left+15,top-6);ctx.beginPath();ctx.moveTo(left,top-2);ctx.lineTo(left+6,top-2);ctx.strokeStyle='#607080';ctx.stroke()}ctx.restore()}},{id:'rightA',afterDraw:chart=>{const{ctx,chartArea:{top,bottom,right}}=chart;const ys=chart.scales.y;ctx.save();ctx.translate(right+55,(top+bottom)/2);ctx.rotate(Math.PI/2);ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText('HCO₃⁻ — ось справа',0,0);ctx.restore();ctx.font='12px sans-serif';ctx.fillStyle='#1565c0';ctx.textAlign='left';for(let v=0;v<=120;v+=20){const y=ys.getPixelForValue(v);const hc=0.03*v*Math.pow(10,7.4-6.1);ctx.fillText(hc.toFixed(0),right+6,y+4)}ctx.restore()}}]});
 }
 
-window.addEventListener('load',function(){initTheme()});
+window.addEventListener('load',function(){
+  initTheme();
+  calc();
+});
 </script>
 </body>
 </html>
