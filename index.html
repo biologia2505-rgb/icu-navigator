@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ICU Navigator v6</title>
+<title>ICU Navigator v7</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root{--bg:#0f1419;--card:#1a2129;--acc:#4fc3f7;--ok:#66bb6a;--warn:#ffb74d;--bad:#ef5350;--txt:#e6edf3;--mut:#8b949e;}
@@ -38,6 +38,10 @@
   .final{margin-top:12px;padding:12px;background:linear-gradient(135deg,#1e3a5f,#1a2129);border-left:3px solid var(--acc);border-radius:6px;font-size:14px;}
   .final ul{margin:8px 0 0 18px;}
   .final li{margin:6px 0;font-size:13px;}
+  .findings{margin-top:12px;padding:12px;background:linear-gradient(135deg,#5f3a1e,#1a2129);border-left:3px solid var(--warn);border-radius:6px;font-size:14px;}
+  .findings h3{font-size:13px;color:var(--warn);margin:0 0 8px;text-transform:uppercase;}
+  .findings ul{margin:6px 0 6px 18px;}
+  .findings li{margin:6px 0;font-size:13px;}
   .expl{margin-top:14px;padding:12px;background:#0d1117;border-radius:8px;border-left:3px solid var(--warn);}
   .expl h3{font-size:13px;color:var(--warn);margin:0 0 8px;text-transform:uppercase;}
   .expl details{margin:6px 0;padding:8px;background:#131a20;border-radius:6px;font-size:13px;}
@@ -50,8 +54,8 @@
 </style>
 </head>
 <body>
-<h1>🧭 ICU Navigator v6</h1>
-<div class="sub">КОС · Стюарт · Winter's · SBE-разбивка (FW/Cl/Alb/UA) · ΔΔ</div>
+<h1>🧭 ICU Navigator v7</h1>
+<div class="sub">КОС · Стюарт · Winter's · SBE-разбивка · ΔΔ · АП-аномалии</div>
 
 <div class="grid">
   <div class="card">
@@ -110,7 +114,7 @@
   <div class="card"><h2>Номограмма Сиггаарда-Андерсена</h2><canvas id="siggaard"></canvas></div>
 </div>
 
-<div class="toast" id="toast">✓ Скопировано в буфер обмена</div>
+<div class="toast" id="toast">✓ Скопировано</div>
 
 <script>
 function num(id){return parseFloat(document.getElementById(id).value);}
@@ -136,7 +140,8 @@ function calc(){
   const AGcorr = AG + 0.25 * (40 - Alb);
   const deltaAG = AGcorr - 12;
   const deltaHCO3 = 24 - HCO3;
-  const deltaDelta = (HCO3 < 24 && deltaHCO3 > 0) ? deltaAG / deltaHCO3 : NaN;
+  // ΔΔ — ТОЛЬКО при истинном метаболическом ацидозе (HCO3 < 22) и нормальном АП
+  const deltaDelta = (HCO3 < 22 && deltaHCO3 > 0) ? deltaAG / deltaHCO3 : NaN;
 
   const SBE_FW  = 0.3 * (Na - 140);
   const SBE_Cl  = 104 - (Cl * 140 / Na);
@@ -150,6 +155,13 @@ function calc(){
   const PO4Ch = PO4 * (0.309*pH - 0.469);
   const SIDe = HCO3 + AlbCh + PO4Ch;
   const SIG = SIDa - SIDe;
+
+  // === ОЦЕНКА НОРМЫ ===
+  const pHnorm = pH >= 7.35 && pH <= 7.45;
+  const pCO2norm = pCO2 >= 35 && pCO2 <= 45;
+  const HCO3norm = HCO3 >= 22 && HCO3 <= 26;
+  const SBEnorm = SBE >= -2 && SBE <= 2;
+  const allNormal = pHnorm && pCO2norm && HCO3norm && SBEnorm;
 
   const rows = [
     ["HCO₃⁻ (лабораторный)", fixed(HCO3in,1)+" ммоль/л"],
@@ -177,11 +189,31 @@ function calc(){
 
   const logs = [];
   const diagnoses = [];
+  const findings = [];   // дополнительные находки (не КОС)
   const explain = [];
 
   let primary = pH < 7.35 ? "acidemia" : pH > 7.45 ? "alkalemia" : "normal";
   logs.push(`<b>Шаг 1. Вектор pH:</b> ${fixed(pH,3)} → ${primary==='acidemia'?'ацидемия':primary==='alkalemia'?'алкалемия':'норма'}.`);
 
+  // === АНОМАЛИЯ АП ===
+  if (AG < 8 || AGcorr < 8) {
+    findings.push({
+      name:"Аномально низкий / отрицательный АП",
+      detail:`АП = ${fixed(AG)}, АП_корр = ${fixed(AGcorr)} мЭкв/л. Норма 8–12 (АП_корр 8–14).`,
+      causes:[
+        "Повышение неизмеряемых катионов: IgG-парапротеинемия (миелома, моноклональная гаммапатия)",
+        "Гиперкальциемия (Ca²⁺ не входит в стандартный АП)",
+        "Гипермагниемия",
+        "Токсичность лития",
+        "Бромиды (ложно завышают Cl⁻, снижая АП)",
+        "Лабораторная ошибка"
+      ],
+      recommendation:"Электрофорез белков, иммунофиксация, общий белок, Ca²⁺, Mg²⁺, литий, исключить лабораторную ошибку."
+    });
+    logs.push(`<b>Аномалия АП:</b> АП = ${fixed(AG)}, АП_корр = ${fixed(AGcorr)} → ниже нормы (8–12).`);
+  }
+
+  // === РЕСПИРАТОРНЫЙ КОМПОНЕНТ ===
   const respAcid = pCO2 > 45;
   const respAlk  = pCO2 < 35;
   const metAcid  = HCO3 < 22 || SBE < -2;
@@ -198,8 +230,8 @@ function calc(){
       why:`pCO₂ = ${fixed(pCO2,1)} мм рт.ст. > 45 → альвеолярная гиповентиляция.`,
       formula:`pCO₂ > 45 мм рт.ст.`,
       details:mode === 'acute'
-        ? `Острая форма: HCO₃⁻ растёт на 1 ммоль/л на 10 мм рт.ст. pCO₂ → ожид. HCO₃⁻ = 24 + 0.1×(${fixed(pCO2,1)}−40) = ${fixed(24+0.1*(pCO2-40),1)}.`
-        : `Хроническая: почки компенсируют за 3–5 дней → ожид. HCO₃⁻ = 24 + 0.35×(${fixed(pCO2,1)}−40) = ${fixed(24+0.35*(pCO2-40),1)}.`,
+        ? `Острая форма: ожид. HCO₃⁻ = 24 + 0.1×(${fixed(pCO2,1)}−40) = ${fixed(24+0.1*(pCO2-40),1)}.`
+        : `Хроническая: ожид. HCO₃⁻ = 24 + 0.35×(${fixed(pCO2,1)}−40) = ${fixed(24+0.35*(pCO2-40),1)}.`,
       note:`Причины: обструкция ДП, угнетение ЦНС, нейромышечные расстройства.`
     });
   } else if (respAlk) {
@@ -215,10 +247,11 @@ function calc(){
       details:mode === 'acute'
         ? `Острая форма: ожид. HCO₃⁻ = 24 − 0.2×(40−${fixed(pCO2,1)}) = ${fixed(24-0.2*(40-pCO2),1)}.`
         : `Хроническая: ожид. HCO₃⁻ = 24 − 0.4×(40−${fixed(pCO2,1)}) = ${fixed(24-0.4*(40-pCO2),1)}.`,
-      note:`Причины: гипоксия, сепсис, боль, тревога, ИВЛ с избыточной вентиляцией.`
+      note:`Причины: гипоксия, сепсис, боль, тревога, ИВЛ.`
     });
   }
 
+  // === HAGMA ===
   if (AGcorr > 14) {
     let d = `АП_корр = ${fixed(AGcorr)} мЭкв/л (>14).`;
     if (Lac > 2) d += ` Лактат = ${fixed(Lac,1)} ммоль/л → <b>лактат-ацидоз</b>.`;
@@ -228,78 +261,80 @@ function calc(){
       title:"HAGMA — метаболический ацидоз с увеличенным АП",
       why:`АП_корр = ${fixed(AGcorr)} > 14 → накопление нелетучих кислот.`,
       formula:`АП = Na⁺ − (Cl⁻ + HCO₃⁻) = ${fixed(NaCorr,1)} − (${fixed(Cl,1)} + ${fixed(HCO3,1)}) = ${fixed(AG)}\nАП_корр = АП + 0.25 × (40 − Alb) = ${fixed(AG)} + 0.25 × (40 − ${fixed(Alb,1)}) = ${fixed(AGcorr)}`,
-      details:Lac > 2
-        ? `Лактат ${fixed(Lac,1)} ммоль/л — ведущий источник HAGMA.`
-        : `Источник — эндогенные кислоты (кетоны, лактат, уремия, токсины).`,
-      note:`Норма АП: 8–12 мЭкв/л. Норма АП_корр: ≤14.`
+      details:Lac > 2 ? `Лактат ${fixed(Lac,1)} — ведущий источник.` : `Источник — эндогенные кислоты.`,
+      note:`Норма АП: 8–12. Норма АП_корр: ≤14.`
     });
   } else {
     logs.push(`<b>Шаг 4. HAGMA:</b> АП_корр = ${fixed(AGcorr)} ≤ 14 — норма.`);
   }
 
+  // === SBE_UA / ΔАП ===
   if (deltaAP_from_SBE > 2) {
     diagnoses.push({name:"Метаболический ацидоз по SBE_UA / ΔАП (неизмеряемые анионы)",
       detail:`ΔАП = ${fixed(deltaAP_from_SBE)} ммоль/л (>2) → накопление неизмеряемых анионов.`});
     logs.push(`<b>Шаг 5. SBE_UA → ΔАП:</b> SBE_UA = ${fixed(SBE_UA)}, ΔАП = ${fixed(deltaAP_from_SBE)} (>2) → неизмеряемые анионы.`);
     explain.push({
       title:"Метаболический ацидоз по SBE_UA / ΔАП",
-      why:`ΔАП = ${fixed(deltaAP_from_SBE)} > 2 ммоль/л — накопление неизмеряемых анионов.`,
-      formula:`SBE_FW  = 0.3 × (Na − 140) = 0.3 × (${fixed(Na,1)} − 140) = ${fixed(SBE_FW)}\nSBE_Cl  = 104 − (Cl × 140 / Na) = 104 − (${fixed(Cl,1)} × 140 / ${fixed(Na,1)}) = ${fixed(SBE_Cl)}\nSBE_Alb = (0.148 × pH − 0.818) × (40 − Alb) = (0.148 × ${fixed(pH,3)} − 0.818) × (40 − ${fixed(Alb,1)}) = ${fixed(SBE_Alb)}\nSBE_UA  = SBE − SBE_FW − SBE_Cl − SBE_Alb = ${fixed(SBE_UA)}\nΔАП ≈ −SBE_UA = ${fixed(deltaAP_from_SBE)}`,
-      details:`По учебнику SBE_UA отрицательный, но его модуль отражает ΔАП.`,
-      note:`Норма ΔАП: −2…+2. Повышение > 2 — HAGMA по Стюарту.`
+      why:`ΔАП = ${fixed(deltaAP_from_SBE)} > 2 ммоль/л.`,
+      formula:`SBE_FW = 0.3×(Na−140) = ${fixed(SBE_FW)}\nSBE_Cl = 104 − Cl×140/Na = ${fixed(SBE_Cl)}\nSBE_Alb = (0.148×pH − 0.818)×(40−Alb) = ${fixed(SBE_Alb)}\nSBE_UA = ${fixed(SBE_UA)}\nΔАП ≈ −SBE_UA = ${fixed(deltaAP_from_SBE)}`,
+      details:`Модуль SBE_UA отражает ΔАП.`,
+      note:`Норма ΔАП: −2…+2. > 2 — HAGMA по Стюарту.`
     });
   } else {
     logs.push(`<b>Шаг 5. SBE_UA → ΔАП:</b> ΔАП = ${fixed(deltaAP_from_SBE)} ≤ 2 — норма.`);
   }
 
+  // === ΔΔ / NAGMA — только при HCO3 < 22 ===
   if (!isNaN(deltaDelta)) {
-    if (deltaDelta < 1) {
+    if (deltaDelta < 1 && AGcorr <= 14) {
       diagnoses.push({name:"Метаболический ацидоз с нормальным АП (гиперхлоремический, NAGMA)",
-        detail:`ΔΔ = ${fixed(deltaDelta,2)} (<1), HCO₃⁻ = ${fixed(HCO3,1)}, Cl⁻ = ${fixed(Cl,1)} → гиперхлоремия.`});
+        detail:`ΔΔ = ${fixed(deltaDelta,2)} (<1), HCO₃⁻ = ${fixed(HCO3,1)}, Cl⁻ = ${fixed(Cl,1)}.`});
       logs.push(`<b>Шаг 6. ΔΔ:</b> ${fixed(deltaDelta,2)} (<1) → NAGMA.`);
       explain.push({
         title:"NAGMA — гиперхлоремический метаболический ацидоз",
-        why:`ΔΔ = ${fixed(deltaDelta,2)} < 1 при HCO₃⁻ = ${fixed(HCO3,1)} и Cl⁻ = ${fixed(Cl,1)}.`,
-        formula:`ΔAG = АП_корр − 12 = ${fixed(AGcorr)} − 12 = ${fixed(deltaAG)}\nΔHCO₃⁻ = 24 − HCO₃⁻ = 24 − ${fixed(HCO3,1)} = ${fixed(deltaHCO3)}\nΔΔ = ΔAG / ΔHCO₃⁻ = ${fixed(deltaAG)} / ${fixed(deltaHCO3)} = ${fixed(deltaDelta,2)}`,
+        why:`ΔΔ = ${fixed(deltaDelta,2)} < 1 при HCO₃⁻ = ${fixed(HCO3,1)} (<22) и нормальном АП.`,
+        formula:`ΔAG = АП_корр − 12 = ${fixed(deltaAG)}\nΔHCO₃⁻ = 24 − HCO₃⁻ = ${fixed(deltaHCO3)}\nΔΔ = ΔAG / ΔHCO₃⁻ = ${fixed(deltaDelta,2)}`,
         details:`ΔΔ < 1 → часть ацидоза обусловлена гиперхлоремией.`,
-        note:`Причины: диарея, RTA, инфузия NaCl, ацетазоламид. Норма ΔΔ: 1–2.`
+        note:`Причины: диарея, RTA, инфузия NaCl, ацетазоламид.`
       });
     } else if (deltaDelta > 2) {
       diagnoses.push({name:"Сопутствующий метаболический алкалоз (по ΔΔ)",
-        detail:`ΔΔ = ${fixed(deltaDelta,2)} (>2) → скрытый метаболический алкалоз.`});
+        detail:`ΔΔ = ${fixed(deltaDelta,2)} (>2).`});
       logs.push(`<b>Шаг 6. ΔΔ:</b> ${fixed(deltaDelta,2)} (>2) → мет. алкалоз.`);
       explain.push({
         title:"Сопутствующий метаболический алкалоз (по ΔΔ)",
         why:`ΔΔ = ${fixed(deltaDelta,2)} > 2 → АП вырос сильнее, чем упал HCO₃⁻.`,
         formula:`ΔΔ = ΔAG / ΔHCO₃⁻ = ${fixed(deltaAG)} / ${fixed(deltaHCO3)} = ${fixed(deltaDelta,2)}`,
-        details:`Избыточный прирост АП → есть параллельный алкалоз.`,
-        note:`Причины: рвота, диуретики, гипокалиемия, гипохлоремия.`
+        details:`Есть параллельный алкалоз.`,
+        note:`Причины: рвота, диуретики, гипокалиемия.`
       });
     } else {
       logs.push(`<b>Шаг 6. ΔΔ:</b> ${fixed(deltaDelta,2)} (1–2) — изолированный HAGMA.`);
     }
   } else {
-    logs.push(`<b>Шаг 6. ΔΔ:</b> не применимо (HCO₃⁻ ≥ 24 — нет метаболического ацидоза).`);
+    logs.push(`<b>Шаг 6. ΔΔ:</b> не применимо (HCO₃⁻ ≥ 22 — нет метаболического ацидоза).`);
   }
 
-  if (metAlk) {
+  // === Метаболический алкалоз ===
+  if (metAlk && !diagnoses.some(d=>d.name.includes("алкалоз") && d.name.includes("Метаболический"))) {
     diagnoses.push({name:"Метаболический алкалоз",
       detail:`SBE = ${fixed(SBE,1)} (>2) и/или HCO₃⁻ = ${fixed(HCO3,1)} (>26).`});
-    logs.push(`<b>Шаг 7. Метаболический алкалоз:</b> SBE = ${fixed(SBE,1)} > 2.`);
+    logs.push(`<b>Шаг 7. Метаболический алкалоз:</b> SBE = ${fixed(SBE,1)}.`);
     explain.push({
       title:"Метаболический алкалоз",
       why:`SBE = ${fixed(SBE,1)} > 2 и/или HCO₃⁻ = ${fixed(HCO3,1)} > 26.`,
       formula:`SBE > 2 ммоль/л\nHCO₃⁻ > 26 ммоль/л`,
-      details:`Избыток оснований → алкалоз. Компенсация: гиповентиляция (рост pCO₂).`,
-      note:`Причины: рвота, диуретики, гипокалиемия, гиперальдостеронизм, избыток HCO₃⁻.`
+      details:`Избыток оснований.`,
+      note:`Причины: рвота, диуретики, гипокалиемия, гиперальдостеронизм.`
     });
   }
 
+  // === Компенсация ===
   let winterInfo = "—";
   let compCheck = [];
   if (metAcid) {
     const lo = 1.5*HCO3 + 8 - 2, hi = 1.5*HCO3 + 8 + 2;
-    winterInfo = `Winter's: ожидаемый pCO₂ = 1.5×${fixed(HCO3,1)} + 8 ± 2 = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
+    winterInfo = `Winter's: ожидаемый pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
     if (pCO2 > hi) compCheck.push(`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)} → сопутствующий респ. ацидоз`);
     else if (pCO2 < lo) compCheck.push(`pCO₂ ${fixed(pCO2,1)} < ${fixed(lo,1)} → сопутствующий респ. алкалоз`);
     else compCheck.push(`pCO₂ в норме компенсации`);
@@ -309,6 +344,7 @@ function calc(){
     compCheck.push(pCO2 > hi ? `pCO₂ выше → респ. ацидоз` : pCO2 < lo ? `pCO₂ ниже → респ. алкалоз` : `компенсация адекватна`);
   }
 
+  // === Оксигенация ===
   let oxyTag = PF > 300 ? `<span class="tag ok">P/F = ${fixed(PF,0)} — норма</span>`
     : PF >= 200 ? `<span class="tag warn">P/F = ${fixed(PF,0)} — ОРДС лёгкая</span>`
     : PF >= 100 ? `<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС средняя</span>`
@@ -320,9 +356,25 @@ function calc(){
     : n === 2 ? "Смешанное нарушение КОС"
     : n === 1 ? "Изолированное нарушение КОС" : "";
 
-  let finalHTML = diagnoses.length > 0
-    ? `<b>${multi}</b><ul>${diagnoses.map((d,i)=>`<li><b>${i+1}. ${d.name}.</b> ${d.detail}</li>`).join('')}</ul>`
-    : "<b>КОС в пределах нормы</b>";
+  // === ИТОГ ===
+  let finalHTML = "";
+  if (allNormal && diagnoses.length === 0) {
+    finalHTML = "<b>Расстройств КОС нет.</b> pH, pCO₂, HCO₃⁻, SBE — в пределах нормы.";
+  } else if (diagnoses.length > 0) {
+    finalHTML = `<b>${multi}</b><ul>${diagnoses.map((d,i)=>`<li><b>${i+1}. ${d.name}.</b> ${d.detail}</li>`).join('')}</ul>`;
+  } else {
+    finalHTML = "<b>Расстройств КОС нет.</b>";
+  }
+
+  // === ДОПОЛНИТЕЛЬНЫЕ НАХОДКИ ===
+  let findingsHTML = "";
+  if (findings.length > 0) {
+    findingsHTML = `<div class="findings"><h3>⚠ Дополнительные находки (не КОС)</h3><ul>`;
+    findings.forEach(f=>{
+      findingsHTML += `<li><b>${f.name}.</b> ${f.detail}<br><i>Возможные причины:</i><ul>${f.causes.map(c=>`<li>${c}</li>`).join('')}</ul><b>Рекомендовано:</b> ${f.recommendation}</li>`;
+    });
+    findingsHTML += `</ul></div>`;
+  }
 
   document.getElementById('diagnosis').innerHTML = `
     <h3>Ход рассуждения</h3>
@@ -333,8 +385,10 @@ function calc(){
     <h3>Оксигенация</h3>
     <div>${oxyTag}</div>
     <div class="final">${finalHTML}</div>
+    ${findingsHTML}
   `;
 
+  // === ПОЯСНЕНИЯ ===
   let explHTML = `<h3>Пояснения к диагнозу (формулы и логика)</h3>`;
   if (explain.length === 0) {
     explHTML += `<div class="note">Нарушений не выявлено — все показатели в норме.</div>`;
@@ -351,9 +405,10 @@ function calc(){
   }
   document.getElementById('explanations').innerHTML = explHTML;
 
+  // === ТЕКСТ ДЛЯ КОПИРОВАНИЯ ===
   const stripTags = (s)=> s.replace(/<[^>]+>/g,'');
   const lines = [];
-  lines.push("═══ ICU NAVIGATOR — ОТЧЁТ ═══");
+  lines.push("═══ ICU NAVIGATOR v7 — ОТЧЁТ ═══");
   lines.push("");
   lines.push("── ВХОДНЫЕ ДАННЫЕ ──");
   lines.push(`pH: ${fixed(pH,3)}   pCO₂: ${fixed(pCO2,1)}   HCO₃⁻: ${fixed(HCO3,1)}   SBE: ${fixed(SBE,1)}`);
@@ -375,14 +430,25 @@ function calc(){
   lines.push(stripTags(oxyTag));
   lines.push("");
   lines.push("── ДИАГНОЗ ──");
-  if (diagnoses.length === 0) {
-    lines.push("КОС в пределах нормы");
+  if (allNormal && diagnoses.length === 0) {
+    lines.push("Расстройств КОС нет.");
+  } else if (diagnoses.length === 0) {
+    lines.push("Расстройств КОС нет.");
   } else {
     lines.push(multi);
     diagnoses.forEach((d,i)=>lines.push(`${i+1}. ${d.name}. ${stripTags(d.detail)}`));
   }
+  if (findings.length > 0) {
+    lines.push("");
+    lines.push("── ДОПОЛНИТЕЛЬНЫЕ НАХОДКИ ──");
+    findings.forEach((f,i)=>{
+      lines.push(`${i+1}. ${f.name}. ${stripTags(f.detail)}`);
+      lines.push(`   Причины: ${f.causes.join('; ')}`);
+      lines.push(`   Рекомендовано: ${stripTags(f.recommendation)}`);
+    });
+  }
   lines.push("");
-  lines.push("── ПОЯСНЕНИЯ (формулы) ──");
+  lines.push("── ПОЯСНЕНИЯ ──");
   explain.forEach((e,i)=>{
     lines.push(`${i+1}. ${e.title}`);
     lines.push(`   Почему: ${stripTags(e.why)}`);
@@ -391,7 +457,7 @@ function calc(){
     lines.push(`   Note: ${stripTags(e.note)}`);
   });
   lines.push("");
-  lines.push("Сформировано: ICU Navigator v6");
+  lines.push("Сформировано: ICU Navigator v7");
 
   lastReport = lines.join("\n");
 
@@ -413,9 +479,9 @@ function copyResult(){
   try { ok = document.execCommand("copy"); } catch(e) { ok = false; }
   document.body.removeChild(ta);
   if (!ok && navigator.clipboard) {
-    navigator.clipboard.writeText(lastReport).then(()=>showToast()).catch(()=>showToast("Не удалось скопировать"));
+    navigator.clipboard.writeText(lastReport).then(()=>showToast()).catch(()=>showToast("Не удалось"));
   } else {
-    showToast(ok ? "✓ Скопировано" : "Не удалось скопировать");
+    showToast(ok ? "✓ Скопировано" : "Не удалось");
   }
 }
 function showToast(msg){
