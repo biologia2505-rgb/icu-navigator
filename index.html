@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ICU Navigator v9.2</title>
+<title>ICU Navigator v9.3</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root{
@@ -51,6 +51,8 @@
   .findings li{margin:8px 0;font-size:13.5px;}
   .alert{margin-top:12px;padding:12px 14px;background:#fff3e0;border-left:4px solid var(--warn);border-radius:8px;font-size:13.5px;color:#5d4037;}
   .alert b{color:var(--warn);}
+  .rec{margin-top:12px;padding:12px 14px;background:#e8f5e9;border-left:4px solid var(--ok);border-radius:8px;font-size:13.5px;color:#1b5e20;}
+  .rec b{color:var(--ok);}
   .expl{margin-top:16px;padding:14px;background:#fbfcfe;border-radius:9px;border:1px solid var(--border);}
   .expl h3{font-size:13px;color:var(--acc);margin:0 0 10px;text-transform:uppercase;letter-spacing:.5px;}
   .expl details{margin:8px 0;padding:10px 12px;background:#fff;border-radius:8px;border:1px solid var(--border);font-size:13.5px;}
@@ -69,8 +71,8 @@
 </style>
 </head>
 <body>
-<h1>🧭 ICU Navigator v9.2</h1>
-<div class="sub">КОС · Стюарт · Winter's · SBE-разбивка · ΔΔ · гиперхлоремия · гипоальбуминемия</div>
+<h1>🧭 ICU Navigator v9.3</h1>
+<div class="sub">КОС · Стюарт · Winter's · SBE-разбивка · ΔΔ · гиперхлоремия · гипоальбуминемия · ОРДС</div>
 
 <div class="grid">
   <div class="card">
@@ -167,11 +169,17 @@ function calc(){
   const SBE_UA  = SBE - SBE_FW - SBE_Cl - SBE_Alb;
   const deltaAP_from_SBE = -SBE_UA;
 
-  // === ГИПЕРХЛОРЕМИЯ: АБСОЛЮТНАЯ + ОТНОСИТЕЛЬНАЯ ===
+  // === ПРОВЕРКА КОНСИСТЕНТНОСТИ SBE и HCO₃⁻ ===
+  // При HCO₃ 24 → SBE ≈ 0; при HCO₃ 37.4 → SBE ≈ +13.4
+  // Грубая оценка: SBE_ожид ≈ HCO₃ − 24
+  const SBE_expected = HCO3 - 24;
+  const SBEmismatch = Math.abs(SBE - SBE_expected) > 5;
+
+  // === ГИПЕРХЛОРЕМИЯ ===
   const NaMinusCl = Na - Cl;
   const NaClRatio = Na / Cl;
-  const absHyperCl = NaMinusCl < 38;         // абсолютная
-  const relHyperCl = NaClRatio < 1.37;       // относительная (Na/Cl)
+  const absHyperCl = NaMinusCl < 38;
+  const relHyperCl = NaClRatio < 1.37;
   const hyperClType = absHyperCl && relHyperCl ? "абсолютная + относительная"
     : absHyperCl ? "абсолютная"
     : relHyperCl ? "относительная"
@@ -180,10 +188,13 @@ function calc(){
   // === ГИПОАЛЬБУМИНЕМИЯ (порог 35) ===
   const hypoAlb = Alb < 35;
 
-  // === ГИПОНАТРИЕМИЯ (искажение SBE_Cl) ===
+  // === ГИПОНАТРИЕМИЯ ===
   const hypoNa = Na < 135;
 
-  // === HCO3 ПОГРАНИЧНАЯ ЗОНА (22–24) + HAGMA ===
+  // === ГИПОКАЛИЕМИЯ ===
+  const hypoK = K < 3.5;
+
+  // === HCO3 ПОГРАНИЧНАЯ ЗОНА ===
   const borderlineHCO3 = HCO3 >= 22 && HCO3 < 24 && AGcorr > 14;
 
   const SIDa = NaCorr + K + Mg - Cl - Lac;
@@ -213,7 +224,8 @@ function calc(){
     ["Na − Cl разница", fixed(NaMinusCl) + (absHyperCl ? " (< 38 — абс. гиперхлоремия)" : " (норма ≥ 38)")],
     ["Na/Cl отношение", fixed(NaClRatio,3) + (relHyperCl ? " (< 1.37 — отн. гиперхлоремия)" : " (норма ≥ 1.37)")],
     ["— — — SBE-разбивка — — —", ""],
-    ["SBE (входной)", fixed(SBE,1)],
+    ["SBE (входной)", fixed(SBE,1) + (SBEmismatch ? " ⚠ несоответствие HCO₃" : "")],
+    ["SBE_ожид ≈ HCO₃ − 24", fixed(SBE_expected,1)],
     ["SBE_FW (эффект воды)", fixed(SBE_FW)],
     ["SBE_Cl (эффект хлора)", fixed(SBE_Cl) + (hypoNa ? " ⚠ (искажена при Na<135)" : "")],
     ["SBE_Alb (эффект альбумина)", fixed(SBE_Alb)],
@@ -234,10 +246,19 @@ function calc(){
   const compensations = [];
   const findings = [];
   const alerts = [];
+  const recs = [];
   const explain = [];
 
   let primary = pH < 7.35 ? "acidemia" : pH > 7.45 ? "alkalemia" : "normal";
   logs.push(`<b>Шаг 1. Вектор pH:</b> ${fixed(pH,3)} → ${primary==='acidemia'?'ацидемия':primary==='alkalemia'?'алкалемия':'норма'}.`);
+
+  // Проверка консистентности SBE
+  if (SBEmismatch) {
+    alerts.push(`<b>⚠ Несоответствие SBE и HCO₃⁻.</b><br>
+      HCO₃⁻ = ${fixed(HCO3,1)}, при этом ожидаемый SBE ≈ ${fixed(SBE_expected,1)} (HCO₃ − 24).<br>
+      Введённый SBE = ${fixed(SBE,1)}. Разница = ${fixed(Math.abs(SBE - SBE_expected),1)} (> 5).<br>
+      <b>Проверьте ввод SBE</b> — возможно, ошибка лаборатории или опечатка.`);
+  }
 
   // Аномалия АП
   if (AG < 8 || AGcorr < 8) {
@@ -285,25 +306,43 @@ function calc(){
   // Гипоальбуминемия (порог 35)
   if (hypoAlb) {
     const SBE_corr_norm = SBE + 0.25 * (40 - Alb);
-    alerts.push(`<b>⚠ Гипоальбуминемия (Alb = ${fixed(Alb,1)} г/л) маскирует тяжесть метаболического ацидоза.</b><br>
+    alerts.push(`<b>⚠ Гипоальбуминемия (Alb = ${fixed(Alb,1)} г/л < 35) маскирует тяжесть метаболического ацидоза.</b><br>
       Реальный SBE при нормальном альбумине (40 г/л) был бы ≈ <b>${fixed(SBE_corr_norm,1)}</b> ммоль/л.<br>
       <b>ВНИМАНИЕ:</b> инфузия альбумина в данном случае <b>усугубит ацидоз</b> (альбумин — слабая кислота).`);
     logs.push(`<b>Гипоальбуминемия:</b> Alb = ${fixed(Alb,1)} < 35 → SBE маскирует ацидоз (реальный ≈ ${fixed(SBE_corr_norm,1)}).`);
   }
 
-  // Гипонатриемия — искажение SBE_Cl
+  // Гипонатриемия
   if (hypoNa) {
     alerts.push(`<b>⚠ Гипонатриемия (Na = ${fixed(Na,1)} ммоль/л < 135).</b><br>
       Формула <code>SBE_Cl = 104 − Cl×140/Na</code> использует фиксированный Na = 140 в числителе. 
-      При Na < 135 результат <b>искажён</b> — используйте <b>Na/Cl отношение</b> и <b>Na−Cl разницу</b> как основные критерии гиперхлоремии.`);
+      При Na < 135 результат <b>искажён</b> — используйте <b>Na/Cl отношение</b> и <b>Na−Cl разницу</b>.`);
+  }
+
+  // Гипокалиемия
+  if (hypoK) {
+    findings.push({
+      name:`Гипокалиемия (K = ${fixed(K,1)} < 3.5)`,
+      detail:`K⁺ = ${fixed(K,1)} ммоль/л. Способствует метаболическому алкалозу (K⁺ и H⁺ обмениваются через мембраны: гипокалиемия → выход H⁺ в клетку → алкалоз плазмы).`,
+      causes:[
+        "Рвота, назогастральная аспирация",
+        "Диуретики (петлевые, тиазиды)",
+        "Гиперальдостеронизм, синдром Кушинга",
+        "Почечный канальцевый ацидоз I типа",
+        "Тиреотоксикоз",
+        "Инсулинотерапия, β₂-агонисты"
+      ],
+      recommendation:"Восполнение K⁺ (внутривенно или перорально). Одновременно корригировать Mg²⁺ (гипомагниемия рефрактерна к K⁺). Проверить альдостерон, ренин."
+    });
+    logs.push(`<b>Гипокалиемия:</b> K = ${fixed(K,1)} < 3.5 → способствует мет. алкалозу.`);
   }
 
   // Пограничный HCO3 + HAGMA
   if (borderlineHCO3) {
     alerts.push(`<b>⚠ HCO₃⁻ = ${fixed(HCO3,1)} (пограничная норма 22–24) при АП_корр = ${fixed(AGcorr)} (>14).</b><br>
-      Возможен <b>смешанный метаболический ацидоз (HAGMA + NAGMA)</b>. ΔΔ не применимо (HCO₃⁻ ≥ 22).<br>
-      Рекомендация: при снижении HCO₃⁻ < 22 — пересчитать ΔΔ. Проверить анионный gap мочи (UAG) для исключения RTA.`);
-    logs.push(`<b>Пограничный HCO₃⁻:</b> ${fixed(HCO3,1)} (22–24) при АП_корр = ${fixed(AGcorr)} (>14) → возможен смешанный ацидоз.`);
+      Возможен <b>смешанный метаболический ацидоз (HAGMA + NAGMA)</b>. ΔΔ не применимо.<br>
+      Рекомендация: при снижении HCO₃⁻ < 22 — пересчитать ΔΔ. Проверить анионный gap мочи (UAG).`);
+    logs.push(`<b>Пограничный HCO₃⁻:</b> ${fixed(HCO3,1)} при АП_корр = ${fixed(AGcorr)} (>14) → возможен смешанный ацидоз.`);
   }
 
   const respAcid = pCO2 > 45;
@@ -319,9 +358,16 @@ function calc(){
     let mode = chronicMode;
     if (chronicMode === 'auto') mode = (HCO3 > 28) ? 'chronic' : 'acute';
     const expHCO3 = mode === 'acute' ? 24 + 0.1*(pCO2-40) : 24 + 0.35*(pCO2-40);
+    // Респираторный ацидоз компенсаторный, если есть мет. алкалоз
     if (metAlk) {
-      respIsCompensatory = true;
-      compensations.push(`Респираторный ацидоз — компенсаторный ответ на метаболический алкалоз. Ожидаемый HCO₃⁻ = ${fixed(expHCO3,1)}.`);
+      const lo = 0.7*HCO3 + 21 - 2, hi = 0.7*HCO3 + 21 + 2;
+      if (pCO2 >= lo && pCO2 <= hi) {
+        respIsCompensatory = true;
+        compensations.push(`Респираторный ацидоз — компенсаторный ответ на метаболический алкалоз (ожидаемый pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)}, фактический = ${fixed(pCO2,1)}).`);
+      } else if (pCO2 > hi) {
+        respDiagName = "Сопутствующий респираторный ацидоз (избыточный)";
+        respDiagDetail = `pCO₂ = ${fixed(pCO2,1)} > ожидаемого (${fixed(hi,1)}).`;
+      }
     } else {
       respDiagName = "Респираторный ацидоз" + (mode==='chronic'?" (хронический)":"");
       respDiagDetail = `pCO₂ = ${fixed(pCO2,1)} мм рт.ст. (>45), pH = ${fixed(pH,3)}.`;
@@ -387,7 +433,8 @@ function calc(){
     logs.push(`<b>HAGMA:</b> АП_корр = ${fixed(AGcorr)} ≤ 14 — норма.`);
   }
 
-  if (deltaAP_from_SBE > 2 && AGcorr <= 14) {
+  // SBE_UA — только при HCO3 < 24 (есть мет. ацидоз)
+  if (deltaAP_from_SBE > 2 && AGcorr <= 14 && HCO3 < 24) {
     diagnoses.push({name:"Метаболический ацидоз по SBE_UA / ΔАП",
       detail:`ΔАП = ${fixed(deltaAP_from_SBE)} ммоль/л (>2).`});
     logs.push(`<b>SBE_UA → ΔАП:</b> ΔАП = ${fixed(deltaAP_from_SBE)} > 2.`);
@@ -430,7 +477,7 @@ function calc(){
     } else if (deltaDelta >= 1.9 && deltaDelta <= 2.1) {
       alerts.push(`<b>⚠ ΔΔ = ${fixed(deltaDelta,2)} — пограничное значение (норма 1–2).</b><br>
         Возможен <b>сопутствующий метаболический алкалоз</b>. Проверьте анамнез: рвота, диуретики, гипокалиемия, гиперальдостеронизм.`);
-      logs.push(`<b>ΔΔ:</b> ${fixed(deltaDelta,2)} — пограничное значение (1.9–2.1). Возможен мет. алкалоз.`);
+      logs.push(`<b>ΔΔ:</b> ${fixed(deltaDelta,2)} — пограничное значение. Возможен мет. алкалоз.`);
     } else {
       logs.push(`<b>ΔΔ:</b> ${fixed(deltaDelta,2)} (1–2) — изолированный HAGMA.`);
     }
@@ -438,19 +485,21 @@ function calc(){
     logs.push(`<b>ΔΔ:</b> не применимо.`);
   }
 
-  if (metAlk && !respIsCompensatory && !diagnoses.some(d=>d.name.includes("алкалоз"))) {
+  // === МЕТАБОЛИЧЕСКИЙ АЛКАЛОЗ — ВСЕГДА В ДИАГНОЗ (баг исправлен) ===
+  if (metAlk && !diagnoses.some(d=>d.name.includes("Метаболический алкалоз"))) {
     diagnoses.push({name:"Метаболический алкалоз",
       detail:`SBE = ${fixed(SBE,1)} (>2) и/или HCO₃⁻ = ${fixed(HCO3,1)} (>26).`});
-    logs.push(`<b>Метаболический алкалоз:</b> SBE = ${fixed(SBE,1)}.`);
+    logs.push(`<b>Метаболический алкалоз:</b> SBE = ${fixed(SBE,1)} > 2, HCO₃⁻ = ${fixed(HCO3,1)}.`);
     explain.push({
       title:"Метаболический алкалоз",
       why:`SBE = ${fixed(SBE,1)} > 2 и/или HCO₃⁻ = ${fixed(HCO3,1)} > 26.`,
-      formula:`SBE > 2\nHCO₃⁻ > 26`,
+      formula:`SBE > 2 ммоль/л\nHCO₃⁻ > 26 ммоль/л`,
       details:`Избыток оснований.`,
-      note:`Причины: рвота, диуретики, гипокалиемия, гиперальдостеронизм.`
+      note:`Причины: рвота, диуретики, гипокалиемия, гиперальдостеронизм, избыток HCO₃⁻.`
     });
   }
 
+  // SIG интерпретация
   let sigHTML = "";
   if (SIG < 0) {
     sigHTML = `SIG = ${fixed(SIG)} (<0) → <b>аномалия</b>: проверить лабораторию, гиперпротеинемия, гиперкальциемия, гипермагниемия.`;
@@ -461,6 +510,7 @@ function calc(){
     sigHTML = `SIG = ${fixed(SIG)} (>2) → накопление неизмеряемых анионов (лактат, кетоны, сульфаты, цитрат, D-лактат).`;
   }
 
+  // Компенсация
   let winterInfo = "—";
   let compCheck = [];
   if (metAcid) {
@@ -471,14 +521,30 @@ function calc(){
     else compCheck.push(`✅ pCO₂ в норме компенсации`);
   } else if (metAlk) {
     const lo = 0.7*HCO3 + 21 - 2, hi = 0.7*HCO3 + 21 + 2;
-    winterInfo = `Ожидаемый pCO₂ при мет. алкалозе = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
-    compCheck.push(pCO2 > hi ? `pCO₂ выше → респ. ацидоз` : pCO2 < lo ? `pCO₂ ниже → респ. алкалоз` : `✅ компенсация адекватна`);
+    winterInfo = `Ожидаемый pCO₂ при мет. алкалозе = 0.7×${fixed(HCO3,1)} + 21 ± 2 = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
+    if (pCO2 > hi) compCheck.push(`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)} → сопутствующий респ. ацидоз (избыточный)`);
+    else if (pCO2 < lo) compCheck.push(`pCO₂ ${fixed(pCO2,1)} < ${fixed(lo,1)} → сопутствующий респ. алкалоз`);
+    else compCheck.push(`✅ pCO₂ в норме компенсации`);
   }
 
+  // Оксигенация + ОРДС-рекомендации
   let oxyTag = PF > 300 ? `<span class="tag ok">P/F = ${fixed(PF,0)} — норма</span>`
-    : PF >= 200 ? `<span class="tag warn">P/F = ${fixed(PF,0)} — ОРДС лёгкая</span>`
-    : PF >= 100 ? `<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС средняя</span>`
-    : `<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС тяжёлая</span>`;
+    : PF >= 200 ? `<span class="tag warn">P/F = ${fixed(PF,0)} — ОРДС лёгкая (200–300)</span>`
+    : PF >= 100 ? `<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС средняя (100–200)</span>`
+    : `<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС тяжёлая (<100)</span>`;
+
+  if (PF <= 300) {
+    let rec = `<b>Рекомендовано при ОРДС (P/F = ${fixed(PF,0)}):</b><ul style="margin:6px 0 6px 20px;">`;
+    rec += `<li>ИВЛ с <b>PEEP ≥ 8 см H₂O</b>, дыхательный объём 6 мл/кг идеальной массы</li>`;
+    rec += `<li>Плато-давление < 30 см H₂O, движущее давление < 15 см H₂O</li>`;
+    rec += `<li><b>Прон-позиция</b> ≥ 12 часов/сутки при P/F < 150</li>`;
+    rec += `<li>Ограничение инфузии, отрицательный баланс</li>`;
+    rec += `<li>Миорелаксация при асинхронии (только при P/F < 150)</li>`;
+    rec += `<li>Рассмотреть ЭКМО при P/F < 80</li>`;
+    rec += `</ul>`;
+    recs.push(rec);
+    logs.push(`<b>ОРДС:</b> P/F = ${fixed(PF,0)} → ${PF>=200?'лёгкая':PF>=100?'средняя':'тяжёлая'} степень.`);
+  }
 
   const n = diagnoses.length;
   let multi = "";
@@ -510,10 +576,15 @@ function calc(){
     alertsHTML = alerts.map(a=>`<div class="alert">${a}</div>`).join('');
   }
 
+  let recsHTML = "";
+  if (recs.length > 0) {
+    recsHTML = recs.map(r=>`<div class="rec">${r}</div>`).join('');
+  }
+
   document.getElementById('diagnosis').innerHTML = `
     <h3>Ход рассуждения</h3>
     <ul>${logs.map(l=>`<li>${l}</li>`).join('')}</ul>
-    <h3>Компенсация (Winter's)</h3>
+    <h3>Компенсация</h3>
     <div>${winterInfo}</div>
     <ul>${compCheck.map(c=>`<li>${c}</li>`).join('')}</ul>
     ${compensations.length > 0 ? `<h3>Компенсаторные сдвиги</h3><ul>${compensations.map(c=>`<li>${c}</li>`).join('')}</ul>` : ''}
@@ -524,6 +595,7 @@ function calc(){
     <div class="final">${finalHTML}</div>
     ${findingsHTML}
     ${alertsHTML}
+    ${recsHTML}
   `;
 
   let explHTML = `<h3>Пояснения к диагнозу (формулы и логика)</h3>`;
@@ -591,7 +663,7 @@ function calc(){
 
   const stripTags = (s)=> s.replace(/<[^>]+>/g,'');
   const lines = [];
-  lines.push("═══ ICU NAVIGATOR v9.2 — ОТЧЁТ ═══");
+  lines.push("═══ ICU NAVIGATOR v9.3 — ОТЧЁТ ═══");
   lines.push("");
   lines.push("── ВХОДНЫЕ ДАННЫЕ ──");
   lines.push(`pH: ${fixed(pH,3)}   pCO₂: ${fixed(pCO2,1)}   HCO₃⁻: ${fixed(HCO3,1)}   SBE: ${fixed(SBE,1)}`);
@@ -647,6 +719,11 @@ function calc(){
     lines.push("── ВНИМАНИЕ ──");
     alerts.forEach(a=>lines.push(stripTags(a)));
   }
+  if (recs.length > 0) {
+    lines.push("");
+    lines.push("── РЕКОМЕНДАЦИИ ──");
+    recs.forEach(r=>lines.push(stripTags(r)));
+  }
   lines.push("");
   lines.push("── ПОЯСНЕНИЯ ──");
   explain.forEach((e,i)=>{
@@ -657,7 +734,7 @@ function calc(){
     lines.push(`   Note: ${stripTags(e.note)}`);
   });
   lines.push("");
-  lines.push("Сформировано: ICU Navigator v9.2");
+  lines.push("Сформировано: ICU Navigator v9.3");
 
   lastReport = lines.join("\n");
 
@@ -736,10 +813,7 @@ function drawSiggaard(pH,pCO2){
     data: fillHigh.concat(fillHighBase),
     borderColor: 'transparent',
     backgroundColor: 'rgba(198,40,40,.08)',
-    fill: true,
-    pointRadius: 0,
-    tension: 0,
-    order: 20
+    fill: true, pointRadius: 0, tension: 0, order: 20
   });
 
   const fillLowBase = phRange.map(p=>({x:p, y:pco2FromHCO3(15, p)}));
@@ -749,10 +823,7 @@ function drawSiggaard(pH,pCO2){
     data: fillLowBase.concat(fillLowTop),
     borderColor: 'transparent',
     backgroundColor: 'rgba(230,81,0,.08)',
-    fill: true,
-    pointRadius: 0,
-    tension: 0,
-    order: 21
+    fill: true, pointRadius: 0, tension: 0, order: 21
   });
 
   hco3List.forEach((h, i)=>{
@@ -763,9 +834,7 @@ function drawSiggaard(pH,pCO2){
       borderColor: isNormal ? '#2e7d32' : colors[i],
       borderWidth: isNormal ? 3 : 1.6,
       borderDash: isNormal ? [] : [5,4],
-      pointRadius: 0,
-      tension: 0.05,
-      fill: false,
+      pointRadius: 0, tension: 0.05, fill: false,
       order: isNormal ? 1 : 5
     });
   });
@@ -773,42 +842,29 @@ function drawSiggaard(pH,pCO2){
   datasets.push({
     label: 'Пациент',
     data: [{x: pH, y: pCO2}],
-    borderColor: '#c62828',
-    backgroundColor: '#c62828',
-    pointRadius: 11,
-    pointBorderColor: '#fff',
-    pointBorderWidth: 2.5,
-    showLine: false,
-    order: 0
+    borderColor: '#c62828', backgroundColor: '#c62828',
+    pointRadius: 11, pointBorderColor: '#fff', pointBorderWidth: 2.5,
+    showLine: false, order: 0
   });
 
   datasets.push({
     label: '— проекция на pH —',
     data: [{x: pH, y: pCO2}, {x: pH, y: 0}],
-    borderColor: 'rgba(198,40,40,.4)',
-    borderWidth: 1.2,
-    borderDash: [4,3],
-    pointRadius: 0,
-    fill: false,
-    order: 2
+    borderColor: 'rgba(198,40,40,.4)', borderWidth: 1.2, borderDash: [4,3],
+    pointRadius: 0, fill: false, order: 2
   });
   datasets.push({
     label: '— проекция на pCO₂ —',
     data: [{x: pH, y: pCO2}, {x: 7.0, y: pCO2}],
-    borderColor: 'rgba(198,40,40,.4)',
-    borderWidth: 1.2,
-    borderDash: [4,3],
-    pointRadius: 0,
-    fill: false,
-    order: 2
+    borderColor: 'rgba(198,40,40,.4)', borderWidth: 1.2, borderDash: [4,3],
+    pointRadius: 0, fill: false, order: 2
   });
 
   sChart = new Chart(ctx, {
     type:'line',
     data:{ datasets },
     options:{
-      responsive:true,
-      maintainAspectRatio:false,
+      responsive:true, maintainAspectRatio:false,
       layout:{padding:{top:40, right:70}},
       interaction:{mode:'nearest', intersect:false},
       plugins:{
@@ -839,8 +895,7 @@ function drawSiggaard(pH,pCO2){
           grid:{color:'#e4ebf3'}
         },
         y:{
-          type:'linear', min:0, max:120,
-          position:'left',
+          type:'linear', min:0, max:120, position:'left',
           title:{display:true, text:'pCO₂ (мм рт.ст.)   —   ось слева', color:'#1a2332', font:{size:14, weight:'bold'}, padding:{right:10}},
           ticks:{color:'#607080', font:{size:12}, stepSize:20},
           grid:{color:'#e4ebf3'}
@@ -862,7 +917,6 @@ function drawSiggaard(pH,pCO2){
         ctx.fillStyle = '#607080';
         ctx.textAlign = 'center';
         for (let v = 0; v <= 120; v += 20) {
-          const y = yScale.getPixelForValue(v);
           if (v % 40 === 0) {
             ctx.fillText(v.toString(), left + 15, top - 6);
             ctx.beginPath();
