@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v17.0 Smooth Flow</title>
+<title>ICU Navigator v17.1 Fixed Flow</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
@@ -60,7 +60,7 @@ body {
   transition: background 0.5s ease, color 0.4s ease;
 }
 
-/* Эффектное интро */
+/* Интро */
 #intro-screen {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -78,7 +78,7 @@ body {
   animation: fadeOutIntro 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
   pointer-events: none;
 }
-#intro-screen h1 { font-size: 38px; margin: 0 0 10px; font-weight: 700; letter-spacing: -0.5px; text-shadow: 0 4px 25px rgba(0,0,0,0.6); }
+#intro-screen h1 { font-size: 38px; margin: 0 0 10px; font-weight: 700; text-shadow: 0 4px 25px rgba(0,0,0,0.6); }
 #intro-screen p { font-size: 15px; margin: 0; opacity: 0.85; font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; }
 @keyframes fadeOutIntro {
   to { opacity: 0; visibility: hidden; }
@@ -114,17 +114,15 @@ body {
 }
 .tab.active { background: var(--acc); color: #fff; box-shadow: 0 10px 25px var(--acc-glow); transform: translateY(-1px); }
 
-/* Идеально плавные переходы между вкладками */
+/* Идеальные бесшовные панели без скачков высоты */
 .panel {
   display: none;
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.3s ease;
 }
 .panel.active {
   display: block;
   opacity: 1;
-  transform: translateY(0);
 }
 
 /* Карточки */
@@ -255,7 +253,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <div class="container">
 <div class="header">
 <div>
-  <h1>🧭 ICU Navigator <span style="font-size:12px;background:var(--okbg);color:var(--ok);padding:5px 12px;border-radius:20px;vertical-align:middle">v17.0 Smooth</span></h1>
+  <h1>🧭 ICU Navigator <span style="font-size:12px;background:var(--okbg);color:var(--ok);padding:5px 12px;border-radius:20px;vertical-align:middle">v17.1 Fixed</span></h1>
   <div class="sub">Клинический экспертный комплекс анализа КОС</div>
 </div>
 <div class="header-actions">
@@ -377,8 +375,7 @@ function switchTab(n){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   const p = document.getElementById('panel-'+n);
   if(p) {
-    p.style.display = 'block';
-    setTimeout(()=>p.classList.add('active'), 10);
+    p.classList.add('active');
   }
   if(n==='charts'){ setTimeout(()=>{ if(gChart)gChart.resize(); if(sChart)sChart.resize(); }, 50); }
 }
@@ -553,7 +550,7 @@ function calc(){
     </tbody></table></details>`;
 
   const strip=s=>s.replace(/<[^>]+>/g,'');
-  const L=["═══ ICU NAVIGATOR v17.0 SMOOTH ═══",""];
+  const L=["═══ ICU NAVIGATOR v17.1 FIXED ═══",""];
   if(notes){ L.push("ЗАМЕТКИ:", notes, ""); }
   L.push("ДИАГНОЗ:", strip(finalHTML), "", "ПАРАМЕТРЫ:");
   rows.forEach(r=>{ if(r[1]&&!r[0].startsWith('—')) L.push(`${r[0]}: ${r[1]}`); });
