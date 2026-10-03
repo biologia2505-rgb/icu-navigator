@@ -3,115 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v10.1 Fixed</title>
+<title>ICU Navigator v10.5 Pro</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-:root{--bg:#f4f7fb;--card:#fff;--acc:#1e6fb8;--acc2:#0d4a80;--ok:#2e7d32;--okbg:#e8f5e9;--warn:#e65100;--warnbg:#fff3e0;--bad:#c62828;--badbg:#ffebee;--txt:#1a2332;--mut:#607080;--border:#d8e0ea;--shadow:0 1px 3px rgba(30,111,184,.06);}
-[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--acc:#4fc3f7;--acc2:#81d4fa;--ok:#66bb6a;--okbg:#1e3a24;--warn:#ffb74d;--warnbg:#3a2e1a;--bad:#ef5350;--badbg:#3a1e1e;--txt:#e6edf3;--mut:#8b949e;--border:#2a333d;--shadow:0 1px 3px rgba(0,0,0,.3);}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --acc: #0284c7;
+  --acc-hover: #0369a1;
+  --acc2: #0f172a;
+  --ok: #16a34a;
+  --okbg: #dcfce7;
+  --warn: #d97706;
+  --warnbg: #fef3c7;
+  --bad: #dc2626;
+  --badbg: #fee2e2;
+  --txt: #0f172a;
+  --mut: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --radius: 14px;
+}
+
+[data-theme="dark"]{
+  --bg: #090d16;
+  --card: #111827;
+  --acc: #38bdf8;
+  --acc-hover: #0ea5e9;
+  --acc2: #f8fafc;
+  --ok: #4ade80;
+  --okbg: rgba(22, 163, 74, 0.15);
+  --warn: #fbbf24;
+  --warnbg: rgba(217, 119, 6, 0.15);
+  --bad: #f87171;
+  --badbg: rgba(220, 38, 38, 0.15);
+  --txt: #f1f5f9;
+  --mut: #94a3b8;
+  --border: #1e293b;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,sans-serif;transition:.2s}
-.container{max-width:1400px;margin:0 auto;padding:16px}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
-.header h1{font-size:22px;margin:0;color:var(--acc2)}
-.header .sub{color:var(--mut);font-size:12px}
-.header-actions{display:flex;gap:6px}
-.icon-btn{background:var(--card);border:1px solid var(--border);color:var(--txt);padding:8px 12px;border-radius:8px;cursor:pointer;font-size:15px}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;transition:background .3s, color .3s;padding-bottom: 40px;}
+.container{max-width:1300px;margin:0 auto;padding:20px 16px}
+
+/* Шапка */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;background:var(--card);padding:16px 20px;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow)}
+.header h1{font-size:20px;margin:0;color:var(--acc2);font-weight:700;display:flex;align-items:center;gap:8px}
+.header .sub{color:var(--mut);font-size:12px;margin-top:2px}
+.header-actions{display:flex;gap:8px}
+.icon-btn{background:var(--bg);border:1px solid var(--border);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.2s}
 .icon-btn:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
-.tabs{display:flex;gap:4px;margin-bottom:14px;background:var(--card);padding:5px;border-radius:10px;border:1px solid var(--border);overflow-x:auto}
-.tab{flex:1;min-width:80px;padding:10px 12px;text-align:center;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600;color:var(--mut);background:transparent;border:none;font-family:inherit}
-.tab.active{background:var(--acc);color:#fff}
+
+/* Вкладки */
+.tabs{display:flex;gap:6px;margin-bottom:20px;background:var(--card);padding:6px;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow-x:auto}
+.tab{flex:1;min-width:100px;padding:10px 16px;text-align:center;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--mut);background:transparent;border:none;font-family:inherit;transition:.2s}
+.tab.active{background:var(--acc);color:#fff;box-shadow:0 2px 4px rgba(2,132,199,0.3)}
+
 .panel{display:none}
 .panel.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-.card{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);box-shadow:var(--shadow)}
-.card h2{font-size:13px;margin:0 0 12px;color:var(--acc);text-transform:uppercase;letter-spacing:.6px;border-bottom:2px solid var(--acc);padding-bottom:6px}
-label{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px;font-weight:600}
-input,select,textarea{width:100%;padding:9px 10px;background:var(--bg);border:1.5px solid var(--border);border-radius:7px;color:var(--txt);font-size:14px;font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc)}
+
+/* Сетки и карточки */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow);transition:.2s}
+.card h2{font-size:13px;margin:0 0 16px;color:var(--acc);text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid var(--border);padding-bottom:8px;font-weight:700;display:flex;align-items:center;gap:6px}
+
+/* Поля ввода */
+label{display:block;font-size:12px;color:var(--mut);margin:12px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--txt);font-size:14px;font-family:inherit;transition:.2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(2,132,199,0.15)}
 input.ok-field{border-color:var(--ok)}
 input.warn-field{border-color:var(--warn)}
 input.bad-field{border-color:var(--bad);background:var(--badbg)}
-.field-hint{font-size:11px;color:var(--mut);margin-top:3px}
+.field-hint{font-size:11px;color:var(--mut);margin-top:4px}
 .field-hint.bad{color:var(--bad)}
-.btnrow{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-button{flex:1;min-width:140px;padding:13px;background:var(--acc);border:none;border-radius:9px;color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
-button:hover{background:var(--acc2)}
-button.ghost{background:var(--card);border:2px solid var(--acc);color:var(--acc)}
-.preset-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.preset-btn{padding:7px 12px;border-radius:20px;background:var(--card);border:1.5px solid var(--border);cursor:pointer;font-size:12px;font-weight:600;color:var(--txt);font-family:inherit}
-.preset-btn:hover{border-color:var(--acc);color:var(--acc)}
-.row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--border);font-size:14px;gap:12px}
+
+/* Кнопки */
+.btnrow{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+button{flex:1;min-width:140px;padding:14px;background:var(--acc);border:none;border-radius:12px;color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit;transition:.2s;box-shadow:0 4px 6px rgba(2,132,199,0.2)}
+button:hover{background:var(--acc-hover);transform:translateY(-1px)}
+button.ghost{background:var(--card);border:2px solid var(--border);color:var(--txt);box-shadow:none}
+button.ghost:hover{border-color:var(--acc);color:var(--acc);background:var(--bg)}
+
+.preset-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.preset-btn{padding:8px 14px;border-radius:20px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:12px;font-weight:600;color:var(--txt);font-family:inherit;transition:.2s}
+.preset-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--card)}
+
+/* Результаты */
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--border);font-size:14px;gap:12px}
 .row span:first-child{color:var(--mut)}
 .row span:last-child{font-weight:700;color:var(--acc2);text-align:right}
-.row.section-header{background:var(--okbg);margin:8px -8px 4px;padding:6px 8px;border-radius:6px;color:var(--acc);font-weight:700;font-size:12px;text-transform:uppercase;border:none}
-.tag{display:inline-block;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:700;margin:3px}
+.row.section-header{background:var(--bg);margin:12px -12px 6px;padding:8px 12px;border-radius:8px;color:var(--acc);font-weight:700;font-size:12px;text-transform:uppercase;border:none}
+
+.tag{display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;margin:3px}
 .tag.ok{background:var(--okbg);color:var(--ok)}
 .tag.warn{background:var(--warnbg);color:var(--warn)}
 .tag.bad{background:var(--badbg);color:var(--bad)}
-.diag,.expl{margin-top:12px;padding:14px;background:var(--bg);border-radius:9px;border:1px solid var(--border);font-size:13.5px;line-height:1.65}
-.diag h3,.expl h3{font-size:13px;color:var(--acc);margin:14px 0 8px;text-transform:uppercase}
+
+.diag,.expl{margin-top:16px;padding:18px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);font-size:14px;line-height:1.7}
+.diag h3,.expl h3{font-size:13px;color:var(--acc);margin:16px 0 8px;text-transform:uppercase;letter-spacing:.5px}
 .diag ul{margin:8px 0 8px 20px;padding:0}
-.diag li{margin:5px 0}
-.final{margin-top:14px;padding:14px;background:linear-gradient(135deg,rgba(30,111,184,.1),transparent);border-left:4px solid var(--acc);border-radius:8px}
+.diag li{margin:6px 0}
+
+.final{margin-top:16px;padding:16px;background:linear-gradient(135deg,rgba(2,132,199,0.08),transparent);border-left:4px solid var(--acc);border-radius:10px}
 .final ul{margin:8px 0 0 20px}
-.findings{margin-top:14px;padding:14px;background:linear-gradient(135deg,rgba(230,81,0,.1),transparent);border-left:4px solid var(--warn);border-radius:8px}
+.findings{margin-top:16px;padding:16px;background:linear-gradient(135deg,rgba(217,119,6,0.08),transparent);border-left:4px solid var(--warn);border-radius:10px}
 .findings h3{font-size:13px;color:var(--warn);margin:0 0 10px}
-.findings ul{margin:8px 0 8px 20px}
-.alert{margin-top:12px;padding:12px 14px;background:var(--warnbg);border-left:4px solid var(--warn);border-radius:8px;font-size:13.5px}
-.rec{margin-top:12px;padding:12px 14px;background:var(--okbg);border-left:4px solid var(--ok);border-radius:8px;font-size:13.5px}
-.expl details{margin:8px 0;padding:10px 12px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
-.expl summary{cursor:pointer;font-weight:700;color:var(--acc2);padding:4px 0}
-.expl .fml{background:var(--bg);padding:10px 12px;border-radius:6px;margin:8px 0;font-family:Consolas,monospace;font-size:12.5px;color:var(--acc2);overflow-x:auto;border-left:3px solid var(--acc)}
+.alert{margin-top:14px;padding:14px 16px;background:var(--warnbg);border-left:4px solid var(--warn);border-radius:10px;font-size:14px}
+.rec{margin-top:14px;padding:14px 16px;background:var(--okbg);border-left:4px solid var(--ok);border-radius:10px;font-size:14px}
+
+.expl details{margin:10px 0;padding:12px 16px;background:var(--card);border-radius:10px;border:1px solid var(--border)}
+.expl summary{cursor:pointer;font-weight:700;color:var(--acc2);padding:2px 0}
+.expl .fml{background:var(--bg);padding:12px;border-radius:8px;margin:10px 0;font-family:Consolas,monospace;font-size:13px;color:var(--acc);overflow-x:auto;border-left:3px solid var(--acc)}
 .expl .note{color:var(--mut);font-size:12.5px;margin-top:6px;font-style:italic}
-.be-table{width:100%;border-collapse:collapse;font-size:13px}
-.be-table th,.be-table td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--border)}
+
+.be-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+.be-table th,.be-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
 .be-table th{background:var(--bg);color:var(--acc);font-size:11.5px;text-transform:uppercase}
 .be-table td:last-child{text-align:right;font-weight:700;font-family:Consolas,monospace}
 .be-table tr.total{border-top:2px solid var(--acc);font-weight:700}
-.chart-box{height:560px;position:relative;width:100%}
-.chart-card{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);margin-bottom:16px}
-.chart-card h2{font-size:13px;margin:0 0 12px;color:var(--acc);text-transform:uppercase;border-bottom:2px solid var(--acc);padding-bottom:6px}
-.notes{min-height:80px;resize:vertical}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:12px 24px;border-radius:9px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:999}
+
+.chart-box{height:520px;position:relative;width:100%}
+.chart-card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);margin-bottom:20px;box-shadow:var(--shadow)}
+.chart-card h2{font-size:13px;margin:0 0 16px;color:var(--acc);text-transform:uppercase;border-bottom:2px solid var(--border);padding-bottom:8px}
+
+.notes{min-height:90px;resize:vertical}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--acc2);color:#fff;padding:12px 24px;border-radius:12px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:999;box-shadow:0 10px 15px -3px rgba(0,0,0,0.2)}
 .toast.show{opacity:1}
-@media(max-width:640px){.container{padding:12px}.tab{padding:8px 6px;font-size:12px}.chart-box{height:420px}.grid{grid-template-columns:1fr}}
+
+@media(max-width:640px){.container{padding:10px}.tab{padding:8px 10px;font-size:12px}.chart-box{height:380px}.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="container">
 <div class="header">
-<div><h1>🧭 ICU Navigator v10.1</h1><div class="sub">КОС · Стюарт · Winter's · SBE-разбивка · ΔΔ · ОРДС</div></div>
+<div>
+  <h1>🧭 ICU Navigator <span style="font-size:12px;background:var(--okbg);color:var(--ok);padding:3px 8px;border-radius:12px;vertical-align:middle">v10.5 Pro</span></h1>
+  <div class="sub">Экспертная система анализа КОС, Стюарта, Winter's и ОРДС</div>
+</div>
 <div class="header-actions">
-<button class="icon-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
-<button class="icon-btn" onclick="shareResult()">📤</button>
+  <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Тема">🌙</button>
+  <button class="icon-btn" onclick="shareResult()" title="Поделиться / Скопировать">📤</button>
 </div>
 </div>
 
 <div class="tabs">
-<button class="tab active" onclick="switchTab('input')" data-tab="input">📥 Ввод</button>
-<button class="tab" onclick="switchTab('results')" data-tab="results">📊 Результаты</button>
+<button class="tab active" onclick="switchTab('input')" data-tab="input">📥 Ввод данных</button>
+<button class="tab" onclick="switchTab('results')" data-tab="results">📊 Результаты и анализ</button>
 <button class="tab" onclick="switchTab('charts')" data-tab="charts">📈 Графики</button>
-<button class="tab" onclick="switchTab('info')" data-tab="info">📚 Справка</button>
+<button class="tab" onclick="switchTab('info')" data-tab="info">📚 База знаний</button>
 </div>
 
 <div class="panel active" id="panel-input">
-<div class="card">
-<h2>Быстрая загрузка примера</h2>
+<div class="card" style="margin-bottom:16px">
+<h2>⚡ Быстрые клинические примеры</h2>
 <div class="preset-row">
-<button class="preset-btn" onclick="loadPreset('4.5')">Пример 4.5</button>
-<button class="preset-btn" onclick="loadPreset('4.6')">Пример 4.6</button>
-<button class="preset-btn" onclick="loadPreset('4.8')">Пример 4.8</button>
-<button class="preset-btn" onclick="loadPreset('4.9')">Пример 4.9</button>
-<button class="preset-btn" onclick="loadPreset('clear')">🗑 Очистить</button>
+<button class="preset-btn" onclick="loadPreset('4.5')">Пример 4.5 (Норма/Легк)</button>
+<button class="preset-btn" onclick="loadPreset('4.6')">Пример 4.6 (Тройное наруш.)</button>
+<button class="preset-btn" onclick="loadPreset('4.8')">Пример 4.8 (Тяж. ацидоз)</button>
+<button class="preset-btn" onclick="loadPreset('4.9')">Пример 4.9 (Смешанный)</button>
+<button class="preset-btn" onclick="loadPreset('clear')" style="color:var(--bad)">🗑 Сброс</button>
 </div>
 </div>
 
-<div class="grid" style="margin-top:12px">
+<div class="grid">
 <div class="card">
-<h2>🫁 Газы крови</h2>
+<h2>🫁 Газы крови и оксигенация</h2>
 <label>pH</label><input id="pH" type="number" step="0.001" value="7.40" oninput="validateField('pH')"><div class="field-hint" id="hint-pH">Норма: 7.35–7.45</div>
 <label>pCO₂ (мм рт.ст.)</label><input id="pCO2" type="number" step="0.1" value="40" oninput="validateField('pCO2')"><div class="field-hint" id="hint-pCO2">Норма: 35–45</div>
-<label>HCO₃⁻ (ммоль/л)</label><input id="HCO3in" type="number" step="0.1" value="24" oninput="validateField('HCO3in')"><div class="field-hint" id="hint-HCO3in">Норма: 22–26</div>
+<label>HCO₃⁻ лаб. (ммоль/л)</label><input id="HCO3in" type="number" step="0.1" value="24" oninput="validateField('HCO3in')"><div class="field-hint" id="hint-HCO3in">Норма: 22–26</div>
 <label>SBE (ммоль/л)</label><input id="SBE" type="number" step="0.1" value="0"><div class="field-hint">Норма: −2…+2</div>
 <label>Лактат (ммоль/л)</label><input id="Lac" type="number" step="0.1" value="1" oninput="validateField('Lac')"><div class="field-hint" id="hint-Lac">Норма: &lt; 2</div>
 <label>pO₂ (мм рт.ст.)</label><input id="pO2" type="number" step="0.1" value="90">
@@ -119,11 +181,11 @@ button.ghost{background:var(--card);border:2px solid var(--acc);color:var(--acc)
 </div>
 
 <div class="card">
-<h2>⚡ Электролиты</h2>
+<h2>⚡ Электролиты сыворотки</h2>
 <label>Na⁺ (ммоль/л)</label><input id="Na" type="number" step="0.1" value="140" oninput="validateField('Na')"><div class="field-hint" id="hint-Na">Норма: 135–145</div>
 <label>Cl⁻ (ммоль/л)</label><input id="Cl" type="number" step="0.1" value="103" oninput="validateField('Cl')"><div class="field-hint" id="hint-Cl">Норма: 98–107</div>
 <label>K⁺ (ммоль/л)</label><input id="K" type="number" step="0.1" value="4.0" oninput="validateField('K')"><div class="field-hint" id="hint-K">Норма: 3.5–5.0</div>
-<label>Ca²⁺ (ммоль/л)</label><input id="Ca" type="number" step="0.01" value="1.2">
+<label>Ca²⁺ иониз. (ммоль/л)</label><input id="Ca" type="number" step="0.01" value="1.2">
 <label>Mg²⁺ (ммоль/л)</label><input id="Mg" type="number" step="0.01" value="0.9">
 </div>
 
@@ -135,78 +197,55 @@ button.ghost{background:var(--card);border:2px solid var(--acc);color:var(--acc)
 <label>Коррекция Na на глюкозу</label>
 <select id="naCorr"><option value="off">Выключена</option><option value="on">Включена (Katz)</option></select>
 <label>Хроничность (респ. сдвиг)</label>
-<select id="chronic"><option value="auto">Авто</option><option value="acute">Острое</option><option value="chronic">Хроническое</option></select>
+<select id="chronic"><option value="auto">Авто-определение</option><option value="acute">Острое</option><option value="chronic">Хроническое</option></select>
 </div>
 </div>
 
-<div class="card" style="margin-top:12px">
-<h2>📝 Заметки к пациенту</h2>
-<textarea class="notes" id="notes" placeholder="Например: ИВЛ, FiO₂ 40%, ПДКВ 8..."></textarea>
+<div class="card" style="margin-top:16px">
+<h2>📝 Клинические заметки / Параметры ИВЛ</h2>
+<textarea class="notes" id="notes" placeholder="Например: Больной в ОРИТ на ИВЛ. PEEP 8, FiO2 40%. Гемодинамика стабильна..."></textarea>
 </div>
 
 <div class="btnrow">
-<button onclick="calc()">Рассчитать</button>
-<button class="ghost" onclick="clearAll()">🗑 Очистить</button>
+<button onclick="calc()">⚡ Рассчитать анализ</button>
+<button class="ghost" onclick="clearAll()">🗑 Очистить форму</button>
 </div>
 </div>
 
 <div class="panel" id="panel-results">
-<div class="card"><h2>Числовые результаты</h2><div id="results"></div></div>
-<div class="card" style="margin-top:12px"><h2>Диагноз и анализ</h2><div class="diag" id="diagnosis"></div></div>
-<div class="card" style="margin-top:12px"><h2>Пояснения</h2><div class="expl" id="explanations"></div></div>
+<div class="card"><h2>📊 Расчетные параметры и индексы</h2><div id="results"></div></div>
+<div class="card" style="margin-top:16px"><h2>🏥 Экспертное заключение и план</h2><div class="diag" id="diagnosis"></div></div>
+<div class="card" style="margin-top:16px"><h2>📖 Развернутые формулы и логика</h2><div class="expl" id="explanations"></div></div>
 </div>
 
 <div class="panel" id="panel-charts">
-<div class="chart-card"><h2>Диаграмма Гэмбла</h2><div class="chart-box"><canvas id="gamble"></canvas></div></div>
-<div class="chart-card"><h2>Номограмма Сиггаарда-Андерсена</h2><div class="chart-box"><canvas id="siggaard"></canvas></div></div>
+<div class="chart-card"><h2>⚖️ Диаграмма Гэмбла (Ионный баланс)</h2><div class="chart-box"><canvas id="gamble"></canvas></div></div>
+<div class="chart-card"><h2>📈 Номограмма Сиггаарда-Андерсена</h2><div class="chart-box"><canvas id="siggaard"></canvas></div></div>
 </div>
 
 <div class="panel" id="panel-info">
-<div class="card"><h2>📚 Метод Стюарта</h2>
-<div style="line-height:1.7;font-size:13.5px">
-<p><b>Три независимые переменные:</b></p>
-<ol style="margin:8px 0 8px 20px">
-<li><b>pCO₂</b> — респираторный компонент</li>
-<li><b>SID</b> — сильная ионная разница</li>
-<li><b>A_tot</b> — слабые кислоты (альбумин, фосфаты)</li>
-</ol>
-<p><b>SID_a</b> = (Na⁺ + K⁺ + Mg²⁺) − (Cl⁻ + Лактат⁻)</p>
-<p><b>SID_e</b> = HCO₃⁻ + заряд альбумина + заряд фосфата</p>
-<p><b>SIG</b> = SID_a − SID_e. Норма 0–2. &gt;2 → накопление неизмеряемых анионов.</p>
+<div class="card"><h2>📚 Физико-химический подход Стюарта</h2>
+<div style="line-height:1.7;font-size:13.5px;color:var(--mut)">
+<p><b>Три независимые переменные:</b> pCO₂, SID (сильная ионная разница) и A_tot (слабые кислоты).</p>
+<p><b>SID_a</b> = (Na⁺ + K⁺ + Mg²⁺ + Ca²⁺) − (Cl⁻ + Лактат⁻)</p>
+<p><b>SID_e</b> = HCO₃⁻ + заряд альбумина + заряд фосфатов</p>
+<p><b>SIG</b> = SID_a − SID_e. Норма: 0–2 мЭкв/л. Превышение указывает на скрытые нелетучие анионы.</p>
 </div></div>
-
-<div class="card" style="margin-top:12px"><h2>📚 Winter's</h2>
-<div style="line-height:1.7;font-size:13.5px">
-<p><b>Мет. ацидоз:</b> pCO₂ = 1.5×HCO₃⁻ + 8 ± 2</p>
-<p><b>Мет. алкалоз:</b> pCO₂ = 0.7×HCO₃⁻ + 21 ± 2</p>
-<p><b>Острый респ. ацидоз:</b> HCO₃⁻ +1 на 10 мм рт.ст. pCO₂</p>
-<p><b>Хронический респ. ацидоз:</b> HCO₃⁻ +3.5 на 10 мм рт.ст. pCO₂</p>
-</div></div>
-
-<div class="card" style="margin-top:12px"><h2>📚 SBE-разбивка</h2>
-<div style="line-height:1.7;font-size:13.5px">
-<p><b>SBE_FW</b> = 0.3×(Na−140)</p>
-<p><b>SBE_Cl</b> = 104 − Cl×140/Na</p>
-<p><b>SBE_Alb</b> = (0.148×pH−0.818)×(40−Alb)</p>
-<p><b>SBE_UA</b> = SBE − FW − Cl − Alb</p>
-<p><b>ΔАП ≈ −SBE_UA</b></p>
-</div></div>
-
-<div class="card" style="margin-top:12px"><h2>📚 Анионный gap</h2>
-<div style="line-height:1.7;font-size:13.5px">
-<p><b>АП</b> = Na⁺ − (Cl⁻ + HCO₃⁻). Норма 8–12</p>
-<p><b>АП_корр</b> = АП + 0.25×(40−Alb). Норма ≤14</p>
-<p><b>ΔAG</b> = АП_корр − 12</p>
-<p><b>ΔΔ</b> = ΔAG/ΔHCO₃⁻. &lt;1 → NAGMA; &gt;2 → мет. алкалоз; 1–2 → HAGMA</p>
+<div class="card" style="margin-top:16px"><h2>📚 Правила компенсации (Winter's & др.)</h2>
+<div style="line-height:1.7;font-size:13.5px;color:var(--mut)">
+<p><b>Метаболический ацидоз:</b> Ожидаемый pCO₂ = 1.5 × HCO₃⁻ + 8 (±2)</p>
+<p><b>Метаболический алкалоз:</b> Ожидаемый pCO₂ = 0.7 × HCO₃⁻ + 21 (±2)</p>
+<p><b>Острый респираторный ацидоз:</b> ΔHCO₃⁻ = 0.1 × ΔpCO₂</p>
+<p><b>Хронический респираторный ацидоз:</b> ΔHCO₃⁻ = 0.35 × ΔpCO₂</p>
 </div></div>
 </div>
 </div>
-<div class="toast" id="toast">✓ Скопировано</div>
+<div class="toast" id="toast">✓ Скопировано в буфер</div>
 
 <script>
 function toggleTheme(){const c=document.documentElement.getAttribute('data-theme')||'light';const n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);const b=document.getElementById('themeBtn');if(b)b.textContent=n==='dark'?'☀️':'🌙';try{localStorage.setItem('icu_theme',n)}catch(e){}}
 function initTheme(){let s='light';try{s=localStorage.getItem('icu_theme')||'light'}catch(e){}document.documentElement.setAttribute('data-theme',s);const b=document.getElementById('themeBtn');if(b)b.textContent=s==='dark'?'☀️':'🌙'}
-function switchTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===n));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));const p=document.getElementById('panel-'+n);if(p)p.classList.add('active')}
+function switchTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===n));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));const p=document.getElementById('panel-'+n);if(p)p.classList.add('active');if(n==='charts'){setTimeout(()=>{if(gChart)gChart.resize();if(sChart)sChart.resize();},50)} }
 
 const ranges={pH:[7.35,7.45],pCO2:[35,45],HCO3in:[22,26],Lac:[0,2],Na:[135,145],Cl:[98,107],K:[3.5,5.0],Alb:[35,50],Gluc:[3.9,5.5]};
 function validateField(id){const el=document.getElementById(id);const h=document.getElementById('hint-'+id);if(!el||!ranges[id])return;const v=parseFloat(el.value);el.classList.remove('ok-field','warn-field','bad-field');if(isNaN(v))return;const[lo,hi]=ranges[id];if(v>=lo&&v<=hi){el.classList.add('ok-field');if(h)h.classList.remove('bad')}else if(v<lo*0.95||v>hi*1.05){el.classList.add('bad-field');if(h)h.classList.add('bad')}else{el.classList.add('warn-field');if(h)h.classList.add('bad')}}
@@ -221,7 +260,7 @@ function loadPreset(n){
   if(n==='clear'){clearAll();return}
   const p=presets[n];if(!p)return;
   for(const k in p){const el=document.getElementById(k);if(el)el.value=p[k]}
-  showToast('✓ Пример '+n);
+  showToast('✓ Пример '+n+' загружен');
   calc();
 }
 function clearAll(){['pH','pCO2','HCO3in','SBE','Lac','pO2','FiO2','Na','Cl','K','Ca','Mg','Alb','PO4','Gluc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});const n=document.getElementById('notes');if(n)n.value=''; calc();}
@@ -272,167 +311,144 @@ const rows=[
 ["HCO₃⁻ (лаб.)",fixed(HCO3in,1)+" ммоль/л"],
 ["HCO₃⁻ (расч.)",fixed(HCO3calc,1)+" ммоль/л"],
 ["Na⁺ (исп.)",fixed(NaCorr,1)+" ммоль/л"],
-["P/F",fixed(PF,0)+" мм рт.ст."],
-["— — —",""],
-["АП",fixed(AG)],
-["АП_корр",fixed(AGcorr)],
-["ΔAG",fixed(deltaAG)],
-["ΔHCO₃⁻",fixed(deltaHCO3)],
-["ΔΔ",isNaN(deltaDelta)?"не применимо":fixed(deltaDelta,2)],
-["Na − Cl",fixed(NaMinusCl)+(absHyperCl?" (<38 абс.)":" (норма)")],
-["Na/Cl",fixed(NaClRatio,3)+(relHyperCl?" (<1.37 отн.)":" (норма)")],
-["— — SBE — —",""],
-["SBE",fixed(SBE,1)+(SBEmismatch?" ⚠":'')],
-["SBE_ожид",fixed(SBE_expected,1)],
-["SBE_FW",fixed(SBE_FW)],
-["SBE_Cl",fixed(SBE_Cl)+(hypoNa?" ⚠":'')],
-["SBE_Alb",fixed(SBE_Alb)],
-["SBE_UA",fixed(SBE_UA)],
-["ΔАП",fixed(deltaAP)],
-["— — Стюарт — —",""],
-["SID_a",fixed(SIDa)],
-["SID_e",fixed(SIDe)],
-["SIG",fixed(SIG)]
+["P/F ratio",fixed(PF,0)+" мм рт.ст."],
+["— Анионный промежуток —",""],
+["АП (Anion Gap)",fixed(AG)],
+["АП скорректированный",fixed(AGcorr)],
+["ΔAG / ΔHCO₃⁻",fixed(deltaDelta,2)],
+["Na − Cl разница",fixed(NaMinusCl)+(absHyperCl?" (<38 абс.)":" (норма)")],
+["Na / Cl отношение",fixed(NaClRatio,3)+(relHyperCl?" (<1.37 отн.)":" (норма)")],
+["— SBE-анализ —",""],
+["SBE (входной)",fixed(SBE,1)+(SBEmismatch?" ⚠":'')],
+["SBE_FW (эффект воды)",fixed(SBE_FW)],
+["SBE_Cl (эффект хлора)",fixed(SBE_Cl)],
+["SBE_Alb (альбумин)",fixed(SBE_Alb)],
+["SBE_UA (неизмер. анионы)",fixed(SBE_UA)],
+["— Стюарт —",""],
+["SID_a (видимая)",fixed(SIDa)],
+["SID_e (эффективная)",fixed(SIDe)],
+["SIG (разница ионов)",fixed(SIG)]
 ];
 const resultsEl=document.getElementById('results');
-if(resultsEl)resultsEl.innerHTML=rows.map(r=>r[0].includes("— —")?`<div class="row section-header"><span>${r[0]}</span><span></span></div>`:`<div class="row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
+if(resultsEl)resultsEl.innerHTML=rows.map(r=>r[0].startsWith('—')?`<div class="row section-header"><span>${r[0]}</span><span></span></div>`:`<div class="row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
 
 const logs=[],diagnoses=[],compensations=[],findings=[],alerts=[],recs=[],explain=[];
 let primary=pH<7.35?"ацидемия":pH>7.45?"алкалемия":"норма";
-logs.push(`<b>Шаг 1. pH:</b> ${fixed(pH,3)} → ${primary}.`);
+logs.push(`<b>pH вектор:</b> ${fixed(pH,3)} → ${primary}.`);
 
-if(SBEmismatch)alerts.push(`<b>⚠ SBE и HCO₃⁻ не согласованы.</b> Ожидаемый SBE ≈ ${fixed(SBE_expected,1)}, введён ${fixed(SBE,1)}. Проверьте ввод.`);
-
-if(AG<8||AGcorr<8){findings.push({name:"Аномально низкий АП",detail:`АП = ${fixed(AG)}, АП_корр = ${fixed(AGcorr)}.`,causes:["IgG-парапротеинемия","Гиперкальциемия","Гипермагниемия","Литий","Бромиды","Лабораторная ошибка"],recommendation:"Электрофорез белков, иммунофиксация, Ca²⁺, Mg²⁺, литий."});logs.push(`<b>Аномалия АП:</b> ${fixed(AG)} / ${fixed(AGcorr)}.`)}
-
-if(absHyperCl||relHyperCl){const tl=hyperClType==="абсолютная + относительная"?"Абс. + отн.":hyperClType==="абсолютная"?"Абс.":"Отн.";let d=[];if(absHyperCl)d.push(`Na−Cl = ${fixed(NaMinusCl)} (<38)`);if(relHyperCl)d.push(`Na/Cl = ${fixed(NaClRatio,3)} (<1.37)`);findings.push({name:`Гиперхлоремия (${tl})`,detail:d.join('<br>'),causes:["Инфузия NaCl","Диарея","RTA","Ацетазоламид","ХПН"],recommendation:"Сбалансированные растворы, фуросемид."});logs.push(`<b>Гиперхлоремия (${tl}).</b>`)}
-
-if(hypoAlb){const S= SBE+0.25*(40-Alb);alerts.push(`<b>⚠ Гипоальбуминемия (Alb = ${fixed(Alb,1)}).</b> Реальный SBE ≈ ${fixed(S,1)}. Инфузия альбумина усугубит ацидоз.`);logs.push(`<b>Гипоальбуминемия.</b>`)}
-if(hypoNa)alerts.push(`<b>⚠ Гипонатриемия (Na = ${fixed(Na,1)}).</b> SBE_Cl искажена.`);
-if(hypoK){findings.push({name:`Гипокалиемия (K = ${fixed(K,1)})`,detail:"Способствует мет. алкалозу.",causes:["Рвота","Диуретики","Гиперальдостеронизм","RTA","Тиреотоксикоз"],recommendation:"Восполнить K⁺ и Mg²⁺."});logs.push(`<b>Гипокалиемия.</b>`)}
-if(borderlineHCO3)alerts.push(`<b>⚠ HCO₃⁻ = ${fixed(HCO3,1)} + АП_корр = ${fixed(AGcorr)}.</b> Возможен смешанный ацидоз.`);
+if(SBEmismatch)alerts.push(`<b>⚠ SBE и HCO₃⁻ не согласованы.</b> Ожидаемый SBE ≈ ${fixed(SBE_expected,1)}, введён ${fixed(SBE,1)}.`);
+if(AG<8||AGcorr<8){findings.push({name:"Аномально низкий АП",detail:`АП = ${fixed(AG)}, АП_корр = ${fixed(AGcorr)}.`,causes:["Парапротеинемия (миелома)","Гиперкальциемия","Гипермагниемия","Токсичность лития"],recommendation:"Проверить белок, электролиты, кальций, магний."});logs.push(`<b>Низкий АП:</b> ${fixed(AG)} / ${fixed(AGcorr)}.`);}
+if(absHyperCl||relHyperCl){findings.push({name:`Гиперхлоремия (${hyperClType})`,detail:`Na−Cl = ${fixed(NaMinusCl)}, Na/Cl = ${fixed(NaClRatio,3)}`,causes:["Инфузия 0.9% NaCl","Диарея","Почечный канальцевый ацидоз"],recommendation:"Использовать сбалансированные растворы (Рингер, Стерофундин)."});logs.push(`<b>Гиперхлоремия.</b>`);}
+if(hypoAlb){alerts.push(`<b>⚠ Гипоальбуминемия (Alb = ${fixed(Alb,1)}).</b> Маскирует метаболический ацидоз. Инфузия альбумина усугубит ацидоз.`);logs.push(`<b>Гипоальбуминемия.</b>`);}
+if(hypoNa)alerts.push(`<b>⚠ Гипонатриемия (Na = ${fixed(Na,1)}).</b> Расчет SBE_Cl искажен.`);
+if(hypoK){findings.push({name:`Гипокалиемия (K = ${fixed(K,1)})`,detail:"Способствует метаболическому алкалозу.",causes:["Рвота, диуретики, гиперальдостеронизм"],recommendation:"Восполнить K⁺ и дефицит Mg²⁺."});logs.push(`<b>Гипокалиемия.</b>`);}
 
 const respAcid=pCO2>45,respAlk=pCO2<35,metAcid=HCO3<22||SBE<-2,metAlk=HCO3>26||SBE>2;
-let respIsComp=false,respName='',respDetail='';
+let respName='',respDetail='';
 
 if(respAcid){
 let mode=chronicMode;if(chronicMode==='auto')mode=HCO3>28?'chronic':'acute';
-if(metAlk){const lo=0.7*HCO3+21-2,hi=0.7*HCO3+21+2;if(pCO2>=lo&&pCO2<=hi){respIsComp=true;compensations.push(`Респ. ацидоз компенсаторный (ожид. ${fixed(lo,1)}–${fixed(hi,1)}).`)}else if(pCO2>hi){respName="Сопутствующий респ. ацидоз (избыточный)";respDetail=`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)}.`}}
-else{respName="Респираторный ацидоз"+(mode==='chronic'?" (хрон.)":"");respDetail=`pCO₂ ${fixed(pCO2,1)} (>45).`}
+if(metAlk){const lo=0.7*HCO3+21-2,hi=0.7*HCO3+21+2;if(pCO2>=lo&&pCO2<=hi)compensations.push(`Респ. ацидоз — компенсатор.`);else if(pCO2>hi)respName="Сопутствующий респ. ацидоз";}
+else{respName="Респираторный ацидоз"+(mode==='chronic'?" (хронический)":"");respDetail=`pCO₂ ${fixed(pCO2,1)} (>45).`;}
 }else if(respAlk){
 let mode=chronicMode;if(chronicMode==='auto')mode=HCO3<20?'chronic':'acute';
-if(metAcid){const lo=1.5*HCO3+8-2,hi=1.5*HCO3+8+2;if(pCO2>=lo&&pCO2<=hi){respIsComp=true;compensations.push(`Респ. алкалоз компенсаторный (Winter's ${fixed(lo,1)}–${fixed(hi,1)}).`)}else if(pCO2<lo){respName="Сопутствующий респ. алкалоз";respDetail=`pCO₂ ${fixed(pCO2,1)} < ${fixed(lo,1)}.`}}
-else if(metAlk){respIsComp=true;compensations.push('Респ. алкалоз компенсаторный.')}
-else{respName="Респираторный алкалоз"+(mode==='chronic'?" (хрон.)":"");respDetail=`pCO₂ ${fixed(pCO2,1)} (<35).`}
+if(metAcid){const lo=1.5*HCO3+8-2,hi=1.5*HCO3+8+2;if(pCO2>=lo&&pCO2<=hi)compensations.push(`Респ. алкалоз — компенсатор.`);else if(pCO2<lo)respName="Сопутствующий респ. алкалоз";}
+else respName="Респираторный алкалоз"+(mode==='chronic'?" (хронический)":"");
 }
-if(respName){diagnoses.push({name:respName,detail:respDetail});logs.push(`<b>Респираторное:</b> ${respName}`)}
+if(respName)diagnoses.push({name:respName,detail:respDetail});
 
-if(AGcorr>14){let d=`АП_корр ${fixed(AGcorr)} (>14).`;if(Lac>2)d+=` Лактат ${fixed(Lac,1)} → лактат-ацидоз.`;diagnoses.push({name:"Метаболический ацидоз с увеличенным АП"+(Lac>2?" (лактат-ацидоз)":""),detail:d});logs.push(`<b>HAGMA:</b> ${d}`);explain.push({title:"HAGMA",why:`АП_корр = ${fixed(AGcorr)} > 14`,formula:`АП = ${fixed(AG)}\nАП_корр = АП + 0.25×(40−Alb) = ${fixed(AGcorr)}`,details:Lac>2?`Лактат ${fixed(Lac,1)} — ведущий источник.`:"Эндогенные кислоты.",note:"Норма АП: 8–12; АП_корр ≤14."})}
-
-if(deltaAP>2&&AGcorr<=14&&HCO3<24){diagnoses.push({name:"Метаболический ацидоз по SBE_UA / ΔАП",detail:`ΔАП = ${fixed(deltaAP)}.`});logs.push(`<b>SBE_UA:</b> ΔАП = ${fixed(deltaAP)}.`);explain.push({title:"Ацидоз по SBE_UA",why:`ΔАП = ${fixed(deltaAP)} > 2`,formula:`SBE_UA = ${fixed(SBE_UA)}\nΔАП ≈ −SBE_UA = ${fixed(deltaAP)}`,details:"Модуль SBE_UA отражает ΔАП.",note:"Норма ΔАП: −2…+2."})}
-else if(deltaAP>2&&AGcorr>14){logs.push(`<b>SBE_UA:</b> подтверждает HAGMA.`)}
+if(AGcorr>14){let d=`АП_корр ${fixed(AGcorr)} (>14).`;if(Lac>2)d+=` Лактат ${fixed(Lac,1)} → лактат-ацидоз.`;diagnoses.push({name:"HAGMA (Метаболический ацидоз с высоким АП)"+(Lac>2?" [лактат]":""),detail:d});}
+if(deltaAP>2&&AGcorr<=14&&HCO3<24)diagnoses.push({name:"Метаболический ацидоз по SBE_UA",detail:`ΔАП = ${fixed(deltaAP)}.`});
 
 if(!isNaN(deltaDelta)){
-if(deltaDelta<1){diagnoses.push({name:"NAGMA (гиперхлоремический)",detail:`ΔΔ = ${fixed(deltaDelta,2)} (<1).`});logs.push(`<b>ΔΔ:</b> ${fixed(deltaDelta,2)} (<1) → NAGMA.`)}
-else if(deltaDelta>2){diagnoses.push({name:"Сопутствующий мет. алкалоз (по ΔΔ)",detail:`ΔΔ = ${fixed(deltaDelta,2)} (>2).`});logs.push(`<b>ΔΔ:</b> ${fixed(deltaDelta,2)} (>2).`)}
-else if(deltaDelta>=1.9&&deltaDelta<=2.1)alerts.push(`<b>⚠ ΔΔ = ${fixed(deltaDelta,2)} пограничное.</b>`)
+if(deltaDelta<1)diagnoses.push({name:"NAGMA (Гиперхлоремический ацидоз)",detail:`ΔΔ = ${fixed(deltaDelta,2)} (<1).`});
+else if(deltaDelta>2)diagnoses.push({name:"Сопутствующий метаболический алкалоз",detail:`ΔΔ = ${fixed(deltaDelta,2)} (>2).`});
 }
 
-if(metAlk&&!diagnoses.some(d=>d.name.includes("Метаболический алкалоз"))){diagnoses.push({name:"Метаболический алкалоз",detail:`SBE ${fixed(SBE,1)}, HCO₃⁻ ${fixed(HCO3,1)}.`});logs.push(`<b>Мет. алкалоз:</b> SBE ${fixed(SBE,1)}.`);explain.push({title:"Мет. алкалоз",why:`SBE ${fixed(SBE,1)} > 2`,formula:`SBE > 2\nHCO₃⁻ > 26`,details:"Избыток оснований.",note:"Рвота, диуретики, гипокалиемия."})}
+if(metAlk&&!diagnoses.some(d=>d.name.includes("алкалоз")))diagnoses.push({name:"Метаболический алкалоз",detail:`SBE ${fixed(SBE,1)}, HCO₃⁻ ${fixed(HCO3,1)}.`});
 
-let sigHTML="";
-if(SIG<0){sigHTML=`SIG = ${fixed(SIG)} (<0) → аномалия.`;alerts.push(`<b>⚠ SIG = ${fixed(SIG)} (<0).</b>`) }
-else if(SIG<=2)sigHTML=`SIG = ${fixed(SIG)} (норма).`;
-else sigHTML=`SIG = ${fixed(SIG)} (>2) → неизмер. анионы.`;
+let sigHTML=SIG<=2?`SIG = ${fixed(SIG)} (норма).`:SIG>2?`SIG = ${fixed(SIG)} (>2) → НАКОПЛЕНИЕ НЕИЗМЕРЯЕМЫХ АНИОНОВ.`:`SIG < 0 (аномалия).`;
 
 let winterInfo="—",compCheck=[];
-if(metAcid){const lo=1.5*HCO3+8-2,hi=1.5*HCO3+8+2;winterInfo=`Winter's: pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)}`;if(pCO2>hi)compCheck.push(`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)} → сопутствующий респ. ацидоз`);else if(pCO2<lo)compCheck.push(`pCO₂ ${fixed(pCO2,1)} < ${fixed(lo,1)} → сопутствующий респ. алкалоз`);else compCheck.push('✅ Компенсация адекватна')}
-else if(metAlk){const lo=0.7*HCO3+21-2,hi=0.7*HCO3+21+2;winterInfo=`Ожидаемый pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)}`;if(pCO2>hi)compCheck.push(`pCO₂ ${fixed(pCO2,1)} > ${fixed(hi,1)}`);else if(pCO2<lo)compCheck.push(`pCO₂ ${fixed(pCO2,1)} < ${fixed(hi,1)}`);else compCheck.push('✅ Компенсация адекватна')}
+if(metAcid){const lo=1.5*HCO3+8-2,hi=1.5*HCO3+8+2;winterInfo=`Winter's: ожид. pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;if(pCO2>hi)compCheck.push(`pCO₂ выше ожид. → сопутствующий респ. ацидоз`);else if(pCO2<lo)compCheck.push(`pCO₂ ниже ожид. → сопутствующий респ. алкалоз`);else compCheck.push('✅ Респираторная компенсация адекватна');}
 
-let oxyTag=PF>300?`<span class="tag ok">P/F = ${fixed(PF,0)} — норма</span>`:PF>=200?`<span class="tag warn">P/F = ${fixed(PF,0)} — ОРДС лёгкая</span>`:PF>=100?`<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС средняя</span>`:`<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС тяжёлая</span>`;
+let oxyTag=PF>300?`<span class="tag ok">P/F = ${fixed(PF,0)} — Оксигенация в норме</span>`:PF>=200?`<span class="tag warn">P/F = ${fixed(PF,0)} — ОРДС легкой степени</span>`:PF>=100?`<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС средней степени</span>`:`<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС тяжелой степени</span>`;
 
-if(PF<=300)recs.push(`<b>ОРДС (P/F ${fixed(PF,0)}):</b><ul style="margin:6px 0 6px 20px"><li>ИВЛ PEEP ≥8, ДО 6 мл/кг</li><li>Плато &lt;30, движ. &lt;15</li><li>Прон-позиция ≥12 ч при P/F&lt;150</li><li>ЭКМО при P/F&lt;80</li></ul>`);
+if(PF<=300)recs.push(`<b>Рекомендации по ИВЛ при ОРДС:</b><ul style="margin:6px 0 6px 20px"><li>PEEP ≥ 8 см H₂O, ДО 6 мл/кг идеальной массы</li><li>Плато &lt; 30, движущее давление &lt; 15</li><li>Прон-позиция при P/F &lt; 150</li></ul>`);
 
 const n=diagnoses.length;
-let multi=n===0?"Расстройств КОС нет":n===1?"Изолированное нарушение":n===2?"Смешанное нарушение":"⚠ Тройное (множественное)";
+let multi=n===0?"Расстройств КОС нет":n===1?"Изолированное нарушение КОС":n===2?"Смешанное нарушение КОС":"⚠ ТРОЙНОЕ (МНОЖЕСТВЕННОЕ) НАРУШЕНИЕ КОС";
 let finalHTML=allNormal&&diagnoses.length===0?"<b>Расстройств КОС нет.</b>":diagnoses.length>0?`<b>${multi}</b><ul>${diagnoses.map((d,i)=>`<li><b>${i+1}. ${d.name}.</b>${d.detail}</li>`).join('')}</ul>`:"<b>Расстройств КОС нет.</b>";
 
-let findingsHTML="";if(findings.length>0){findingsHTML=`<div class="findings"><h3>⚠ Доп. находки</h3><ul>`;findings.forEach(f=>{findingsHTML+=`<li><b>${f.name}.</b><br>${f.detail}<br><i>Причины:</i><ul>${f.causes.map(c=>`<li>${c}</li>`).join('')}</ul><b>Рек:</b> ${f.recommendation}</li>`});findingsHTML+='</ul></div>'}
+let findingsHTML="";if(findings.length>0){findingsHTML=`<div class="findings"><h3>⚠ Дополнительные находки</h3><ul>`;findings.forEach(f=>{findingsHTML+=`<li><b>${f.name}.</b><br>${f.detail}<br><i>Причины:</i><ul>${f.causes.map(c=>`<li>${c}</li>`).join('')}</ul><b>Тактика:</b> ${f.recommendation}</li>`});findingsHTML+='</ul></div>'}
 
 const alertsHTML=alerts.map(a=>`<div class="alert">${a}</div>`).join('');
 const recsHTML=recs.map(r=>`<div class="rec">${r}</div>`).join('');
 
-const diagEl=document.getElementById('diagnosis');
-if(diagEl)diagEl.innerHTML=`<h3>Ход</h3><ul>${logs.map(l=>`<li>${l}</li>`).join('')}</ul><h3>Компенсация</h3><div>${winterInfo}</div><ul>${compCheck.map(c=>`<li>${c}</li>`).join('')}</ul>${compensations.length>0?`<h3>Компенсаторные сдвиги</h3><ul>${compensations.map(c=>`<li>${c}</li>`).join('')}</ul>`:''}<h3>Оксигенация</h3><div>${oxyTag}</div><h3>Стюарт</h3><div>${sigHTML}</div>${notes?`<h3>📝 Заметки</h3><div>${notes.replace(/\n/g,'<br>')}</div>`:''}<div class="final">${finalHTML}</div>${findingsHTML}${alertsHTML}${recsHTML}`;
+document.getElementById('diagnosis').innerHTML=`
+<h3>Ход анализа и вектор</h3><ul>${logs.map(l=>`<li>${l}</li>`).join('')}</ul>
+<h3>Компенсаторный ответ</h3><div>${winterInfo}</div><ul>${compCheck.map(c=>`<li>${c}</li>`).join('')}</ul>
+${compensations.length>0?`<ul>${compensations.map(c=>`<li>${c}</li>`).join('')}</ul>`:''}
+<h3>Статус оксигенации</h3><div>${oxyTag}</div>
+<h3>Физико-химия (Стюарт)</h3><div>${sigHTML}</div>
+${notes?`<h3>📝 Заметки</h3><div>${notes.replace(/\n/g,'<br>')}</div>`:''}
+<div class="final">${finalHTML}</div>${findingsHTML}${alertsHTML}${recsHTML}`;
 
-let explHTML='<h3>Пояснения</h3>';if(explain.length===0)explHTML+=`<div class="note">Нарушений нет.</div>`;else explain.forEach((e,i)=>{explHTML+=`<details ${i===0?'open':''}><summary>${i+1}. ${e.title}</summary><div style="margin-top:8px"><b>Почему:</b> ${e.why}</div><div class="fml">${e.formula.replace(/\n/g,'<br>')}</div><div><b>Значит:</b> ${e.details}</div><div class="note">${e.note}</div></details>`});
-explHTML+=`<details style="margin-top:14px;background:var(--okbg)" open><summary style="color:var(--acc2)">📊 SBE-разбивка</summary><div style="margin-top:10px"><table class="be-table"><thead><tr><th>Компонент</th><th>Формула</th><th>Значение</th></tr></thead><tbody><tr><td>SBE_FW</td><td>0.3×(Na−140)</td><td>${fixed(SBE_FW)}</td></tr><tr><td>SBE_Cl</td><td>104−Cl×140/Na</td><td>${fixed(SBE_Cl)}</td></tr><tr><td>SBE_Alb</td><td>(0.148pH−0.818)×(40−Alb)</td><td>${fixed(SBE_Alb)}</td></tr><tr><td>SBE_UA</td><td>SBE−FW−Cl−Alb</td><td>${fixed(SBE_UA)}</td></tr><tr class="total"><td colspan="2">Сумма</td><td>${fixed(SBE_FW+SBE_Cl+SBE_Alb+SBE_UA,1)}</td></tr></tbody></table></div></details>`;
-const explEl=document.getElementById('explanations');
-if(explEl)explEl.innerHTML=explHTML;
+document.getElementById('explanations').innerHTML=`
+<h3>Логика расчетов SBE и анионов</h3>
+<details open><summary>📊 Детализация SBE</summary>
+<table class="be-table"><thead><tr><th>Компонент</th><th>Формула</th><th>Значение</th></tr></thead>
+<tbody>
+<tr><td>SBE_FW</td><td>0.3 × (Na − 140)</td><td>${fixed(SBE_FW)}</td></tr>
+<tr><td>SBE_Cl</td><td>104 − Cl × 140 / Na</td><td>${fixed(SBE_Cl)}</td></tr>
+<tr><td>SBE_Alb</td><td>(0.148pH − 0.818) × (40 − Alb)</td><td>${fixed(SBE_Alb)}</td></tr>
+<tr><td>SBE_UA</td><td>SBE − FW − Cl − Alb</td><td>${fixed(SBE_UA)}</td></tr>
+<tr class="total"><td colspan="2">Сумма вклада</td><td>${fixed(SBE_FW+SBE_Cl+SBE_Alb+SBE_UA,1)}</td></tr>
+</tbody></table></details>`;
 
 const strip=s=>s.replace(/<[^>]+>/g,'');
-const L=[];
-L.push("═══ ICU NAVIGATOR v10.1 ═══","","── ВХОД ──");
-L.push(`pH ${fixed(pH,3)}  pCO₂ ${fixed(pCO2,1)}  HCO₃⁻ ${fixed(HCO3,1)}  SBE ${fixed(SBE,1)}`);
-L.push(`Na ${fixed(Na,1)}  K ${fixed(K,1)}  Cl ${fixed(Cl,1)}  Ca ${fixed(Ca,2)}  Mg ${fixed(Mg,2)}`);
-L.push(`Alb ${fixed(Alb,1)}  PO₄ ${fixed(PO4,2)}  Gluc ${fixed(Gluc,1)}  Lac ${fixed(Lac,1)}`);
-L.push(`pO₂ ${fixed(pO2,1)}  FiO₂ ${fixed(FiO2,0)}%`);
-if(notes){L.push("","── ЗАМЕТКИ ──",notes)}
-L.push("","── РАСЧЁТЫ ──");
-rows.forEach(r=>{if(r[1]&&!r[0].includes("— —"))L.push(`${r[0]}: ${r[1]}`)});
-L.push("","── ХОД ──");logs.forEach(l=>L.push("• "+strip(l)));
-L.push("","── КОМПЕНСАЦИЯ ──",winterInfo);compCheck.forEach(c=>L.push("• "+strip(c)));compensations.forEach(c=>L.push("• "+strip(c)));
-L.push("","── ОКСИГЕНАЦИЯ ──",strip(oxyTag));
-L.push("","── СТЮАРТ ──",strip(sigHTML));
-L.push("","── ДИАГНОЗ ──");
-if(diagnoses.length===0)L.push("Расстройств КОС нет.");else{L.push(multi);diagnoses.forEach((d,i)=>L.push(`${i+1}. ${d.name}. ${strip(d.detail)}`))}
-if(findings.length>0){L.push("","── ДОП. НАХОДКИ ──");findings.forEach((f,i)=>{L.push(`${i+1}. ${f.name}. ${strip(f.detail)}`);L.push(`   Причины: ${f.causes.join('; ')}`);L.push(`   Рек: ${strip(f.recommendation)}`)})}
-if(alerts.length>0){L.push("","── ВНИМАНИЕ ──");alerts.forEach(a=>L.push(strip(a)))}
-if(recs.length>0){L.push("","── РЕКОМЕНДАЦИИ ──");recs.forEach(r=>L.push(strip(r)))}
-L.push("","Сформировано: ICU Navigator v10.1");
+const L=["═══ ICU NAVIGATOR v10.5 PRO ═══",""];
+if(notes){L.push("ЗАМЕТКИ:",notes,"")}
+L.push("ДИАГНОЗ:", strip(finalHTML), "", "ПАРАМЕТРЫ:");
+rows.forEach(r=>{if(r[1]&&!r[0].startsWith('—'))L.push(`${r[0]}: ${r[1]}`)});
 lastReport=L.join("\n");
 
 try{drawGamble(NaCorr,K,Ca,Mg,Cl,HCO3,Lac,SIG>0?SIG:0)}catch(e){}
 try{drawSiggaard(pH,pCO2)}catch(e){}
 }
 
-function copyResult(){if(!lastReport){try{calc()}catch(e){}}const ta=document.createElement("textarea");ta.value=lastReport;ta.style.position="fixed";ta.style.top="-1000px";document.body.appendChild(ta);ta.focus();ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);if(!ok&&navigator.clipboard){navigator.clipboard.writeText(lastReport).then(()=>showToast('✓')).catch(()=>showToast('Не удалось'))}else showToast(ok?"✓ Скопировано":"Не удалось")}
-function shareResult(){if(!lastReport){try{calc()}catch(e){}}if(navigator.share){navigator.share({title:'ICU Navigator',text:lastReport}).catch(()=>{})}else copyResult()}
+function copyResult(){if(!lastReport)calc();const ta=document.createElement("textarea");ta.value=lastReport;ta.style.position="fixed";ta.style.top="-1000px";document.body.appendChild(ta);ta.focus();ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);if(!ok&&navigator.clipboard)navigator.clipboard.writeText(lastReport);showToast("✓ Отчет скопирован")}
+function shareResult(){if(!lastReport)calc();if(navigator.share){navigator.share({title:'ICU Navigator',text:lastReport}).catch(()=>{})}else copyResult()}
 function showToast(m){const t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
 
 let gChart=null,sChart=null;
 function drawGamble(Na,K,Ca,Mg,Cl,HCO3,Lac,SIG){
 const ctx=document.getElementById('gamble');if(!ctx||isNaN(Na))return;if(gChart)gChart.destroy();
 gChart=new Chart(ctx,{type:'bar',data:{labels:['Катионы (+)','Анионы (−)'],datasets:[
-{label:'Na⁺',data:[Na,0],backgroundColor:'#1e6fb8'},
-{label:'K⁺',data:[K,0],backgroundColor:'#4a9edb'},
-{label:'Ca²⁺',data:[Ca,0],backgroundColor:'#7cc4e8'},
-{label:'Mg²⁺',data:[Mg,0],backgroundColor:'#b3ddf5'},
-{label:'Cl⁻',data:[0,Cl],backgroundColor:'#e57373'},
-{label:'HCO₃⁻',data:[0,HCO3],backgroundColor:'#ffb74d'},
-{label:'Лактат',data:[0,Lac],backgroundColor:'#ba68c8'},
-{label:'SIG',data:[0,SIG],backgroundColor:'#90a4ae'}
-]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:12}}}},scales:{x:{stacked:true},y:{stacked:true,title:{display:true,text:'мЭкв/л'}}}}});
+{label:'Na⁺',data:[Na,0],backgroundColor:'#0284c7'},
+{label:'K⁺',data:[K,0],backgroundColor:'#38bdf8'},
+{label:'Ca²⁺',data:[Ca,0],backgroundColor:'#7dd3fc'},
+{label:'Mg²⁺',data:[Mg,0],backgroundColor:'#bae6fd'},
+{label:'Cl⁻',data:[0,Cl],backgroundColor:'#f87171'},
+{label:'HCO₃⁻',data:[0,HCO3],backgroundColor:'#fbbf24'},
+{label:'Лактат',data:[0,Lac],backgroundColor:'#c084fc'},
+{label:'SIG',data:[0,SIG],backgroundColor:'#94a3b8'}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:12,family:'Inter'}}}},scales:{x:{stacked:true},y:{stacked:true,title:{display:true,text:'мЭкв/л'}}}},plugins:[{id:'bg',beforeDraw:c=>{const{ctx,chartArea}=c;if(!chartArea)return;ctx.save();ctx.fillStyle=document.documentElement.getAttribute('data-theme')==='dark'?'#111827':'#ffffff';ctx.fillRect(chartArea.left,chartArea.top,chartArea.width,chartArea.height);ctx.restore();}}]});
 }
 function drawSiggaard(pH,pCO2){
 const ctx=document.getElementById('siggaard');if(!ctx||isNaN(pH))return;if(sChart)sChart.destroy();
 const fn=(h,p)=>h/(0.03*Math.pow(10,p-6.1));
 const phR=[];for(let p=7.0;p<=7.8;p+=0.02)phR.push(parseFloat(p.toFixed(3)));
-const list=[5,10,15,20,24,30,35,40];const cl=['#bbdefb','#90caf9','#64b5f6','#42a5f5','#2196f3','#1e88e5','#1976d2','#1565c0'];
+const list=[5,10,15,20,24,30,35,40];const cl=['#e0f2fe','#bae6fd','#7dd3fc','#38bdf8','#0284c7','#0369a1','#075985','#0c4a6e'];
 const ds=[];
-ds.push({label:'Зона мет. алкалоза',data:phR.map(p=>({x:p,y:fn(30,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(198,40,40,.08)',fill:true,pointRadius:0,tension:0,order:20});
-ds.push({label:'Зона мет. ацидоза',data:phR.map(p=>({x:p,y:fn(15,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(230,81,0,.08)',fill:true,pointRadius:0,tension:0,order:21});
-list.forEach((h,i)=>{const nrm=h===24;ds.push({label:'HCO₃⁻ = '+h,data:phR.map(p=>({x:p,y:fn(h,p)})),borderColor:nrm?'#2e7d32':cl[i],borderWidth:nrm?3:1.6,borderDash:nrm?[]:[5,4],pointRadius:0,tension:0.05,fill:false,order:nrm?1:5})});
-ds.push({label:'Пациент',data:[{x:pH,y:pCO2}],borderColor:'#c62828',backgroundColor:'#c62828',pointRadius:11,pointBorderColor:'#fff',pointBorderWidth:2.5,showLine:false,order:0});
-ds.push({label:'— pH —',data:[{x:pH,y:pCO2},{x:pH,y:0}],borderColor:'rgba(198,40,40,.4)',borderWidth:1.2,borderDash:[4,3],pointRadius:0,fill:false,order:2});
-ds.push({label:'— pCO₂ —',data:[{x:pH,y:pCO2},{x:7.0,y:pCO2}],borderColor:'rgba(198,40,40,.4)',borderWidth:1.2,borderDash:[4,3],pointRadius:0,fill:false,order:2});
-sChart=new Chart(ctx,{type:'line',data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:40,right:70}},interaction:{mode:'nearest',intersect:false},plugins:{legend:{labels:{font:{size:11.5},usePointStyle:true,boxWidth:14,filter:i=>!i.text.startsWith('—')&&!i.text.includes('Зона')}},tooltip:{filter:i=>!i.dataset.label.startsWith('—')&&!i.dataset.label.includes('Зона'),callbacks:{label:c=>{const p=c.parsed.x,pc=c.parsed.y;const h=0.03*pc*Math.pow(10,p-6.1);if(c.dataset.label==='Пациент')return`Пациент: pH ${pH.toFixed(3)}, pCO₂ ${pCO2.toFixed(1)}`;return`${c.dataset.label} | pH ${p.toFixed(2)}, pCO₂ ${pc.toFixed(0)}, HCO₃⁻ ${h.toFixed(1)}`}}}},scales:{x:{type:'linear',min:7.0,max:7.8,title:{display:true,text:'pH (снизу)',font:{size:14,weight:'bold'}},ticks:{stepSize:0.1,callback:v=>v.toFixed(2)}},y:{type:'linear',min:0,max:120,position:'left',title:{display:true,text:'pCO₂ (слева)',font:{size:14,weight:'bold'}},ticks:{stepSize:20}}}},plugins:[{id:'topA',afterDraw:chart=>{const{ctx,chartArea:{left,right,top}}=chart;ctx.save();ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText('pCO₂ — ось сверху',(left+right)/2,top-24);ctx.font='12px sans-serif';for(let v=0;v<=120;v+=40){const y=chart.scales.y.getPixelForValue(v);ctx.fillText(v.toString(),left+15,top-6);ctx.beginPath();ctx.moveTo(left,top-2);ctx.lineTo(left+6,top-2);ctx.strokeStyle='#607080';ctx.stroke()}ctx.restore()}},{id:'rightA',afterDraw:chart=>{const{ctx,chartArea:{top,bottom,right}}=chart;const ys=chart.scales.y;ctx.save();ctx.translate(right+55,(top+bottom)/2);ctx.rotate(Math.PI/2);ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText('HCO₃⁻ — ось справа',0,0);ctx.restore();ctx.font='12px sans-serif';ctx.fillStyle='#1565c0';ctx.textAlign='left';for(let v=0;v<=120;v+=20){const y=ys.getPixelForValue(v);const hc=0.03*v*Math.pow(10,7.4-6.1);ctx.fillText(hc.toFixed(0),right+6,y+4)}ctx.restore()}}]});
+ds.push({label:'Зона алкалоза',data:phR.map(p=>({x:p,y:fn(30,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(220,38,38,0.06)',fill:true,pointRadius:0,order:20});
+ds.push({label:'Зона ацидоза',data:phR.map(p=>({x:p,y:fn(15,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(217,119,6,0.06)',fill:true,pointRadius:0,order:21});
+list.forEach((h,i)=>{const nrm=h===24;ds.push({label:'HCO₃⁻ = '+h,data:phR.map(p=>({x:p,y:fn(h,p)})),borderColor:nrm?'#16a34a':cl[i],borderWidth:nrm?2.5:1.4,borderDash:nrm?[]:[4,4],pointRadius:0,order:nrm?1:5})});
+ds.push({label:'Пациент',data:[{x:pH,y:pCO2}],borderColor:'#dc2626',backgroundColor:'#dc2626',pointRadius:10,pointBorderColor:'#fff',pointBorderWidth:2,showLine:false,order:0});
+sChart=new Chart(ctx,{type:'line',data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11,family:'Inter'},filter:i=>!i.text.includes('Зона')}}},scales:{x:{type:'linear',min:7.0,max:7.8,title:{display:true,text:'pH крови'}},y:{type:'linear',min:0,max:120,title:{display:true,text:'pCO₂ (мм рт.ст.)'}}}},plugins:[{id:'bg2',beforeDraw:c=>{const{ctx,chartArea}=c;if(!chartArea)return;ctx.save();ctx.fillStyle=document.documentElement.getAttribute('data-theme')==='dark'?'#111827':'#ffffff';ctx.fillRect(chartArea.left,chartArea.top,chartArea.width,chartArea.height);ctx.restore();}}]});
 }
 
-window.addEventListener('load',function(){
-  initTheme();
-  calc();
-});
+window.addEventListener('load',function(){initTheme();calc();});
 </script>
 </body>
 </html>
