@@ -1,0 +1,509 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">from IPython.display import HTML, display</p>
+<p class="p2"><br></p>
+<p class="p1">html_code = r"""</p>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="ru"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</p>
+<p class="p1">&lt;title&gt;ICU Navigator v6&lt;/title&gt;</p>
+<p class="p1">&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>:root{--bg:#0f1419;--card:#1a2129;--acc:#4fc3f7;--ok:#66bb6a;--warn:#ffb74d;--bad:#ef5350;--txt:#e6edf3;--mut:#8b949e;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>*{box-sizing:border-box;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,sans-serif;padding:16px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>h1{font-size:20px;margin:0 0 4px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.sub{color:var(--mut);font-size:12px;margin-bottom:16px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.card{background:var(--card);border-radius:10px;padding:14px;border:1px solid #2a333d;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.card h2{font-size:13px;margin:0 0 10px;color:var(--acc);text-transform:uppercase;letter-spacing:.5px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>label{display:block;font-size:12px;color:var(--mut);margin:8px 0 3px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>input,select{width:100%;padding:8px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:var(--txt);font-size:14px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>input:focus,select:focus{outline:none;border-color:var(--acc);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.res{background:var(--card);border-radius:10px;padding:14px;margin-top:12px;border:1px solid #2a333d;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #2a333d;font-size:14px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.row:last-child{border:none;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.row span:last-child{font-weight:600;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.tag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:12px;font-weight:600;margin:2px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.ok{background:rgba(102,187,106,.2);color:var(--ok);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.warn{background:rgba(255,183,77,.2);color:var(--warn);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.bad{background:rgba(239,83,80,.2);color:var(--bad);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.btnrow{display:flex;gap:8px;margin-top:14px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>button{flex:1;padding:12px;background:var(--acc);border:none;border-radius:8px;color:#0d1117;font-weight:700;font-size:15px;cursor:pointer;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>button:hover{opacity:.9;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>button.ghost{background:transparent;border:1px solid var(--acc);color:var(--acc);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>button.ghost:hover{background:rgba(79,195,247,.1);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>canvas{max-height:340px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.diag{margin-top:10px;padding:12px;background:#0d1117;border-radius:8px;font-size:13px;line-height:1.6;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.diag h3{font-size:13px;color:var(--acc);margin:12px 0 6px;text-transform:uppercase;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.diag ul{margin:6px 0 6px 18px;padding:0;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.diag li{margin:4px 0;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.final{margin-top:12px;padding:12px;background:linear-gradient(135deg,#1e3a5f,#1a2129);border-left:3px solid var(--acc);border-radius:6px;font-size:14px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.final ul{margin:8px 0 0 18px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.final li{margin:6px 0;font-size:13px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.expl{margin-top:14px;padding:12px;background:#0d1117;border-radius:8px;border-left:3px solid var(--warn);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.expl h3{font-size:13px;color:var(--warn);margin:0 0 8px;text-transform:uppercase;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.expl details{margin:6px 0;padding:8px;background:#131a20;border-radius:6px;font-size:13px;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.expl summary{cursor:pointer;font-weight:600;color:var(--acc);outline:none;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.expl summary:hover{color:#81d4fa;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.expl .fml{background:#0a0e12;padding:8px 10px;border-radius:5px;margin:6px 0;font-family:Consolas,Monaco,monospace;font-size:12.5px;color:#a5d6ff;overflow-x:auto;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.expl .note{color:var(--mut);font-size:12px;margin-top:4px;font-style:italic;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#66bb6a;color:#0d1117;padding:10px 20px;border-radius:8px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:999;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.toast.show{opacity:1;}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1">&lt;h1&gt;🧭 ICU Navigator v6&lt;/h1&gt;</p>
+<p class="p1">&lt;div class="sub"&gt;КОС · Стюарт · Winter's · SBE-разбивка (FW/Cl/Alb/UA) · ΔΔ · с копированием&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h2&gt;Газы крови&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;pH&lt;/label&gt;&lt;input id="pH" type="number" step="0.001" value="7.40"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;pCO₂ (мм рт.ст.)&lt;/label&gt;&lt;input id="pCO2" type="number" step="0.1" value="40"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;HCO₃⁻ (лабораторный, ммоль/л)&lt;/label&gt;&lt;input id="HCO3in" type="number" step="0.1" value="24"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;SBE (от анализатора, ммоль/л)&lt;/label&gt;&lt;input id="SBE" type="number" step="0.1" value="0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Лактат (ммоль/л)&lt;/label&gt;&lt;input id="Lac" type="number" step="0.1" value="1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;pO₂ (мм рт.ст.)&lt;/label&gt;&lt;input id="pO2" type="number" step="0.1" value="90"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;FiO₂ (%)&lt;/label&gt;&lt;input id="FiO2" type="number" step="1" value="21"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h2&gt;Электролиты&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Na⁺ (ммоль/л)&lt;/label&gt;&lt;input id="Na" type="number" step="0.1" value="140"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Cl⁻ (ммоль/л)&lt;/label&gt;&lt;input id="Cl" type="number" step="0.1" value="103"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;K⁺ (ммоль/л)&lt;/label&gt;&lt;input id="K" type="number" step="0.1" value="4.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Ca²⁺ (ммоль/л)&lt;/label&gt;&lt;input id="Ca" type="number" step="0.01" value="1.2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Mg²⁺ (ммоль/л)&lt;/label&gt;&lt;input id="Mg" type="number" step="0.01" value="0.9"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h2&gt;Белки и метаболиты&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Альбумин (г/л)&lt;/label&gt;&lt;input id="Alb" type="number" step="0.1" value="40"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;PO₄ (ммоль/л)&lt;/label&gt;&lt;input id="PO4" type="number" step="0.01" value="1.1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Глюкоза (ммоль/л)&lt;/label&gt;&lt;input id="Gluc" type="number" step="0.1" value="5.5"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Коррекция Na на глюкозу&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;select id="naCorr"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="off"&gt;Выключена&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="on"&gt;Включена (Katz)&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Хроничность (респ. сдвиг)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;select id="chronic"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="auto"&gt;Авто&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="acute"&gt;Острое&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="chronic"&gt;Хроническое&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="btnrow"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="calc()"&gt;Рассчитать&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;button class="ghost" onclick="copyResult()"&gt;📋 Скопировать результат&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="res" id="out" style="display:none"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2 style="font-size:13px;color:var(--acc);margin:0 0 10px;"&gt;Числовые результаты&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="results"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="diag" id="diagnosis"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="expl" id="explanations"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="grid" style="margin-top:14px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;&lt;h2&gt;Диаграмма Гэмбла&lt;/h2&gt;&lt;canvas id="gamble"&gt;&lt;/canvas&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;&lt;h2&gt;Номограмма Сиггаарда-Андерсена&lt;/h2&gt;&lt;canvas id="siggaard"&gt;&lt;/canvas&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="toast" id="toast"&gt;✓ Скопировано в буфер обмена&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">function num(id){return parseFloat(document.getElementById(id).value);}</p>
+<p class="p1">function fixed(x,n=2){return (isNaN(x)||!isFinite(x))?"—":x.toFixed(n);}</p>
+<p class="p1">let lastReport = "";</p>
+<p class="p2"><br></p>
+<p class="p1">function calc(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const pH=num('pH'), pCO2=num('pCO2'), HCO3in=num('HCO3in'), SBE=num('SBE'), Lac=num('Lac');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const pO2=num('pO2'), FiO2=num('FiO2');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const Na=num('Na'), Cl=num('Cl'), K=num('K'), Ca=num('Ca'), Mg=num('Mg');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const Alb=num('Alb'), PO4=num('PO4'), Gluc=num('Gluc');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const naCorrMode = document.getElementById('naCorr').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const chronicMode = document.getElementById('chronic').value;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const HCO3calc = 0.03 * pCO2 * Math.pow(10, pH - 6.1);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const HCO3 = HCO3in || HCO3calc;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>let NaCorr = Na;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (naCorrMode === 'on' &amp;&amp; Gluc &gt; 5.5) NaCorr = Na + 1.6 * ((Gluc - 5.5)/5.5);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const PF = pO2 / (FiO2/100);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const AG = NaCorr - (Cl + HCO3);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const AGcorr = AG + 0.25 * (40 - Alb);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const deltaAG = AGcorr - 12;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const deltaHCO3 = 24 - HCO3;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// ΔΔ считаем только при метаболическом ацидозе (HCO3 &lt; 24)</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const deltaDelta = (HCO3 &lt; 24 &amp;&amp; deltaHCO3 &gt; 0) ? deltaAG / deltaHCO3 : NaN;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const SBE_FW<span class="Apple-converted-space">  </span>= 0.3 * (Na - 140);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const SBE_Cl<span class="Apple-converted-space">  </span>= 104 - (Cl * 140 / Na);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const SBE_Alb = (0.148 * pH - 0.818) * (40 - Alb);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const SBE_UA<span class="Apple-converted-space">  </span>= SBE - SBE_FW - SBE_Cl - SBE_Alb;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const deltaAP_from_SBE = -SBE_UA; <span class="Apple-converted-space">  </span>// ΔАП ≈ −SBE_UA (по учебнику)</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const SIDa = NaCorr + K + Mg - Cl - Lac;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const AlbGdl = Alb/10;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const AlbCh = AlbGdl * (0.123*pH - 0.631) * 10;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const PO4Ch = PO4 * (0.309*pH - 0.469);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const SIDe = HCO3 + AlbCh + PO4Ch;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const SIG = SIDa - SIDe;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// ===== ЧИСЛА =====</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const rows = [</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["HCO₃⁻ (лабораторный)", fixed(HCO3in,1)+" ммоль/л"],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["HCO₃⁻ (расчётный)", fixed(HCO3calc,1)+" ммоль/л"],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["Na⁺ (используется)", fixed(NaCorr,1)+" ммоль/л"],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["P/F ratio", fixed(PF,0)+" мм рт.ст."],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["Anion Gap (АП)", fixed(AG)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["АП коррект. (альбумин)", fixed(AGcorr)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["ΔAG", fixed(deltaAG)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["ΔHCO₃⁻", fixed(deltaHCO3)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["ΔΔ (дельта-разница)", isNaN(deltaDelta) ? "не применимо" : fixed(deltaDelta,2)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["—— SBE-разбивка ——", ""],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["SBE (входной)", fixed(SBE,1)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["SBE_FW (эффект воды)", fixed(SBE_FW)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["SBE_Cl (эффект хлора)", fixed(SBE_Cl)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["SBE_Alb (эффект альбумина)", fixed(SBE_Alb)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["SBE_UA (неизмер. анионы)", fixed(SBE_UA)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["ΔАП ≈ −SBE_UA", fixed(deltaAP_from_SBE)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["—— Стюарт ——", ""],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["SID_a", fixed(SIDa)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["SID_e", fixed(SIDe)],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>["SIG", fixed(SIG)],</p>
+<p class="p1"><span class="Apple-converted-space">  </span>];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('results').innerHTML = rows.map(r=&gt;`&lt;div class="row"&gt;&lt;span&gt;${r[0]}&lt;/span&gt;&lt;span&gt;${r[1]}&lt;/span&gt;&lt;/div&gt;`).join('');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// ===== ЛОГИКА =====</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const logs = [];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const diagnoses = [];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const explain = [];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>let primary = pH &lt; 7.35 ? "acidemia" : pH &gt; 7.45 ? "alkalemia" : "normal";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>logs.push(`&lt;b&gt;Шаг 1. Вектор pH:&lt;/b&gt; ${fixed(pH,3)} → ${primary==='acidemia'?'ацидемия':primary==='alkalemia'?'алкалемия':'норма'}.`);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const respAcid = pCO2 &gt; 45;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const respAlk<span class="Apple-converted-space">  </span>= pCO2 &lt; 35;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const metAcid<span class="Apple-converted-space">  </span>= HCO3 &lt; 22 || SBE &lt; -2;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const metAlk <span class="Apple-converted-space">  </span>= HCO3 &gt; 26 || SBE &gt; 2;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// --- Шаг 3: Респираторный компонент ---</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (respAcid) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let mode = chronicMode;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (chronicMode === 'auto') mode = (HCO3 &gt; 28) ? 'chronic' : 'acute';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const expHCO3 = mode === 'acute' ? 24 + 0.1*(pCO2-40) : 24 + 0.35*(pCO2-40);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>logs.push(`&lt;b&gt;Шаг 3. Респираторный ацидоз&lt;/b&gt; (${mode==='acute'?'острое':'хроническое'}): ожид. HCO₃⁻ = ${fixed(expHCO3,1)}.`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>diagnoses.push({name:"Респираторный ацидоз" + (mode==='chronic'?" (хронический)":""), detail:`pCO₂ = ${fixed(pCO2,1)} мм рт.ст. (&gt;45), pH = ${fixed(pH,3)}.`});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>explain.push({</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title:"Респираторный ацидоз",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>why:`pCO₂ = ${fixed(pCO2,1)} мм рт.ст. &gt; 45 → альвеолярная гиповентиляция.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>formula:`pCO₂ &gt; 45 мм рт.ст.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>details:mode === 'acute'</p>
+<p class="p1"><span class="Apple-converted-space">        </span>? `Острая форма: HCO₃⁻ растёт на 1 ммоль/л на 10 мм рт.ст. pCO₂ → ожид. HCO₃⁻ = 24 + 0.1×(${fixed(pCO2,1)}−40) = ${fixed(24+0.1*(pCO2-40),1)}.`</p>
+<p class="p1"><span class="Apple-converted-space">        </span>: `Хроническая: почки компенсируют за 3–5 дней → ожид. HCO₃⁻ = 24 + 0.35×(${fixed(pCO2,1)}−40) = ${fixed(24+0.35*(pCO2-40),1)}.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>note:`Причины: обструкция ДП, угнетение ЦНС, нейромышечные расстройства.`</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else if (respAlk) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let mode = chronicMode;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (chronicMode === 'auto') mode = (HCO3 &lt; 20) ? 'chronic' : 'acute';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const expHCO3 = mode === 'acute' ? 24 - 0.2*(40-pCO2) : 24 - 0.4*(40-pCO2);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>logs.push(`&lt;b&gt;Шаг 3. Респираторный алкалоз&lt;/b&gt; (${mode==='acute'?'острое':'хроническое'}): ожид. HCO₃⁻ = ${fixed(expHCO3,1)}.`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>diagnoses.push({name:"Респираторный алкалоз" + (mode==='chronic'?" (хронический)":""), detail:`pCO₂ = ${fixed(pCO2,1)} мм рт.ст. (&lt;35), pH = ${fixed(pH,3)}.`});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>explain.push({</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title:"Респираторный алкалоз",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>why:`pCO₂ = ${fixed(pCO2,1)} мм рт.ст. &lt; 35 → гипервентиляция.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>formula:`pCO₂ &lt; 35 мм рт.ст.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>details:mode === 'acute'</p>
+<p class="p1"><span class="Apple-converted-space">        </span>? `Острая форма: ожид. HCO₃⁻ = 24 − 0.2×(40−${fixed(pCO2,1)}) = ${fixed(24-0.2*(40-pCO2),1)}.`</p>
+<p class="p1"><span class="Apple-converted-space">        </span>: `Хроническая: ожид. HCO₃⁻ = 24 − 0.4×(40−${fixed(pCO2,1)}) = ${fixed(24-0.4*(40-pCO2),1)}.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>note:`Причины: гипоксия, сепсис, боль, тревога, ИВЛ с избыточной вентиляцией.`</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// --- Шаг 4: HAGMA ---</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (AGcorr &gt; 14) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let d = `АП_корр = ${fixed(AGcorr)} мЭкв/л (&gt;14).`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (Lac &gt; 2) d += ` Лактат = ${fixed(Lac,1)} ммоль/л → &lt;b&gt;лактат-ацидоз&lt;/b&gt;.`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>diagnoses.push({name:"Метаболический ацидоз с увеличенным АП" + (Lac&gt;2?" (лактат-ацидоз)":""), detail:d});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>logs.push(`&lt;b&gt;Шаг 4. HAGMA:&lt;/b&gt; ${d}`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>explain.push({</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title:"HAGMA — метаболический ацидоз с увеличенным АП",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>why:`АП_корр = ${fixed(AGcorr)} &gt; 14 → накопление нелетучих кислот.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>formula:`АП = Na⁺ − (Cl⁻ + HCO₃⁻) = ${fixed(NaCorr,1)} − (${fixed(Cl,1)} + ${fixed(HCO3,1)}) = ${fixed(AG)}\nАП_корр = АП + 0.25 × (40 − Alb) = ${fixed(AG)} + 0.25 × (40 − ${fixed(Alb,1)}) = ${fixed(AGcorr)}`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>details:Lac &gt; 2</p>
+<p class="p1"><span class="Apple-converted-space">        </span>? `Лактат ${fixed(Lac,1)} ммоль/л — ведущий источник HAGMA.`</p>
+<p class="p1"><span class="Apple-converted-space">        </span>: `Источник — эндогенные кислоты (кетоны, лактат, уремия, токсины).`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>note:`Норма АП: 8–12 мЭкв/л. Норма АП_корр: ≤14.`</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>logs.push(`&lt;b&gt;Шаг 4. HAGMA:&lt;/b&gt; АП_корр = ${fixed(AGcorr)} ≤ 14 — норма.`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// --- Шаг 5: SBE_UA / ΔАП ---</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (deltaAP_from_SBE &gt; 2) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>diagnoses.push({name:"Метаболический ацидоз по SBE_UA / ΔАП (неизмеряемые анионы)",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>detail:`ΔАП = ${fixed(deltaAP_from_SBE)} ммоль/л (&gt;2) → накопление неизмеряемых анионов.`});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>logs.push(`&lt;b&gt;Шаг 5. SBE_UA → ΔАП:&lt;/b&gt; SBE_UA = ${fixed(SBE_UA)}, ΔАП = ${fixed(deltaAP_from_SBE)} (&gt;2) → неизмеряемые анионы.`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>explain.push({</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title:"Метаболический ацидоз по SBE_UA / ΔАП",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>why:`ΔАП = ${fixed(deltaAP_from_SBE)} &gt; 2 ммоль/л — накопление неизмеряемых анионов.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>formula:`SBE_FW<span class="Apple-converted-space">  </span>= 0.3 × (Na − 140) = 0.3 × (${fixed(Na,1)} − 140) = ${fixed(SBE_FW)}\nSBE_Cl<span class="Apple-converted-space">  </span>= 104 − (Cl × 140 / Na) = 104 − (${fixed(Cl,1)} × 140 / ${fixed(Na,1)}) = ${fixed(SBE_Cl)}\nSBE_Alb = (0.148 × pH − 0.818) × (40 − Alb) = (0.148 × ${fixed(pH,3)} − 0.818) × (40 − ${fixed(Alb,1)}) = ${fixed(SBE_Alb)}\nSBE_UA<span class="Apple-converted-space">  </span>= SBE − SBE_FW − SBE_Cl − SBE_Alb = ${fixed(SBE_UA)}\nΔАП ≈ −SBE_UA = ${fixed(deltaAP_from_SBE)}`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>details:`По учебнику SBE_UA отрицательный, но его модуль отражает ΔАП.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>note:`Норма ΔАП: −2…+2. Повышение &gt; 2 — HAGMA по Стюарту.`</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>logs.push(`&lt;b&gt;Шаг 5. SBE_UA → ΔАП:&lt;/b&gt; ΔАП = ${fixed(deltaAP_from_SBE)} ≤ 2 — норма.`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// --- Шаг 6: ΔΔ ---</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!isNaN(deltaDelta)) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (deltaDelta &lt; 1) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>diagnoses.push({name:"Метаболический ацидоз с нормальным АП (гиперхлоремический, NAGMA)",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>detail:`ΔΔ = ${fixed(deltaDelta,2)} (&lt;1), HCO₃⁻ = ${fixed(HCO3,1)}, Cl⁻ = ${fixed(Cl,1)} → гиперхлоремия.`});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>logs.push(`&lt;b&gt;Шаг 6. ΔΔ:&lt;/b&gt; ${fixed(deltaDelta,2)} (&lt;1) → NAGMA.`);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>explain.push({</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title:"NAGMA — гиперхлоремический метаболический ацидоз",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>why:`ΔΔ = ${fixed(deltaDelta,2)} &lt; 1 при HCO₃⁻ = ${fixed(HCO3,1)} и Cl⁻ = ${fixed(Cl,1)}.`,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>formula:`ΔAG = АП_корр − 12 = ${fixed(AGcorr)} − 12 = ${fixed(deltaAG)}\nΔHCO₃⁻ = 24 − HCO₃⁻ = 24 − ${fixed(HCO3,1)} = ${fixed(deltaHCO3)}\nΔΔ = ΔAG / ΔHCO₃⁻ = ${fixed(deltaAG)} / ${fixed(deltaHCO3)} = ${fixed(deltaDelta,2)}`,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>details:`ΔΔ &lt; 1 → часть ацидоза обусловлена гиперхлоремией.`,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>note:`Причины: диарея, RTA, инфузия NaCl, ацетазоламид. Норма ΔΔ: 1–2.`</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>} else if (deltaDelta &gt; 2) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>diagnoses.push({name:"Сопутствующий метаболический алкалоз (по ΔΔ)",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>detail:`ΔΔ = ${fixed(deltaDelta,2)} (&gt;2) → скрытый метаболический алкалоз.`});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>logs.push(`&lt;b&gt;Шаг 6. ΔΔ:&lt;/b&gt; ${fixed(deltaDelta,2)} (&gt;2) → мет. алкалоз.`);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>explain.push({</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title:"Сопутствующий метаболический алкалоз (по ΔΔ)",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>why:`ΔΔ = ${fixed(deltaDelta,2)} &gt; 2 → АП вырос сильнее, чем упал HCO₃⁻.`,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>formula:`ΔΔ = ΔAG / ΔHCO₃⁻ = ${fixed(deltaAG)} / ${fixed(deltaHCO3)} = ${fixed(deltaDelta,2)}`,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>details:`Избыточный прирост АП → есть параллельный алкалоз.`,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>note:`Причины: рвота, диуретики, гипокалиемия, гипохлоремия.`</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>logs.push(`&lt;b&gt;Шаг 6. ΔΔ:&lt;/b&gt; ${fixed(deltaDelta,2)} (1–2) — изолированный HAGMA.`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>logs.push(`&lt;b&gt;Шаг 6. ΔΔ:&lt;/b&gt; не применимо (HCO₃⁻ ≥ 24 — нет метаболического ацидоза).`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// --- Шаг 7: Метаболический алкалоз (независимо от респираторного!) ---</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (metAlk) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>diagnoses.push({name:"Метаболический алкалоз",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>detail:`SBE = ${fixed(SBE,1)} (&gt;2) и/или HCO₃⁻ = ${fixed(HCO3,1)} (&gt;26).`});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>logs.push(`&lt;b&gt;Шаг 7. Метаболический алкалоз:&lt;/b&gt; SBE = ${fixed(SBE,1)} &gt; 2.`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>explain.push({</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title:"Метаболический алкалоз",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>why:`SBE = ${fixed(SBE,1)} &gt; 2 и/или HCO₃⁻ = ${fixed(HCO3,1)} &gt; 26.`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>formula:`SBE &gt; 2 ммоль/л\nHCO₃⁻ &gt; 26 ммоль/л`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>details:`Избыток оснований → алкалоз. Компенсация: гиповентиляция (рост pCO₂).`,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>note:`Причины: рвота, диуретики, гипокалиемия, гиперальдостеронизм, избыток HCO₃⁻.`</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// --- Шаг 8: Winter's ---</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let winterInfo = "—";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let compCheck = [];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (metAcid) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const lo = 1.5*HCO3 + 8 - 2, hi = 1.5*HCO3 + 8 + 2;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>winterInfo = `Winter's: ожидаемый pCO₂ = 1.5×${fixed(HCO3,1)} + 8 ± 2 = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (pCO2 &gt; hi) compCheck.push(`pCO₂ ${fixed(pCO2,1)} &gt; ${fixed(hi,1)} → сопутствующий респ. ацидоз`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else if (pCO2 &lt; lo) compCheck.push(`pCO₂ ${fixed(pCO2,1)} &lt; ${fixed(lo,1)} → сопутствующий респ. алкалоз`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else compCheck.push(`pCO₂ в норме компенсации`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else if (metAlk) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const lo = 0.7*HCO3 + 21 - 2, hi = 0.7*HCO3 + 21 + 2;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>winterInfo = `Ожидаемый pCO₂ при мет. алкалозе = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>compCheck.push(pCO2 &gt; hi ? `pCO₂ выше → респ. ацидоз` : pCO2 &lt; lo ? `pCO₂ ниже → респ. алкалоз` : `компенсация адекватна`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// --- Шаг 9: Оксигенация ---</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let oxyTag = PF &gt; 300 ? `&lt;span class="tag ok"&gt;P/F = ${fixed(PF,0)} — норма&lt;/span&gt;`</p>
+<p class="p1"><span class="Apple-converted-space">    </span>: PF &gt;= 200 ? `&lt;span class="tag warn"&gt;P/F = ${fixed(PF,0)} — ОРДС лёгкая&lt;/span&gt;`</p>
+<p class="p1"><span class="Apple-converted-space">    </span>: PF &gt;= 100 ? `&lt;span class="tag bad"&gt;P/F = ${fixed(PF,0)} — ОРДС средняя&lt;/span&gt;`</p>
+<p class="p1"><span class="Apple-converted-space">    </span>: `&lt;span class="tag bad"&gt;P/F = ${fixed(PF,0)} — ОРДС тяжёлая&lt;/span&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const n = diagnoses.length;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let multi = n &gt;= 4 ? "⚠ Множественное нарушение КОС (≥4 компонентов)"</p>
+<p class="p1"><span class="Apple-converted-space">    </span>: n === 3 ? "⚠ Тройное нарушение КОС"</p>
+<p class="p1"><span class="Apple-converted-space">    </span>: n === 2 ? "Смешанное нарушение КОС"</p>
+<p class="p1"><span class="Apple-converted-space">    </span>: n === 1 ? "Изолированное нарушение КОС" : "";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>let finalHTML = diagnoses.length &gt; 0</p>
+<p class="p1"><span class="Apple-converted-space">    </span>? `&lt;b&gt;${multi}&lt;/b&gt;&lt;ul&gt;${diagnoses.map((d,i)=&gt;`&lt;li&gt;&lt;b&gt;${i+1}. ${d.name}.&lt;/b&gt; ${d.detail}&lt;/li&gt;`).join('')}&lt;/ul&gt;`</p>
+<p class="p1"><span class="Apple-converted-space">    </span>: "&lt;b&gt;КОС в пределах нормы&lt;/b&gt;";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('diagnosis').innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h3&gt;Ход рассуждения&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;ul&gt;${logs.map(l=&gt;`&lt;li&gt;${l}&lt;/li&gt;`).join('')}&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h3&gt;Компенсация&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;${winterInfo}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;ul&gt;${compCheck.map(c=&gt;`&lt;li&gt;${c}&lt;/li&gt;`).join('')}&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h3&gt;Оксигенация&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;${oxyTag}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="final"&gt;${finalHTML}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// --- Пояснения ---</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let explHTML = `&lt;h3&gt;Пояснения к диагнозу (формулы и логика)&lt;/h3&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (explain.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>explHTML += `&lt;div class="note"&gt;Нарушений не выявлено — все показатели в норме.&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>explain.forEach((e,i)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>explHTML += `&lt;details ${i===0?'open':''}&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;summary&gt;${i+1}. ${e.title}&lt;/summary&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="margin-top:6px;"&gt;&lt;b&gt;Почему:&lt;/b&gt; ${e.why}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="fml"&gt;${e.formula.replace(/\n/g,'&lt;br&gt;')}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;b&gt;Что это значит:&lt;/b&gt; ${e.details}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="note"&gt;${e.note}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/details&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('explanations').innerHTML = explHTML;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// ===== ТЕКСТОВЫЙ ОТЧЁТ ДЛЯ КОПИРОВАНИЯ =====</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const stripTags = (s)=&gt; s.replace(/&lt;[^&gt;]+&gt;/g,'');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const lines = [];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("═══ ICU NAVIGATOR — ОТЧЁТ ═══");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("── ВХОДНЫЕ ДАННЫЕ ──");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push(`pH: ${fixed(pH,3)} <span class="Apple-converted-space">  </span>pCO₂: ${fixed(pCO2,1)} <span class="Apple-converted-space">  </span>HCO₃⁻: ${fixed(HCO3,1)} <span class="Apple-converted-space">  </span>SBE: ${fixed(SBE,1)}`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push(`Na: ${fixed(Na,1)} <span class="Apple-converted-space">  </span>K: ${fixed(K,1)} <span class="Apple-converted-space">  </span>Cl: ${fixed(Cl,1)} <span class="Apple-converted-space">  </span>Ca: ${fixed(Ca,2)} <span class="Apple-converted-space">  </span>Mg: ${fixed(Mg,2)}`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push(`Alb: ${fixed(Alb,1)} <span class="Apple-converted-space">  </span>PO₄: ${fixed(PO4,2)} <span class="Apple-converted-space">  </span>Глюкоза: ${fixed(Gluc,1)} <span class="Apple-converted-space">  </span>Лактат: ${fixed(Lac,1)}`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push(`pO₂: ${fixed(pO2,1)} <span class="Apple-converted-space">  </span>FiO₂: ${fixed(FiO2,0)}%`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("── РАСЧЁТЫ ──");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rows.forEach(r=&gt;{ if(r[1] !== "") lines.push(`${r[0]}: ${r[1]}`); });</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("── ХОД РАССУЖДЕНИЯ ──");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>logs.forEach(l=&gt;lines.push("• " + stripTags(l)));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("── КОМПЕНСАЦИЯ ──");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push(winterInfo);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>compCheck.forEach(c=&gt;lines.push("• " + stripTags(c)));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("── ОКСИГЕНАЦИЯ ──");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push(stripTags(oxyTag));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("── ДИАГНОЗ ──");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (diagnoses.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>lines.push("КОС в пределах нормы");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>lines.push(multi);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>diagnoses.forEach((d,i)=&gt;lines.push(`${i+1}. ${d.name}. ${stripTags(d.detail)}`));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("── ПОЯСНЕНИЯ (формулы) ──");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>explain.forEach((e,i)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>lines.push(`${i+1}. ${e.title}`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>lines.push(` <span class="Apple-converted-space">  </span>Почему: ${stripTags(e.why)}`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>lines.push(` <span class="Apple-converted-space">  </span>Формула: ${e.formula.replace(/\n/g,' | ')}`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>lines.push(` <span class="Apple-converted-space">  </span>Значение: ${stripTags(e.details)}`);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>lines.push(` <span class="Apple-converted-space">  </span>Note: ${stripTags(e.note)}`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>lines.push("Сформировано: ICU Navigator v6");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>lastReport = lines.join("\n");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Визуализация</p>
+<p class="p1"><span class="Apple-converted-space">  </span>drawGamble(NaCorr, K, Ca, Mg, Cl, HCO3, Lac, SIG&gt;0?SIG:0);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>drawSiggaard(pH, pCO2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('out').style.display = 'block';</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function copyResult(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!lastReport) { calc(); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Копирование через временный textarea (для Colab iframe)</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ta = document.createElement("textarea");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ta.value = lastReport;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ta.style.position = "fixed";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ta.style.top = "-1000px";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ta.style.left = "-1000px";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.body.appendChild(ta);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ta.focus();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ta.select();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let ok = false;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>ok = document.execCommand("copy");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} catch(e) { ok = false; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.body.removeChild(ta);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Fallback через Clipboard API</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!ok &amp;&amp; navigator.clipboard) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>navigator.clipboard.writeText(lastReport).then(()=&gt;showToast()).catch(()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>showToast("Не удалось скопировать — выделите текст вручную");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>showToast(ok ? "✓ Скопировано в буфер обмена" : "Не удалось скопировать");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function showToast(msg){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const t = document.getElementById('toast');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>t.textContent = msg;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>t.classList.add('show');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>setTimeout(()=&gt;t.classList.remove('show'), 2000);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">let gChart=null, sChart=null;</p>
+<p class="p1">function drawGamble(Na,K,Ca,Mg,Cl,HCO3,Lac,SIG){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ctx = document.getElementById('gamble');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (gChart) gChart.destroy();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>gChart = new Chart(ctx, {type:'bar', data:{labels:['Катионы (+)','Анионы (−)'], datasets:[</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'Na', data:[Na,0], backgroundColor:'#4fc3f7'},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'K', data:[K,0], backgroundColor:'#81d4fa'},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'Ca', data:[Ca,0], backgroundColor:'#4dd0e1'},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'Mg', data:[Mg,0], backgroundColor:'#26c6da'},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'Cl', data:[0,Cl], backgroundColor:'#ef5350'},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'HCO₃', data:[0,HCO3], backgroundColor:'#ffb74d'},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'Lactate', data:[0,Lac], backgroundColor:'#ab47bc'},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'SIG', data:[0,SIG], backgroundColor:'#78909c'},</p>
+<p class="p1"><span class="Apple-converted-space">  </span>]}, options:{responsive:true, scales:{x:{stacked:true, ticks:{color:'#8b949e'}}, y:{stacked:true, ticks:{color:'#8b949e'}, grid:{color:'#2a333d'}}}, plugins:{legend:{labels:{color:'#e6edf3', font:{size:10}}}}}});</p>
+<p class="p1">}</p>
+<p class="p1">function drawSiggaard(pH,pCO2){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ctx = document.getElementById('siggaard');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (sChart) sChart.destroy();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>function pco2FromHCO3(h,p){return h/(0.03*Math.pow(10,p-6.1));}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ph=[]; for(let p=7.0;p&lt;=7.8;p+=0.02) ph.push(p);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const normal=ph.map(p=&gt;({x:p,y:Math.log10(pco2FromHCO3(24,p))}));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const lo=ph.map(p=&gt;({x:p,y:Math.log10(pco2FromHCO3(15,p))}));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const hi=ph.map(p=&gt;({x:p,y:Math.log10(pco2FromHCO3(35,p))}));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const acute=ph.map(p=&gt;({x:p,y:Math.log10(Math.max(1,40-(p-7.4)/0.008))}));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const chron=ph.map(p=&gt;({x:p,y:Math.log10(Math.max(1,40-(p-7.4)/0.003))}));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>sChart = new Chart(ctx, {type:'line', data:{datasets:[</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'Норма (HCO₃=24)', data:normal, borderColor:'#66bb6a', borderWidth:2, pointRadius:0, tension:0},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'HCO₃=15', data:lo, borderColor:'#ffb74d', borderWidth:1, pointRadius:0, borderDash:[4,4], tension:0},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'HCO₃=35', data:hi, borderColor:'#4fc3f7', borderWidth:1, pointRadius:0, borderDash:[4,4], tension:0},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'Острая респ.', data:acute, borderColor:'#ab47bc', borderWidth:1, pointRadius:0, tension:0},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'Хронич. респ.', data:chron, borderColor:'#26c6da', borderWidth:1, pointRadius:0, tension:0},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{label:'Пациент', data:[{x:pH,y:Math.log10(pCO2)}], borderColor:'#ef5350', backgroundColor:'#ef5350', pointRadius:8, showLine:false},</p>
+<p class="p1"><span class="Apple-converted-space">  </span>]}, options:{responsive:true, scales:{x:{type:'linear',min:7.0,max:7.8,title:{display:true,text:'pH',color:'#8b949e'},ticks:{color:'#8b949e'},grid:{color:'#2a333d'}}, y:{title:{display:true,text:'log₁₀(pCO₂)',color:'#8b949e'},ticks:{color:'#8b949e'},grid:{color:'#2a333d'}}}, plugins:{legend:{labels:{color:'#e6edf3',font:{size:10}}}}}});</p>
+<p class="p1">}</p>
+<p class="p1">calc();</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+<p class="p1">"""</p>
+<p class="p2"><br></p>
+<p class="p1">display(HTML(html_code))</p>
+</body>
+</html>
