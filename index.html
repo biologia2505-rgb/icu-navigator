@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v14.0 Soft Aesthetic</title>
+<title>ICU Navigator v15.0 Mesh Gradient</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
   --bg: #fdfbf7;
-  --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #f4ede2 100%);
-  --card: rgba(255, 255, 255, 0.75);
+  --card: rgba(255, 255, 255, 0.78);
   --card-solid: #ffffff;
-  --acc: #d4a373; /* Теплый песочно-бежевый / кэмел */
-  --acc-hover: #bc8a5f;
-  --acc-glow: rgba(212, 163, 115, 0.2);
+  --acc: #c89664;
+  --acc-hover: #b07e4d;
+  --acc-glow: rgba(200, 150, 100, 0.22);
   --acc2: #283618;
   --ok: #606c38;
   --okbg: rgba(96, 108, 56, 0.08);
@@ -24,20 +23,19 @@
   --bad: #bc4749;
   --badbg: rgba(188, 71, 73, 0.08);
   --txt: #333333;
-  --mut: #8d8d8d;
-  --border: rgba(212, 163, 115, 0.2);
-  --shadow: 0 20px 40px -15px rgba(140, 120, 100, 0.12);
+  --mut: #828282;
+  --border: rgba(200, 150, 100, 0.2);
+  --shadow: 0 20px 40px -15px rgba(120, 100, 80, 0.12);
   --radius: 24px;
 }
 
 [data-theme="dark"] {
-  --bg: #161513;
-  --bg-gradient: linear-gradient(135deg, #161513 0%, #1e1b18 100%);
-  --card: rgba(30, 28, 25, 0.75);
-  --card-solid: #221f1c;
-  --acc: #e5b27e;
-  --acc-hover: #f0c394;
-  --acc-glow: rgba(229, 178, 126, 0.15);
+  --bg: #121110;
+  --card: rgba(26, 24, 22, 0.78);
+  --card-solid: #1d1a18;
+  --acc: #d4a373;
+  --acc-hover: #e5b27e;
+  --acc-glow: rgba(212, 163, 115, 0.2);
   --acc2: #f4ede2;
   --ok: #a3b18a;
   --okbg: rgba(163, 177, 138, 0.12);
@@ -46,34 +44,27 @@
   --bad: #e07a5f;
   --badbg: rgba(224, 122, 95, 0.12);
   --txt: #f4ede2;
-  --mut: #a39e93;
-  --border: rgba(229, 178, 126, 0.15);
-  --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --mut: #9e9589;
+  --border: rgba(212, 163, 115, 0.15);
+  --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  background: var(--bg);
-  background-image: var(--bg-gradient);
+  background-color: var(--bg);
+  /* Живой Mesh Gradient вместо картинок: гарантированно работает везде и переливается эстетично */
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(212, 163, 115, 0.25) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(96, 108, 56, 0.15) 0px, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(188, 71, 73, 0.12) 0px, transparent 50%),
+    radial-gradient(at 90% 90%, rgba(221, 161, 94, 0.18) 0px, transparent 50%);
   background-attachment: fixed;
   color: var(--txt);
   font-family: 'Plus Jakarta Sans', sans-serif;
   min-height: 100vh;
   padding-bottom: 60px;
   transition: background 0.5s ease, color 0.4s ease;
-}
-
-/* Декоративный фоновый блок с нежной картинкой/абстракцией */
-.bg-decor {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2000&auto=format&fit=crop');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.04;
-  pointer-events: none;
-  z-index: -1;
 }
 
 .container { max-width: 1350px; margin: 0 auto; padding: 40px 20px; }
@@ -95,7 +86,7 @@ body {
 }
 .icon-btn:hover { background: var(--acc); color: #fff; border-color: var(--acc); transform: scale(1.05); box-shadow: 0 8px 20px var(--acc-glow); }
 
-/* Нежные табы */
+/* Табы */
 .tabs {
   display: flex; gap: 8px; margin-bottom: 32px; background: var(--card); backdrop-filter: blur(25px);
   padding: 8px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow-x: auto;
@@ -111,7 +102,7 @@ body {
 .panel.active { display: block; }
 @keyframes fadeInSoft { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Воздушные карточки */
+/* Карточки */
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
 .card {
   background: var(--card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -141,7 +132,7 @@ input.bad-field { border-color: var(--bad); background: var(--badbg); }
 .field-hint { font-size: 11.5px; color: var(--mut); margin-top: 6px; font-weight: 500; }
 .field-hint.bad { color: var(--bad); }
 
-/* Плавные кнопки */
+/* Кнопки */
 .btnrow { display: flex; gap: 16px; margin-top: 28px; flex-wrap: wrap; }
 button {
   flex: 1; min-width: 170px; padding: 16px; background: var(--acc); border: none; border-radius: 18px;
@@ -182,7 +173,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 .diag li { margin: 8px 0; }
 
 .final {
-  margin-top: 20px; padding: 20px; background: linear-gradient(135deg, rgba(212, 163, 115, 0.1), transparent);
+  margin-top: 20px; padding: 20px; background: linear-gradient(135deg, rgba(200, 150, 100, 0.1), transparent);
   border-left: 4px solid var(--acc); border-radius: 14px; font-weight: 500;
 }
 .findings {
@@ -217,7 +208,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
   position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); background: var(--card-solid);
   border: 1px solid var(--border); color: var(--txt); padding: 16px 32px; border-radius: 20px;
   font-weight: 600; opacity: 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
-  z-index: 999; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  z-index: 999; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(-5px); }
 
@@ -230,12 +221,11 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 </style>
 </head>
 <body>
-<div class="bg-decor"></div>
 <div class="container">
 <div class="header">
 <div>
-  <h1>🌿 ICU Navigator <span style="font-size:12px;background:var(--okbg);color:var(--ok);padding:5px 12px;border-radius:20px;vertical-align:middle">v14.0 Aesthetic</span></h1>
-  <div class="sub">Нежный и плавный экспертный комплекс анализа КОС</div>
+  <h1>🌿 ICU Navigator <span style="font-size:12px;background:var(--okbg);color:var(--ok);padding:5px 12px;border-radius:20px;vertical-align:middle">v15.0 Gradient</span></h1>
+  <div class="sub">Нежный экспертный комплекс анализа КОС с живым фоном</div>
 </div>
 <div class="header-actions">
   <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Сменить тему">🌙</button>
@@ -529,7 +519,7 @@ function calc(){
     </tbody></table></details>`;
 
   const strip=s=>s.replace(/<[^>]+>/g,'');
-  const L=["═══ ICU NAVIGATOR v14.0 AESTHETIC ═══",""];
+  const L=["═══ ICU NAVIGATOR v15.0 MESH ═══",""];
   if(notes){ L.push("ЗАМЕТКИ:", notes, ""); }
   L.push("ДИАГНОЗ:", strip(finalHTML), "", "ПАРАМЕТРЫ:");
   rows.forEach(r=>{ if(r[1]&&!r[0].startsWith('—')) L.push(`${r[0]}: ${r[1]}`); });
@@ -557,7 +547,7 @@ function shareResult(){
 function showToast(m){
   const t=document.getElementById('toast'); if(!t)return;
   t.textContent=m; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('no-show'), 2000);
+  setTimeout(()=>t.classList.remove('show'), 2000);
 }
 
 let gChart=null, sChart=null;
@@ -566,15 +556,15 @@ function drawGamble(Na,K,Ca,Mg,Cl,HCO3,Lac,SIG){
   if(gChart) gChart.destroy();
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
   gChart=new Chart(ctx,{type:'bar',data:{labels:['Катионы (+)','Анионы (−)'],datasets:[
-    {label:'Na⁺',data:[Na,0],backgroundColor:'#d4a373'},
-    {label:'K⁺',data:[K,0],backgroundColor:'#e9edc9'},
+    {label:'Na⁺',data:[Na,0],backgroundColor:'#c89664'},
+    {label:'K⁺',data:[K,0],backgroundColor:'#a3b18a'},
     {label:'Ca²⁺',data:[Ca,0],backgroundColor:'#ccd5ae'},
     {label:'Mg²⁺',data:[Mg,0],backgroundColor:'#faedcd'},
     {label:'Cl⁻',data:[0,Cl],backgroundColor:'#bc4749'},
     {label:'HCO₃⁻',data:[0,HCO3],backgroundColor:'#dda15e'},
     {label:'Лактат',data:[0,Lac],backgroundColor:'#b5838d'},
-    {label:'SIG',data:[0,SIG],backgroundColor:'#8d8d8d'}
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:isDark?'#f4ede2':'#333333',font:{size:12,family:'Plus Jakarta Sans'}}}},scales:{x:{stacked:true,ticks:{color:isDark?'#a39e93':'#8d8d8d'}},y:{stacked:true,ticks:{color:isDark?'#a39e93':'#8d8d8d'},title:{display:true,text:'мЭкв/л',color:isDark?'#a39e93':'#8d8d8d'}}}}});
+    {label:'SIG',data:[0,SIG],backgroundColor:'#828282'}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:isDark?'#f4ede2':'#333333',font:{size:12,family:'Plus Jakarta Sans'}}}},scales:{x:{stacked:true,ticks:{color:isDark?'#9e9589':'#828282'}},y:{stacked:true,ticks:{color:isDark?'#9e9589':'#828282'},title:{display:true,text:'мЭкв/л',color:isDark?'#9e9589':'#828282'}}}}});
 }
 function drawSiggaard(pH,pCO2){
   const ctx=document.getElementById('siggaard'); if(!ctx||isNaN(pH))return;
@@ -582,13 +572,13 @@ function drawSiggaard(pH,pCO2){
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
   const fn=(h,p)=>h/(0.03*Math.pow(10,p-6.1));
   const phR=[]; for(let p=7.0; p<=7.8; p+=0.02) phR.push(parseFloat(p.toFixed(3)));
-  const list=[5,10,15,20,24,30,35,40]; const cl=['#faedcd','#ccd5ae','#e9edc9','#d4a373','#bc6c25','#99582a','#65451f','#38220f'];
+  const list=[5,10,15,20,24,30,35,40]; const cl=['#faedcd','#ccd5ae','#e9edc9','#c89664','#a35d24','#804617','#522d0c','#2b1704'];
   const ds=[];
   ds.push({label:'Зона алкалоза',data:phR.map(p=>({x:p,y:fn(30,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(188,71,73,0.05)',fill:true,pointRadius:0,order:20});
   ds.push({label:'Зона ацидоза',data:phR.map(p=>({x:p,y:fn(15,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(221,161,94,0.05)',fill:true,pointRadius:0,order:21});
   list.forEach((h,i)=>{const nrm=h===24; ds.push({label:'HCO₃⁻ = '+h,data:phR.map(p=>({x:p,y:fn(h,p)})),borderColor:nrm?'#606c38':cl[i],borderWidth:nrm?2.5:1.4,borderDash:nrm?[]:[4,4],pointRadius:0,order:nrm?1:5});});
   ds.push({label:'Пациент',data:[{x:pH,y:pCO2}],borderColor:'#bc4749',backgroundColor:'#bc4749',pointRadius:10,pointBorderColor:'#fff',pointBorderWidth:2,showLine:false,order:0});
-  sChart=new Chart(ctx,{type:'line',data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:isDark?'#f4ede2':'#333333',font:{size:11,family:'Plus Jakarta Sans'},filter:i=>!i.text.includes('Зона')}}},scales:{x:{type:'linear',min:7.0,max:7.8,ticks:{color:isDark?'#a39e93':'#8d8d8d'},title:{display:true,text:'pH крови',color:isDark?'#a39e93':'#8d8d8d'}},y:{type:'linear',min:0,max:120,ticks:{color:isDark?'#a39e93':'#8d8d8d'},title:{display:true,text:'pCO₂ (мм рт.ст.)',color:isDark?'#a39e93':'#8d8d8d'}}}}});
+  sChart=new Chart(ctx,{type:'line',data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:isDark?'#f4ede2':'#333333',font:{size:11,family:'Plus Jakarta Sans'},filter:i=>!i.text.includes('Зона')}}},scales:{x:{type:'linear',min:7.0,max:7.8,ticks:{color:isDark?'#9e9589':'#828282'},title:{display:true,text:'pH крови',color:isDark?'#9e9589':'#828282'}},y:{type:'linear',min:0,max:120,ticks:{color:isDark?'#9e9589':'#828282'},title:{display:true,text:'pCO₂ (мм рт.ст.)',color:isDark?'#9e9589':'#828282'}}}}});
 }
 
 window.addEventListener('load', function(){ initTheme(); calc(); });
