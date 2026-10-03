@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ICU Navigator v9.1</title>
+<title>ICU Navigator v9.2</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root{
@@ -69,8 +69,8 @@
 </style>
 </head>
 <body>
-<h1>🧭 ICU Navigator v9.1</h1>
-<div class="sub">КОС · Стюарт · Winter's · SBE-разбивка · ΔΔ · АП-аномалии · гиперхлоремия</div>
+<h1>🧭 ICU Navigator v9.2</h1>
+<div class="sub">КОС · Стюарт · Winter's · SBE-разбивка · ΔΔ · гиперхлоремия · гипоальбуминемия</div>
 
 <div class="grid">
   <div class="card">
@@ -167,10 +167,24 @@ function calc(){
   const SBE_UA  = SBE - SBE_FW - SBE_Cl - SBE_Alb;
   const deltaAP_from_SBE = -SBE_UA;
 
+  // === ГИПЕРХЛОРЕМИЯ: АБСОЛЮТНАЯ + ОТНОСИТЕЛЬНАЯ ===
   const NaMinusCl = Na - Cl;
-  const NaMinusClLow = NaMinusCl < 38;
+  const NaClRatio = Na / Cl;
+  const absHyperCl = NaMinusCl < 38;         // абсолютная
+  const relHyperCl = NaClRatio < 1.37;       // относительная (Na/Cl)
+  const hyperClType = absHyperCl && relHyperCl ? "абсолютная + относительная"
+    : absHyperCl ? "абсолютная"
+    : relHyperCl ? "относительная"
+    : "нет";
 
-  const hypoAlb = Alb < 25;
+  // === ГИПОАЛЬБУМИНЕМИЯ (порог 35) ===
+  const hypoAlb = Alb < 35;
+
+  // === ГИПОНАТРИЕМИЯ (искажение SBE_Cl) ===
+  const hypoNa = Na < 135;
+
+  // === HCO3 ПОГРАНИЧНАЯ ЗОНА (22–24) + HAGMA ===
+  const borderlineHCO3 = HCO3 >= 22 && HCO3 < 24 && AGcorr > 14;
 
   const SIDa = NaCorr + K + Mg - Cl - Lac;
   const AlbGdl = Alb/10;
@@ -196,11 +210,12 @@ function calc(){
     ["ΔAG", fixed(deltaAG)],
     ["ΔHCO₃⁻", fixed(deltaHCO3)],
     ["ΔΔ (дельта-разница)", isNaN(deltaDelta) ? "не применимо" : fixed(deltaDelta,2)],
-    ["Na − Cl разница", fixed(NaMinusCl) + (NaMinusClLow ? " (< 38 — гиперхлоремия)" : " (норма ≥ 38)")],
+    ["Na − Cl разница", fixed(NaMinusCl) + (absHyperCl ? " (< 38 — абс. гиперхлоремия)" : " (норма ≥ 38)")],
+    ["Na/Cl отношение", fixed(NaClRatio,3) + (relHyperCl ? " (< 1.37 — отн. гиперхлоремия)" : " (норма ≥ 1.37)")],
     ["— — — SBE-разбивка — — —", ""],
     ["SBE (входной)", fixed(SBE,1)],
     ["SBE_FW (эффект воды)", fixed(SBE_FW)],
-    ["SBE_Cl (эффект хлора)", fixed(SBE_Cl)],
+    ["SBE_Cl (эффект хлора)", fixed(SBE_Cl) + (hypoNa ? " ⚠ (искажена при Na<135)" : "")],
     ["SBE_Alb (эффект альбумина)", fixed(SBE_Alb)],
     ["SBE_UA (прочие анионы)", fixed(SBE_UA)],
     ["ΔАП ≈ −SBE_UA", fixed(deltaAP_from_SBE)],
@@ -224,6 +239,7 @@ function calc(){
   let primary = pH < 7.35 ? "acidemia" : pH > 7.45 ? "alkalemia" : "normal";
   logs.push(`<b>Шаг 1. Вектор pH:</b> ${fixed(pH,3)} → ${primary==='acidemia'?'ацидемия':primary==='alkalemia'?'алкалемия':'норма'}.`);
 
+  // Аномалия АП
   if (AG < 8 || AGcorr < 8) {
     findings.push({
       name:"Аномально низкий / отрицательный АП",
@@ -241,11 +257,18 @@ function calc(){
     logs.push(`<b>Аномалия АП:</b> АП = ${fixed(AG)}, АП_корр = ${fixed(AGcorr)} → ниже нормы.`);
   }
 
-  if (NaMinusClLow) {
-    const deficit = 38 - NaMinusCl;
+  // Гиперхлоремия
+  if (absHyperCl || relHyperCl) {
+    let typeLabel = hyperClType === "абсолютная + относительная" ? "Абсолютная + относительная"
+      : hyperClType === "абсолютная" ? "Абсолютная"
+      : "Относительная";
+    let details = [];
+    if (absHyperCl) details.push(`Na − Cl = ${fixed(NaMinusCl)} (< 38) — <b>абсолютная гиперхлоремия</b>`);
+    if (relHyperCl) details.push(`Na/Cl = ${fixed(NaClRatio,3)} (< 1.37) — <b>относительная гиперхлоремия</b>`);
+    if (hypoNa) details.push(`⚠ <b>Гипонатриемия (Na = ${fixed(Na,1)})</b> — интерпретация Na−Cl может быть ложной, ориентируйтесь на Na/Cl.`);
     findings.push({
-      name:"Гиперхлоремия (низкая Na−Cl разница)",
-      detail:`Na − Cl = ${fixed(NaMinusCl)} (норма ≥ 38). Дефицит: ${fixed(deficit)}.`,
+      name:`Гиперхлоремия (${typeLabel})`,
+      detail: details.join('<br>'),
       causes:[
         "Инфузия больших объёмов 0.9% NaCl",
         "Диарея (потеря HCO₃⁻ с хлором)",
@@ -256,15 +279,31 @@ function calc(){
       ],
       recommendation:"Заменить NaCl на сбалансированные растворы (Рингер-лактат, Стерофундин). Фуросемид для выведения Cl⁻."
     });
-    logs.push(`<b>Гиперхлоремия:</b> Na − Cl = ${fixed(NaMinusCl)} < 38 → низкая SID.`);
+    logs.push(`<b>Гиперхлоремия (${typeLabel}):</b> Na−Cl = ${fixed(NaMinusCl)}, Na/Cl = ${fixed(NaClRatio,3)}.`);
   }
 
+  // Гипоальбуминемия (порог 35)
   if (hypoAlb) {
     const SBE_corr_norm = SBE + 0.25 * (40 - Alb);
     alerts.push(`<b>⚠ Гипоальбуминемия (Alb = ${fixed(Alb,1)} г/л) маскирует тяжесть метаболического ацидоза.</b><br>
       Реальный SBE при нормальном альбумине (40 г/л) был бы ≈ <b>${fixed(SBE_corr_norm,1)}</b> ммоль/л.<br>
       <b>ВНИМАНИЕ:</b> инфузия альбумина в данном случае <b>усугубит ацидоз</b> (альбумин — слабая кислота).`);
-    logs.push(`<b>Гипоальбуминемия:</b> Alb = ${fixed(Alb,1)} → SBE маскирует ацидоз (реальный ≈ ${fixed(SBE_corr_norm,1)}).`);
+    logs.push(`<b>Гипоальбуминемия:</b> Alb = ${fixed(Alb,1)} < 35 → SBE маскирует ацидоз (реальный ≈ ${fixed(SBE_corr_norm,1)}).`);
+  }
+
+  // Гипонатриемия — искажение SBE_Cl
+  if (hypoNa) {
+    alerts.push(`<b>⚠ Гипонатриемия (Na = ${fixed(Na,1)} ммоль/л < 135).</b><br>
+      Формула <code>SBE_Cl = 104 − Cl×140/Na</code> использует фиксированный Na = 140 в числителе. 
+      При Na < 135 результат <b>искажён</b> — используйте <b>Na/Cl отношение</b> и <b>Na−Cl разницу</b> как основные критерии гиперхлоремии.`);
+  }
+
+  // Пограничный HCO3 + HAGMA
+  if (borderlineHCO3) {
+    alerts.push(`<b>⚠ HCO₃⁻ = ${fixed(HCO3,1)} (пограничная норма 22–24) при АП_корр = ${fixed(AGcorr)} (>14).</b><br>
+      Возможен <b>смешанный метаболический ацидоз (HAGMA + NAGMA)</b>. ΔΔ не применимо (HCO₃⁻ ≥ 22).<br>
+      Рекомендация: при снижении HCO₃⁻ < 22 — пересчитать ΔΔ. Проверить анионный gap мочи (UAG) для исключения RTA.`);
+    logs.push(`<b>Пограничный HCO₃⁻:</b> ${fixed(HCO3,1)} (22–24) при АП_корр = ${fixed(AGcorr)} (>14) → возможен смешанный ацидоз.`);
   }
 
   const respAcid = pCO2 > 45;
@@ -461,7 +500,7 @@ function calc(){
   if (findings.length > 0) {
     findingsHTML = `<div class="findings"><h3>⚠ Дополнительные находки (не КОС)</h3><ul>`;
     findings.forEach(f=>{
-      findingsHTML += `<li><b>${f.name}.</b> ${f.detail}<br><i>Возможные причины:</i><ul>${f.causes.map(c=>`<li>${c}</li>`).join('')}</ul><b>Рекомендовано:</b> ${f.recommendation}</li>`;
+      findingsHTML += `<li><b>${f.name}.</b><br>${f.detail}<br><i>Возможные причины:</i><ul>${f.causes.map(c=>`<li>${c}</li>`).join('')}</ul><b>Рекомендовано:</b> ${f.recommendation}</li>`;
     });
     findingsHTML += `</ul></div>`;
   }
@@ -510,7 +549,7 @@ function calc(){
         <thead><tr><th>Компонент</th><th>Формула</th><th>Значение</th></tr></thead>
         <tbody>
           <tr><td>SBE_FW (вода)</td><td>0.3 × (Na − 140)</td><td>${fixed(SBE_FW)}</td></tr>
-          <tr><td>SBE_Cl (хлор)</td><td>104 − Cl×140/Na</td><td>${fixed(SBE_Cl)}</td></tr>
+          <tr><td>SBE_Cl (хлор)</td><td>104 − Cl×140/Na</td><td>${fixed(SBE_Cl)}${hypoNa ? ' ⚠' : ''}</td></tr>
           <tr><td>SBE_Alb (альбумин)</td><td>(0.148×pH − 0.818)×(40−Alb)</td><td>${fixed(SBE_Alb)}</td></tr>
           <tr><td>SBE_UA (прочие анионы)</td><td>SBE − FW − Cl − Alb</td><td>${fixed(SBE_UA)}</td></tr>
           <tr class="total"><td colspan="2">Сумма</td><td>${fixed(SBE_FW + SBE_Cl + SBE_Alb + SBE_UA,1)}</td></tr>
@@ -552,7 +591,7 @@ function calc(){
 
   const stripTags = (s)=> s.replace(/<[^>]+>/g,'');
   const lines = [];
-  lines.push("═══ ICU NAVIGATOR v9.1 — ОТЧЁТ ═══");
+  lines.push("═══ ICU NAVIGATOR v9.2 — ОТЧЁТ ═══");
   lines.push("");
   lines.push("── ВХОДНЫЕ ДАННЫЕ ──");
   lines.push(`pH: ${fixed(pH,3)}   pCO₂: ${fixed(pCO2,1)}   HCO₃⁻: ${fixed(HCO3,1)}   SBE: ${fixed(SBE,1)}`);
@@ -618,7 +657,7 @@ function calc(){
     lines.push(`   Note: ${stripTags(e.note)}`);
   });
   lines.push("");
-  lines.push("Сформировано: ICU Navigator v9.1");
+  lines.push("Сформировано: ICU Navigator v9.2");
 
   lastReport = lines.join("\n");
 
@@ -690,8 +729,6 @@ function drawSiggaard(pH,pCO2){
 
   const datasets = [];
 
-  // === ЗАКРАШЕННЫЕ ОБЛАСТИ МЕЖДУ БУФЕРНЫМИ ЛИНИЯМИ ===
-  // Между HCO3 = 24 и HCO3 = 30 (зона мет. алкалоза) — светло-красная
   const fillHigh = phRange.map(p=>({x:p, y:pco2FromHCO3(30, p)}));
   const fillHighBase = phRange.slice().reverse().map(p=>({x:p, y:pco2FromHCO3(24, p)}));
   datasets.push({
@@ -705,7 +742,6 @@ function drawSiggaard(pH,pCO2){
     order: 20
   });
 
-  // Между HCO3 = 24 и HCO3 = 15 (зона мет. ацидоза) — светло-оранжевая
   const fillLowBase = phRange.map(p=>({x:p, y:pco2FromHCO3(15, p)}));
   const fillLowTop = phRange.slice().reverse().map(p=>({x:p, y:pco2FromHCO3(24, p)}));
   datasets.push({
@@ -719,7 +755,6 @@ function drawSiggaard(pH,pCO2){
     order: 21
   });
 
-  // Буферные линии
   hco3List.forEach((h, i)=>{
     const isNormal = (h === 24);
     datasets.push({
@@ -735,7 +770,6 @@ function drawSiggaard(pH,pCO2){
     });
   });
 
-  // Точка пациента
   datasets.push({
     label: 'Пациент',
     data: [{x: pH, y: pCO2}],
@@ -748,7 +782,6 @@ function drawSiggaard(pH,pCO2){
     order: 0
   });
 
-  // Проекции
   datasets.push({
     label: '— проекция на pH —',
     data: [{x: pH, y: pCO2}, {x: pH, y: 0}],
@@ -819,23 +852,19 @@ function drawSiggaard(pH,pCO2){
       afterDraw:(chart)=>{
         const {ctx, chartArea:{left, right, top}} = chart;
         ctx.save();
-        // Заголовок сверху
         ctx.fillStyle = '#1a2332';
         ctx.font = 'bold 14px -apple-system, sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText('pCO₂ (мм рт.ст.)  —  ось сверху', (left + right) / 2, top - 24);
 
-        // Метки pCO2 сверху — те же, что слева, но зеркально
         const yScale = chart.scales.y;
         ctx.font = '12px -apple-system, sans-serif';
         ctx.fillStyle = '#607080';
         ctx.textAlign = 'center';
         for (let v = 0; v <= 120; v += 20) {
           const y = yScale.getPixelForValue(v);
-          // Подписываем не все, а каждые 40 (чтобы не перегружать)
           if (v % 40 === 0) {
             ctx.fillText(v.toString(), left + 15, top - 6);
-            // небольшая засечка
             ctx.beginPath();
             ctx.moveTo(left, top - 2);
             ctx.lineTo(left + 6, top - 2);
@@ -851,7 +880,6 @@ function drawSiggaard(pH,pCO2){
         const {ctx, chartArea:{top, bottom, right}} = chart;
         const yScale = chart.scales.y;
         ctx.save();
-        // Заголовок справа
         ctx.save();
         ctx.translate(right + 55, (top + bottom) / 2);
         ctx.rotate(Math.PI / 2);
@@ -861,7 +889,6 @@ function drawSiggaard(pH,pCO2){
         ctx.fillText('HCO₃⁻ (ммоль/л)  —  ось справа', 0, 0);
         ctx.restore();
 
-        // Метки HCO3 справа
         ctx.font = '12px -apple-system, sans-serif';
         ctx.fillStyle = '#1565c0';
         ctx.textAlign = 'left';
@@ -869,7 +896,6 @@ function drawSiggaard(pH,pCO2){
           const y = yScale.getPixelForValue(v);
           const hco3 = 0.03 * v * Math.pow(10, 7.4 - 6.1);
           ctx.fillText(hco3.toFixed(0), right + 6, y + 4);
-          // засечка
           ctx.beginPath();
           ctx.moveTo(right, y);
           ctx.lineTo(right + 5, y);
