@@ -3,50 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v11.0 Awwwards Edition</title>
+<title>ICU Navigator v12.0 Cyber-Medical</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --bg: #030712;
-  --card: rgba(17, 24, 39, 0.75);
-  --card-solid: #111827;
-  --acc: #38bdf8;
-  --acc-glow: rgba(56, 189, 248, 0.25);
-  --acc2: #f8fafc;
-  --ok: #4ade80;
-  --okbg: rgba(74, 222, 128, 0.12);
-  --warn: #fbbf24;
-  --warnbg: rgba(251, 191, 36, 0.12);
-  --bad: #f87171;
-  --badbg: rgba(248, 113, 113, 0.12);
+  --bg: #020617;
+  --card: rgba(15, 23, 42, 0.85);
+  --card-solid: #0f172a;
+  --acc: #06b6d4;
+  --acc-glow: rgba(6, 182, 212, 0.35);
+  --acc2: #38bdf8;
+  --ok: #10b981;
+  --okbg: rgba(16, 185, 129, 0.12);
+  --warn: #f59e0b;
+  --warnbg: rgba(245, 158, 11, 0.12);
+  --bad: #ef4444;
+  --badbg: rgba(239, 68, 68, 0.12);
   --txt: #f8fafc;
-  --mut: #94a3b8;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(56, 189, 248, 0.5);
-  --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --radius: 20px;
+  --mut: #64748b;
+  --border: rgba(6, 182, 212, 0.2);
+  --border-focus: rgba(6, 182, 212, 0.8);
+  --shadow: 0 0 25px rgba(2, 6, 23, 0.8), inset 0 0 15px rgba(6, 182, 212, 0.05);
+  --radius: 16px;
 }
 
 [data-theme="light"] {
-  --bg: #f1f5f9;
-  --card: rgba(255, 255, 255, 0.85);
+  --bg: #f0fdf4;
+  --card: rgba(255, 255, 255, 0.9);
   --card-solid: #ffffff;
-  --acc: #0284c7;
-  --acc-glow: rgba(2, 132, 199, 0.15);
+  --acc: #0d9488;
+  --acc-glow: rgba(13, 148, 136, 0.2);
   --acc2: #0f172a;
-  --ok: #16a34a;
-  --okbg: rgba(22, 163, 74, 0.08);
+  --ok: #059669;
+  --okbg: rgba(5, 150, 105, 0.08);
   --warn: #d97706;
   --warnbg: rgba(217, 119, 6, 0.08);
   --bad: #dc2626;
   --badbg: rgba(220, 38, 38, 0.08);
   --txt: #0f172a;
   --mut: #64748b;
-  --border: rgba(0, 0, 0, 0.06);
-  --border-focus: rgba(2, 132, 199, 0.4);
-  --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --border: rgba(13, 148, 136, 0.25);
+  --border-focus: rgba(13, 148, 136, 0.8);
+  --shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
 }
 
 * { box-sizing: border-box; }
@@ -54,167 +54,176 @@ body {
   margin: 0;
   background-color: var(--bg);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(147, 51, 234, 0.1) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(14, 165, 233, 0.08) 0px, transparent 50%);
-  background-attachment: fixed;
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
   color: var(--txt);
   font-family: 'Plus Jakarta Sans', sans-serif;
   min-height: 100vh;
   padding-bottom: 50px;
-  transition: background 0.4s ease, color 0.3s ease;
+  transition: background 0.4s ease;
 }
 
 .container { max-width: 1350px; margin: 0 auto; padding: 24px 16px; }
 
-/* Шапка с эффектом стекла */
+/* Шапка монитора */
 .header {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 20px; background: var(--card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  padding: 18px 24px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow);
+  margin-bottom: 24px; background: var(--card); backdrop-filter: blur(20px);
+  padding: 20px 24px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
 }
-.header h1 { font-size: 21px; margin: 0; color: var(--acc2); font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
-.header .sub { color: var(--mut); font-size: 12.5px; margin-top: 3px; font-weight: 500; }
+.header::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--acc);
+  box-shadow: 0 0 12px var(--acc);
+}
+.header h1 { font-size: 22px; margin: 0; color: var(--txt); font-weight: 800; display: flex; align-items: center; gap: 12px; font-family: 'JetBrains Mono', monospace; }
+.header .sub { color: var(--mut); font-size: 12px; margin-top: 4px; font-weight: 500; letter-spacing: 0.5px; }
 .header-actions { display: flex; gap: 10px; }
 .icon-btn {
   background: var(--card-solid); border: 1px solid var(--border); color: var(--txt);
-  width: 42px; height: 42px; border-radius: 12px; cursor: pointer; font-size: 16px;
-  display: flex; align-items: center; justify-content: center; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 44px; height: 44px; border-radius: 12px; cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
 }
-.icon-btn:hover { background: var(--acc); color: #fff; border-color: var(--acc); transform: translateY(-2px); box-shadow: 0 4px 12px var(--acc-glow); }
+.icon-btn:hover { background: var(--acc); color: #020617; border-color: var(--acc); transform: translateY(-2px); box-shadow: 0 0 15px var(--acc-glow); }
 
-/* Табы (Переключатели) */
+/* Пульсирующий индикатор */
+.live-badge {
+  display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; background: var(--okbg); color: var(--ok); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--ok);
+}
+.live-dot { width: 7px; height: 7px; background: var(--ok); border-radius: 50%; animation: pulseDot 1.5s infinite; }
+@keyframes pulseDot { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+/* Вкладки */
 .tabs {
-  display: flex; gap: 6px; margin-bottom: 24px; background: var(--card); backdrop-filter: blur(16px);
+  display: flex; gap: 8px; margin-bottom: 24px; background: var(--card); backdrop-filter: blur(20px);
   padding: 8px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow-x: auto;
 }
 .tab {
-  flex: 1; min-width: 110px; padding: 12px 18px; text-align: center; border-radius: 12px;
-  cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--mut); background: transparent;
-  border: none; font-family: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1; min-width: 120px; padding: 12px 20px; text-align: center; border-radius: 12px;
+  cursor: pointer; font-size: 13.5px; font-weight: 700; color: var(--mut); background: transparent;
+  border: none; font-family: 'JetBrains Mono', monospace; transition: all 0.3s ease;
 }
-.tab.active { background: var(--acc); color: #fff; box-shadow: 0 6px 20px var(--acc-glow); transform: translateY(-1px); }
+.tab.active { background: var(--acc); color: #020617; box-shadow: 0 0 20px var(--acc-glow); transform: translateY(-1px); }
 
-.panel { display: none; animation: fadeIn 0.35s ease-in-out; }
+.panel { display: none; animation: fadeIn 0.3s ease; }
 .panel.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Сетки и карточки-стекло */
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+/* Карточки-терминалы */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 20px; }
 .card {
-  background: var(--card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  background: var(--card); backdrop-filter: blur(20px);
   border-radius: var(--radius); padding: 24px; border: 1px solid var(--border); box-shadow: var(--shadow);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition: all 0.3s ease; position: relative;
 }
-.card:hover { border-color: rgba(56, 189, 248, 0.25); }
+.card:hover { border-color: var(--border-focus); box-shadow: 0 0 30px var(--acc-glow); }
 .card h2 {
-  font-size: 13px; margin: 0 0 18px; color: var(--acc); text-transform: uppercase;
-  letter-spacing: 1px; border-bottom: 1.5px solid var(--border); padding-bottom: 10px; font-weight: 700;
-  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; margin: 0 0 18px; color: var(--acc); text-transform: uppercase;
+  letter-spacing: 1.5px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace;
 }
 
-/* Элементы ввода */
-label { display: block; font-size: 12px; color: var(--mut); margin: 14px 0 6px; font-weight: 600; }
+/* Поля ввода */
+label { display: block; font-size: 11.5px; color: var(--mut); margin: 14px 0 6px; font-weight: 700; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
 input, select, textarea {
-  width: 100%; padding: 11px 14px; background: var(--card-solid); border: 1.5px solid var(--border);
-  border-radius: 12px; color: var(--txt); font-size: 14.5px; font-family: inherit; font-weight: 500;
+  width: 100%; padding: 12px 14px; background: var(--card-solid); border: 1.5px solid var(--border);
+  border-radius: 12px; color: var(--txt); font-size: 15px; font-family: 'JetBrains Mono', monospace; font-weight: 500;
   transition: all 0.2s ease;
 }
 input:focus, select:focus, textarea:focus {
-  outline: none; border-color: var(--acc); box-shadow: 0 0 0 4px var(--acc-glow);
+  outline: none; border-color: var(--acc); box-shadow: 0 0 15px var(--acc-glow);
 }
 input.ok-field { border-color: var(--ok); }
 input.warn-field { border-color: var(--warn); }
 input.bad-field { border-color: var(--bad); background: var(--badbg); }
-.field-hint { font-size: 11.5px; color: var(--mut); margin-top: 5px; font-weight: 500; }
+.field-hint { font-size: 11px; color: var(--mut); margin-top: 5px; font-family: 'JetBrains Mono', monospace; }
 .field-hint.bad { color: var(--bad); }
 
 /* Кнопки */
 .btnrow { display: flex; gap: 14px; margin-top: 24px; flex-wrap: wrap; }
 button {
-  flex: 1; min-width: 160px; padding: 15px; background: var(--acc); border: none; border-radius: 14px;
-  color: #fff; font-weight: 700; font-size: 15px; cursor: pointer; font-family: inherit;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 8px 20px var(--acc-glow);
+  flex: 1; min-width: 160px; padding: 16px; background: var(--acc); border: none; border-radius: 14px;
+  color: #020617; font-weight: 800; font-size: 15px; cursor: pointer; font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s ease; box-shadow: 0 0 20px var(--acc-glow); text-transform: uppercase; letter-spacing: 0.5px;
 }
-button:hover { background: #0ea5e9; transform: translateY(-2px); box-shadow: 0 12px 25px var(--acc-glow); }
+button:hover { background: #38bdf8; transform: translateY(-2px); box-shadow: 0 0 30px var(--acc-glow); }
 button.ghost { background: var(--card-solid); border: 2px solid var(--border); color: var(--txt); box-shadow: none; }
 button.ghost:hover { border-color: var(--acc); color: var(--acc); background: var(--card); }
 
 .preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
 .preset-btn {
   padding: 8px 16px; border-radius: 20px; background: var(--card-solid); border: 1px solid var(--border);
-  cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--txt); font-family: inherit; transition: all 0.2s;
+  cursor: pointer; font-size: 12px; font-weight: 700; color: var(--txt); font-family: 'JetBrains Mono', monospace; transition: all 0.2s;
 }
-.preset-btn:hover { border-color: var(--acc); color: var(--acc); transform: translateY(-1px); }
+.preset-btn:hover { border-color: var(--acc); color: var(--acc); box-shadow: 0 0 10px var(--acc-glow); }
 
-/* Строки результатов */
+/* Результаты */
 .row { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px dashed var(--border); font-size: 14.5px; gap: 12px; }
 .row span:first-child { color: var(--mut); font-weight: 500; }
-.row span:last-child { font-weight: 700; color: var(--acc2); text-align: right; }
+.row span:last-child { font-weight: 700; color: var(--txt); font-family: 'JetBrains Mono', monospace; text-align: right; }
 .row.section-header {
   background: var(--card-solid); margin: 16px -12px 8px; padding: 10px 14px; border-radius: 10px;
-  color: var(--acc); font-weight: 700; font-size: 12px; text-transform: uppercase; border: none; letter-spacing: 0.5px;
+  color: var(--acc); font-weight: 700; font-size: 11.5px; text-transform: uppercase; border: none; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px;
 }
 
-.tag { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 700; margin: 4px; }
-.tag.ok { background: var(--okbg); color: var(--ok); }
-.tag.warn { background: var(--warnbg); color: var(--warn); }
-.tag.bad { background: var(--badbg); color: var(--bad); }
+.tag { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; margin: 4px; font-family: 'JetBrains Mono', monospace; }
+.tag.ok { background: var(--okbg); color: var(--ok); border: 1px solid var(--ok); }
+.tag.warn { background: var(--warnbg); color: var(--warn); border: 1px solid var(--warn); }
+.tag.bad { background: var(--badbg); color: var(--bad); border: 1px solid var(--bad); }
 
 .diag, .expl {
   margin-top: 20px; padding: 22px; background: var(--card-solid); border-radius: var(--radius);
   border: 1px solid var(--border); font-size: 14.5px; line-height: 1.75;
 }
-.diag h3, .expl h3 { font-size: 13.5px; color: var(--acc); margin: 18px 0 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.diag h3, .expl h3 { font-size: 12.5px; color: var(--acc); margin: 18px 0 10px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
 .diag ul { margin: 8px 0 8px 20px; padding: 0; }
 .diag li { margin: 8px 0; }
 
 .final {
-  margin-top: 18px; padding: 18px; background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(147, 51, 234, 0.05));
+  margin-top: 18px; padding: 18px; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), transparent);
   border-left: 4px solid var(--acc); border-radius: 12px; font-weight: 500;
 }
-.final ul { margin: 8px 0 0 20px; }
 .findings {
-  margin-top: 18px; padding: 18px; background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), transparent);
+  margin-top: 18px; padding: 18px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), transparent);
   border-left: 4px solid var(--warn); border-radius: 12px;
 }
-.findings h3 { font-size: 13.5px; color: var(--warn); margin: 0 0 10px; }
-.alert { margin-top: 16px; padding: 16px; background: var(--warnbg); border-left: 4px solid var(--warn); border-radius: 12px; font-size: 14.5px; }
-.rec { margin-top: 16px; padding: 16px; background: var(--okbg); border-left: 4px solid var(--ok); border-radius: 12px; font-size: 14.5px; }
+.alert { margin-top: 16px; padding: 16px; background: var(--warnbg); border-left: 4px solid var(--warn); border-radius: 12px; font-size: 14.5px; border: 1px solid var(--warn); }
+.rec { margin-top: 16px; padding: 16px; background: var(--okbg); border-left: 4px solid var(--ok); border-radius: 12px; font-size: 14.5px; border: 1px solid var(--ok); }
 
 .expl details { margin: 12px 0; padding: 14px 18px; background: var(--card); border-radius: 12px; border: 1px solid var(--border); }
-.expl summary { cursor: pointer; font-weight: 700; color: var(--acc2); padding: 2px 0; }
+.expl summary { cursor: pointer; font-weight: 700; color: var(--txt); padding: 2px 0; font-family: 'JetBrains Mono', monospace; }
 .expl .fml {
-  background: var(--bg); padding: 14px; border-radius: 10px; margin: 12px 0; font-family: Consolas, monospace;
-  font-size: 13.5px; color: var(--acc); overflow-x: auto; border-left: 3px solid var(--acc);
+  background: var(--bg); padding: 14px; border-radius: 10px; margin: 12px 0; font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--acc); overflow-x: auto; border-left: 3px solid var(--acc);
 }
-.expl .note { color: var(--mut); font-size: 13px; margin-top: 8px; font-style: italic; }
 
-.be-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
+.be-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; }
 .be-table th, .be-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
-.be-table th { background: var(--card); color: var(--acc); font-size: 12px; text-transform: uppercase; }
-.be-table td:last-child { text-align: right; font-weight: 700; font-family: Consolas, monospace; }
+.be-table th { background: var(--card); color: var(--acc); font-size: 11px; text-transform: uppercase; }
+.be-table td:last-child { text-align: right; font-weight: 700; }
 .be-table tr.total { border-top: 2px solid var(--acc); font-weight: 700; }
 
 .chart-box { height: 540px; position: relative; width: 100%; }
 .chart-card {
-  background: var(--card); backdrop-filter: blur(16px); border-radius: var(--radius);
+  background: var(--card); backdrop-filter: blur(20px); border-radius: var(--radius);
   padding: 24px; border: 1px solid var(--border); margin-bottom: 24px; box-shadow: var(--shadow);
 }
-.chart-card h2 { font-size: 13px; margin: 0 0 18px; color: var(--acc); text-transform: uppercase; border-bottom: 1.5px solid var(--border); padding-bottom: 10px; }
+.chart-card h2 { font-size: 12px; margin: 0 0 18px; color: var(--acc); text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
 
 .notes { min-height: 100px; resize: vertical; }
 .toast {
   position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--card-solid);
-  border: 1px solid var(--border); color: var(--txt); padding: 14px 28px; border-radius: 16px;
-  font-weight: 700; opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
-  z-index: 999; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--acc); color: var(--txt); padding: 14px 28px; border-radius: 16px;
+  font-weight: 700; opacity: 0; transition: all 0.3s ease; pointer-events: none;
+  z-index: 999; box-shadow: 0 0 30px var(--acc-glow); font-family: 'JetBrains Mono', monospace;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(-5px); }
 
 @media(max-width: 640px) {
   .container { padding: 12px; }
-  .tab { padding: 10px 12px; font-size: 12px; min-width: 90px; }
+  .tab { padding: 10px 12px; font-size: 11.5px; min-width: 90px; }
   .chart-box { height: 400px; }
   .grid { grid-template-columns: 1fr; }
 }
@@ -224,8 +233,8 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <div class="container">
 <div class="header">
 <div>
-  <h1>🧭 ICU Navigator <span style="font-size:11px;background:var(--okbg);color:var(--ok);padding:4px 10px;border-radius:20px;vertical-align:middle;font-weight:700">v11.0 Awwwards</span></h1>
-  <div class="sub">Клинический экспертный комплекс анализа КОС и ОРДС</div>
+  <h1>🧭 ICU NAVIGATOR <span class="live-badge"><span class="live-dot"></span>v12.0 CYBER</span></h1>
+  <div class="sub">Клинический терминал реанимационного мониторинга и анализа КОС</div>
 </div>
 <div class="header-actions">
   <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Сменить тему">☀️</button>
@@ -234,27 +243,27 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 </div>
 
 <div class="tabs">
-<button class="tab active" onclick="switchTab('input')" data-tab="input">📥 Ввод данных</button>
-<button class="tab" onclick="switchTab('results')" data-tab="results">📊 Анализ и диагноз</button>
-<button class="tab" onclick="switchTab('charts')" data-tab="charts">📈 Графики</button>
-<button class="tab" onclick="switchTab('info')" data-tab="info">📚 База знаний</button>
+<button class="tab active" onclick="switchTab('input')" data-tab="input">📥 ВВОД ДАННЫХ</button>
+<button class="tab" onclick="switchTab('results')" data-tab="results">📊 АНАЛИЗ И ДИАГНОЗ</button>
+<button class="tab" onclick="switchTab('charts')" data-tab="charts">📈 ГРАФИКИ</button>
+<button class="tab" onclick="switchTab('info')" data-tab="info">📚 БАЗА ЗНАНИЙ</button>
 </div>
 
 <div class="panel active" id="panel-input">
 <div class="card" style="margin-bottom:20px">
-<h2>⚡ Клинические пресеты из учебника</h2>
+<h2>⚡ ЭКСПРЕСС-ПРЕСЕТЫ ПАЦИЕНТОВ</h2>
 <div class="preset-row">
 <button class="preset-btn" onclick="loadPreset('4.5')">Пример 4.5</button>
 <button class="preset-btn" onclick="loadPreset('4.6')">Пример 4.6 (Тройное)</button>
 <button class="preset-btn" onclick="loadPreset('4.8')">Пример 4.8 (Тяж. ацидоз)</button>
 <button class="preset-btn" onclick="loadPreset('4.9')">Пример 4.9 (Смешанный)</button>
-<button class="preset-btn" onclick="loadPreset('clear')" style="color:var(--bad)">🗑 Очистить</button>
+<button class="preset-btn" onclick="loadPreset('clear')" style="color:var(--bad)">🗑 СБРОС</button>
 </div>
 </div>
 
 <div class="grid">
 <div class="card">
-<h2>🫁 Газы крови и оксигенация</h2>
+<h2>🫁 ГАЗЫ КРОВИ И ОКСИГЕНАЦИЯ</h2>
 <label>pH</label><input id="pH" type="number" step="0.001" value="7.40" oninput="validateField('pH')"><div class="field-hint" id="hint-pH">Норма: 7.35–7.45</div>
 <label>pCO₂ (мм рт.ст.)</label><input id="pCO2" type="number" step="0.1" value="40" oninput="validateField('pCO2')"><div class="field-hint" id="hint-pCO2">Норма: 35–45</div>
 <label>HCO₃⁻ лаб. (ммоль/л)</label><input id="HCO3in" type="number" step="0.1" value="24" oninput="validateField('HCO3in')"><div class="field-hint" id="hint-HCO3in">Норма: 22–26</div>
@@ -265,7 +274,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 </div>
 
 <div class="card">
-<h2>⚡ Электролиты сыворотки</h2>
+<h2>⚡ ЭЛЕКТРОЛИТЫ СЫВОРОТКИ</h2>
 <label>Na⁺ (ммоль/л)</label><input id="Na" type="number" step="0.1" value="140" oninput="validateField('Na')"><div class="field-hint" id="hint-Na">Норма: 135–145</div>
 <label>Cl⁻ (ммоль/л)</label><input id="Cl" type="number" step="0.1" value="103" oninput="validateField('Cl')"><div class="field-hint" id="hint-Cl">Норма: 98–107</div>
 <label>K⁺ (ммоль/л)</label><input id="K" type="number" step="0.1" value="4.0" oninput="validateField('K')"><div class="field-hint" id="hint-K">Норма: 3.5–5.0</div>
@@ -274,7 +283,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 </div>
 
 <div class="card">
-<h2>🧪 Белки и метаболиты</h2>
+<h2>🧪 БЕЛКИ И МЕТАБОЛИТЫ</h2>
 <label>Альбумин (г/л)</label><input id="Alb" type="number" step="0.1" value="40" oninput="validateField('Alb')"><div class="field-hint" id="hint-Alb">Норма: 35–50</div>
 <label>PO₄ (ммоль/л)</label><input id="PO4" type="number" step="0.01" value="1.1">
 <label>Глюкоза (ммоль/л)</label><input id="Gluc" type="number" step="0.1" value="5.5" oninput="validateField('Gluc')"><div class="field-hint" id="hint-Gluc">Норма: 3.9–5.5</div>
@@ -286,36 +295,36 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 </div>
 
 <div class="card" style="margin-top:20px">
-<h2>📝 Клинические заметки / Параметры ИВЛ</h2>
-<textarea class="notes" id="notes" placeholder="Пациент на ИВЛ, параметры вентиляции, гемодинамика..."></textarea>
+<h2>📝 КЛИНИЧЕСКИЙ ПРОТОКОЛ / ПАРАМЕТРЫ ИВЛ</h2>
+<textarea class="notes" id="notes" placeholder="Пациент в ОРИТ на ИВЛ, PEEP, FiO2, гемодинамика..."></textarea>
 </div>
 
 <div class="btnrow">
-<button onclick="calc()">⚡ Рассчитать анализ</button>
-<button class="ghost" onclick="clearAll()">🗑 Очистить форму</button>
+<button onclick="calc()">⚡ ЗАПУСТИТЬ АНАЛИЗ</button>
+<button class="ghost" onclick="clearAll()">🗑 ОЧИСТИТЬ ФОРМУ</button>
 </div>
 </div>
 
 <div class="panel" id="panel-results">
-<div class="card"><h2>📊 Расчетные индексы</h2><div id="results"></div></div>
-<div class="card" style="margin-top:20px"><h2>🏥 Экспертное заключение</h2><div class="diag" id="diagnosis"></div></div>
-<div class="card" style="margin-top:20px"><h2>📖 Развернутые формулы</h2><div class="expl" id="explanations"></div></div>
+<div class="card"><h2>📊 РАСЧЕТНЫЕ ИНДЕКСЫ</h2><div id="results"></div></div>
+<div class="card" style="margin-top:20px"><h2>🏥 ЭКСПЕРТНОЕ ЗАКЛЮЧЕНИЕ</h2><div class="diag" id="diagnosis"></div></div>
+<div class="card" style="margin-top:20px"><h2>📖 РАЗВЕРНУТЫЕ ФОРМУЛЫ</h2><div class="expl" id="explanations"></div></div>
 </div>
 
 <div class="panel" id="panel-charts">
-<div class="chart-card"><h2>⚖️️ Диаграмма Гэмбла</h2><div class="chart-box"><canvas id="gamble"></canvas></div></div>
-<div class="chart-card"><h2>📈 Номограмма Сиггаарда-Андерсена</h2><div class="chart-box"><canvas id="siggaard"></canvas></div></div>
+<div class="chart-card"><h2>⚖ ДИАГРАММА ГЭМБЛА</h2><div class="chart-box"><canvas id="gamble"></canvas></div></div>
+<div class="chart-card"><h2>📈 НОМОГРАММА СИГГААРДА-АНДЕРСЕНА</h2><div class="chart-box"><canvas id="siggaard"></canvas></div></div>
 </div>
 
 <div class="panel" id="panel-info">
-<div class="card"><h2>📚 Физико-химический подход Стюарта</h2>
-<div style="line-height:1.7;font-size:14px;color:var(--mut)">
+<div class="card"><h2>📚 ФИЗИКО-ХИМИЧЕСКИЙ ПОДХОД СТЮАРТА</h2>
+<div style="line-height:1.7;font-size:14px;color:var(--mut);font-family:'JetBrains Mono',monospace">
 <p>SID_a = (Na⁺ + K⁺ + Mg²⁺ + Ca²⁺) − (Cl⁻ + Лактат⁻)</p>
 <p>SID_e = HCO₃⁻ + заряд альбумина + заряд фосфатов</p>
 <p>SIG = SID_a − SID_e. Норма: 0–2 мЭкв/л.</p>
 </div></div>
-<div class="card" style="margin-top:20px"><h2>📚 Правила Winter's</h2>
-<div style="line-height:1.7;font-size:14px;color:var(--mut)">
+<div class="card" style="margin-top:20px"><h2>📚 ПРАВИЛА WINTER'S</h2>
+<div style="line-height:1.7;font-size:14px;color:var(--mut);font-family:'JetBrains Mono',monospace">
 <p>Мет. ацидоз: pCO₂ = 1.5 × HCO₃⁻ + 8 (±2)</p>
 <p>Мет. алкалоз: pCO₂ = 0.7 × HCO₃⁻ + 21 (±2)</p>
 </div></div>
@@ -332,7 +341,7 @@ function toggleTheme(){
   const btn = document.getElementById('themeBtn');
   if(btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
   try{ localStorage.setItem('icu_theme', next); }catch(e){}
-  if(gChart || sChart) { calc(); }
+  calc();
 }
 function initTheme(){
   let s = 'dark';
@@ -519,7 +528,7 @@ function calc(){
     </tbody></table></details>`;
 
   const strip=s=>s.replace(/<[^>]+>/g,'');
-  const L=["═══ ICU NAVIGATOR v11.0 AWWWARDS ═══",""];
+  const L=["═══ ICU NAVIGATOR v12.0 CYBER ═══",""];
   if(notes){ L.push("ЗАМЕТКИ:", notes, ""); }
   L.push("ДИАГНОЗ:", strip(finalHTML), "", "ПАРАМЕТРЫ:");
   rows.forEach(r=>{ if(r[1]&&!r[0].startsWith('—')) L.push(`${r[0]}: ${r[1]}`); });
@@ -556,15 +565,15 @@ function drawGamble(Na,K,Ca,Mg,Cl,HCO3,Lac,SIG){
   if(gChart) gChart.destroy();
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
   gChart=new Chart(ctx,{type:'bar',data:{labels:['Катионы (+)','Анионы (−)'],datasets:[
-    {label:'Na⁺',data:[Na,0],backgroundColor:'#38bdf8'},
-    {label:'K⁺',data:[K,0],backgroundColor:'#7dd3fc'},
-    {label:'Ca²⁺',data:[Ca,0],backgroundColor:'#bae6fd'},
-    {label:'Mg²⁺',data:[Mg,0],backgroundColor:'#e0f2fe'},
-    {label:'Cl⁻',data:[0,Cl],backgroundColor:'#f87171'},
-    {label:'HCO₃⁻',data:[0,HCO3],backgroundColor:'#fbbf24'},
+    {label:'Na⁺',data:[Na,0],backgroundColor:'#06b6d4'},
+    {label:'K⁺',data:[K,0],backgroundColor:'#38bdf8'},
+    {label:'Ca²⁺',data:[Ca,0],backgroundColor:'#7dd3fc'},
+    {label:'Mg²⁺',data:[Mg,0],backgroundColor:'#bae6fd'},
+    {label:'Cl⁻',data:[0,Cl],backgroundColor:'#ef4444'},
+    {label:'HCO₃⁻',data:[0,HCO3],backgroundColor:'#f59e0b'},
     {label:'Лактат',data:[0,Lac],backgroundColor:'#c084fc'},
-    {label:'SIG',data:[0,SIG],backgroundColor:'#94a3b8'}
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:isDark?'#f8fafc':'#0f172a',font:{size:12,family:'Plus Jakarta Sans'}}}},scales:{x:{stacked:true,ticks:{color:isDark?'#94a3b8':'#64748b'}},y:{stacked:true,ticks:{color:isDark?'#94a3b8':'#64748b'},title:{display:true,text:'мЭкв/л',color:isDark?'#94a3b8':'#64748b'}}}}});
+    {label:'SIG',data:[0,SIG],backgroundColor:'#64748b'}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:isDark?'#f8fafc':'#0f172a',font:{size:12,family:'JetBrains Mono'}}}},scales:{x:{stacked:true,ticks:{color:isDark?'#64748b':'#64748b'}},y:{stacked:true,ticks:{color:isDark?'#64748b':'#64748b'},title:{display:true,text:'мЭкв/л',color:isDark?'#64748b':'#64748b'}}}}});
 }
 function drawSiggaard(pH,pCO2){
   const ctx=document.getElementById('siggaard'); if(!ctx||isNaN(pH))return;
@@ -572,13 +581,13 @@ function drawSiggaard(pH,pCO2){
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
   const fn=(h,p)=>h/(0.03*Math.pow(10,p-6.1));
   const phR=[]; for(let p=7.0; p<=7.8; p+=0.02) phR.push(parseFloat(p.toFixed(3)));
-  const list=[5,10,15,20,24,30,35,40]; const cl=['#e0f2fe','#bae6fd','#7dd3fc','#38bdf8','#0284c7','#0369a1','#075985','#0c4a6e'];
+  const list=[5,10,15,20,24,30,35,40]; const cl=['#e0f2fe','#bae6fd','#7dd3fc','#38bdf8','#06b6d4','#0891b2','#0e7490','#164e63'];
   const ds=[];
-  ds.push({label:'Зона алкалоза',data:phR.map(p=>({x:p,y:fn(30,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(248,113,113,0.06)',fill:true,pointRadius:0,order:20});
-  ds.push({label:'Зона ацидоза',data:phR.map(p=>({x:p,y:fn(15,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(251,191,36,0.06)',fill:true,pointRadius:0,order:21});
-  list.forEach((h,i)=>{const nrm=h===24; ds.push({label:'HCO₃⁻ = '+h,data:phR.map(p=>({x:p,y:fn(h,p)})),borderColor:nrm?'#4ade80':cl[i],borderWidth:nrm?2.5:1.4,borderDash:nrm?[]:[4,4],pointRadius:0,order:nrm?1:5});});
-  ds.push({label:'Пациент',data:[{x:pH,y:pCO2}],borderColor:'#f87171',backgroundColor:'#f87171',pointRadius:10,pointBorderColor:'#fff',pointBorderWidth:2,showLine:false,order:0});
-  sChart=new Chart(ctx,{type:'line',data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:isDark?'#f8fafc':'#0f172a',font:{size:11,family:'Plus Jakarta Sans'},filter:i=>!i.text.includes('Зона')}}},scales:{x:{type:'linear',min:7.0,max:7.8,ticks:{color:isDark?'#94a3b8':'#64748b'},title:{display:true,text:'pH крови',color:isDark?'#94a3b8':'#64748b'}},y:{type:'linear',min:0,max:120,ticks:{color:isDark?'#94a3b8':'#64748b'},title:{display:true,text:'pCO₂ (мм рт.ст.)',color:isDark?'#94a3b8':'#64748b'}}}}});
+  ds.push({label:'Зона алкалоза',data:phR.map(p=>({x:p,y:fn(30,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(239,68,68,0.06)',fill:true,pointRadius:0,order:20});
+  ds.push({label:'Зона ацидоза',data:phR.map(p=>({x:p,y:fn(15,p)})).concat(phR.slice().reverse().map(p=>({x:p,y:fn(24,p)}))),borderColor:'transparent',backgroundColor:'rgba(245,158,11,0.06)',fill:true,pointRadius:0,order:21});
+  list.forEach((h,i)=>{const nrm=h===24; ds.push({label:'HCO₃⁻ = '+h,data:phR.map(p=>({x:p,y:fn(h,p)})),borderColor:nrm?'#10b981':cl[i],borderWidth:nrm?2.5:1.4,borderDash:nrm?[]:[4,4],pointRadius:0,order:nrm?1:5});});
+  ds.push({label:'Пациент',data:[{x:pH,y:pCO2}],borderColor:'#ef4444',backgroundColor:'#ef4444',pointRadius:10,pointBorderColor:'#fff',pointBorderWidth:2,showLine:false,order:0});
+  sChart=new Chart(ctx,{type:'line',data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:isDark?'#f8fafc':'#0f172a',font:{size:11,family:'JetBrains Mono'},filter:i=>!i.text.includes('Зона')}}},scales:{x:{type:'linear',min:7.0,max:7.8,ticks:{color:isDark?'#64748b':'#64748b'},title:{display:true,text:'pH крови',color:isDark?'#64748b':'#64748b'}},y:{type:'linear',min:0,max:120,ticks:{color:isDark?'#64748b':'#64748b'},title:{display:true,text:'pCO₂ (мм рт.ст.)',color:isDark?'#64748b':'#64748b'}}}}});
 }
 
 window.addEventListener('load', function(){ initTheme(); calc(); });
