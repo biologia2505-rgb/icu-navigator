@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v23.1 Universal Core</title>
+<title>ICU Navigator v23.2 Universal Core</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -40,10 +40,8 @@ body{margin:0;background:var(--bg);background-image:radial-gradient(circle at 0 
 .tab{flex:1;min-width:100px;padding:12px;border:0;border-radius:12px;background:transparent;color:var(--mut);font:700 12px 'JetBrains Mono',monospace;cursor:pointer;transition:.15s;text-transform:uppercase;letter-spacing:.5px}
 .tab:hover{color:var(--acc)}
 .tab.active{background:var(--acc);color:#fff;box-shadow:0 2px 10px var(--glow)}
-
 .panel{display:none !important}
 .panel.active{display:block !important;animation:fadeIn .25s ease}
-
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
 .card,.chart-card{border-radius:var(--radius);padding:20px}
@@ -134,8 +132,8 @@ td:last-child{text-align:right;font-weight:700}
 <div class="container">
 <header class="header">
   <div>
-    <h1>⚡ ICU NAVIGATOR <span class="badge">v23.1</span></h1>
-    <div class="sub">Universal Core · Полный алгоритм КОС · Синдромальный диагноз</div>
+    <h1>⚡ ICU NAVIGATOR <span class="badge">v23.2</span></h1>
+    <div class="sub">Universal Core · Скрытый HAGMA · Тройные нарушения</div>
   </div>
   <div class="header-actions">
     <div class="status-ticker">РИСК: <span id="riskBadge">—</span></div>
@@ -165,7 +163,7 @@ td:last-child{text-align:right;font-weight:700}
     <h2>⚡ ПРЕСЕТЫ</h2>
     <div class="preset-row">
       <button class="preset-btn" onclick="loadPreset('4.5')">Пример 4.5</button>
-      <button class="preset-btn" onclick="loadPreset('4.6')">Пример 4.6</button>
+      <button class="preset-btn" onclick="loadPreset('4.6')">Пример 4.6 (кетоалкалоз)</button>
       <button class="preset-btn" onclick="loadPreset('4.8')">Пример 4.8</button>
       <button class="preset-btn" onclick="loadPreset('4.9')">Пример 4.9</button>
       <button class="preset-btn" onclick="loadPreset('d-lactate')">D-лактат (Na 158.4)</button>
@@ -225,28 +223,25 @@ td:last-child{text-align:right;font-weight:700}
 </section>
 
 <section class="panel" id="panel-charts">
-  <div class="chart-card"><h2>Диаграмма Гэмбла (сильные ионы)</h2><div class="chart-box"><canvas id="gamble"></canvas></div></div>
+  <div class="chart-card"><h2>Диаграмма Гэмбла</h2><div class="chart-box"><canvas id="gamble"></canvas></div></div>
   <div class="chart-card" style="margin-top:16px"><h2>Номограмма Сиггаарда-Андерсена</h2><div class="chart-box"><canvas id="siggaard"></canvas></div></div>
 </section>
 
 <section class="panel" id="panel-info">
-  <div class="card"><h2>ЧТО В v23.1</h2>
+  <div class="card"><h2>ЧТО В v23.2</h2>
     <ol style="line-height:1.8;font-size:13.5px">
-      <li>AGcorr через <b>г/л</b>: AG + 0.25 × (40 − Alb)</li>
-      <li>SIDa — <b>2 модели</b>: с зарядами ×2 или упрощённая</li>
-      <li>Katz коррекция Na — опционально</li>
-      <li>SBE-разбивка (FW, Cl, Alb, UA)</li>
-      <li>ОРДС — по Berlin с клиническими критериями</li>
-      <li>ΔΔ пороги: 0.4 / 0.9 / 2.0 (по учебнику)</li>
-      <li>D-лактат-дифдиагноз при HAGMA + нормальный L-лактат</li>
-      <li>Гиперхлоремия — 2 уровня (абс. + отн.)</li>
+      <li><b>Скрытый HAGMA:</b> определяется по АП + клинический триггер (Lac, Gluc, SIG), даже при нормальном/повышенном HCO₃⁻</li>
+      <li><b>Кетоацидоз-дифдиагноз:</b> гипергликемия + АП ↑ → кетоны, β-ГБ</li>
+      <li><b>Тройные нарушения:</b> синдром показывает все компоненты</li>
+      <li><b>ΔΔ:</b> пояснение при мет. алкалозе</li>
+      <li><b>Респираторная компенсация</b> — не идёт в диагноз</li>
+      <li><b>Гипохлоремия</b> (Cl &lt; 98) — отдельная находка</li>
+      <li>SBE-разбивка, SID 2 модели, Katz</li>
+      <li>ОРДС по Berlin</li>
+      <li>D-лактат-дифдиагноз</li>
       <li>Гиперпротеинемия / гипопротеинемия — правильно</li>
-      <li>Хроничность «авто» — без категоричных выводов</li>
-      <li>Убраны авто-назначения (NaHCO₃ и др.)</li>
-      <li>История — только по кнопке «Рассчитать и сохранить»</li>
-      <li><b>v23.1:</b> исправлено переключение табов</li>
     </ol>
-    <div class="alert" style="margin-top:14px"><b>Важно:</b> расчётно-образовательный инструмент. Не валидированный медицинский прибор. Требует клинической верификации.</div>
+    <div class="alert" style="margin-top:14px"><b>Важно:</b> расчётно-образовательный инструмент. Требует клинической верификации.</div>
   </div>
 </section>
 </div>
@@ -334,14 +329,33 @@ function calcStewart(d,b){
   return{SIDa,Alb_charge,PO4_charge,SIDe,SIG};
 }
 
-function detectPrimary(d,b){
-  const out={acidBase:"normal",resp:null,met:null};
+/* Определение первичного нарушения — БЕЗ ложного респираторного компонента при компенсации */
+function detectPrimary(d,b,comp){
+  const out={acidBase:"normal",resp:null,met:null,respIsCompensation:false};
   if(d.pH<7.35)out.acidBase="acidemia";
   else if(d.pH>7.45)out.acidBase="alkalemia";
-  if(d.pCO2>45)out.resp="respiratory acidosis";
-  else if(d.pCO2<35)out.resp="respiratory alkalosis";
   if(b.HCO3<22||b.SBE<-2)out.met="metabolic acidosis";
   else if(b.HCO3>26||b.SBE>2)out.met="metabolic alkalosis";
+
+  // Респираторный компонент
+  if(d.pCO2>45){
+    if(out.met==="metabolic alkalosis"){
+      // Проверяем компенсацию
+      const lo=0.7*b.HCO3+21-2, hi=0.7*b.HCO3+21+2;
+      if(d.pCO2>=lo && d.pCO2<=hi){ out.respIsCompensation=true; }
+      else out.resp="respiratory acidosis";
+    }else{
+      out.resp="respiratory acidosis";
+    }
+  }else if(d.pCO2<35){
+    if(out.met==="metabolic acidosis"){
+      const lo=1.5*b.HCO3+8-2, hi=1.5*b.HCO3+8+2;
+      if(d.pCO2>=lo && d.pCO2<=hi){ out.respIsCompensation=true; }
+      else out.resp="respiratory alkalosis";
+    }else{
+      out.resp="respiratory alkalosis";
+    }
+  }
   return out;
 }
 
@@ -400,7 +414,10 @@ function compensation(d,b,p){
 }
 
 function calcDeltaDelta(d,b){
-  if(!(b.HCO3<22 && b.deltaAG>0))return{value:NaN,classification:"не применимо"};
+  if(!(b.HCO3<22 && b.deltaAG>0)){
+    if(b.HCO3>26) return{value:NaN,classification:"не применимо (мет. алкалоз — ΔΔ не работает, HAGMA оценивать по АП)"};
+    return{value:NaN,classification:"не применимо"};
+  }
   const dd=b.deltaDelta;
   let classification;
   if(dd<0.4)classification="Гиперхлоремический ацидоз (NAGMA)";
@@ -410,54 +427,103 @@ function calcDeltaDelta(d,b){
   return{value:dd,classification};
 }
 
-function clinicalFindings(d,b,st,p,dd){
+/* Ключевая функция: определение HAGMA с учётом маскировки */
+function detectHAGMA(d,b,st){
+  // АП высокий?
+  if(b.AGcorr<=14) return{hasHAGMA:false,reason:""};
+
+  // Классические критерии
+  if(b.HCO3<22 || b.SBE<-2) return{hasHAGMA:true,reason:"АП ↑ + HCO₃/SBE ↓ (классический HAGMA)"};
+
+  // Скрытый HAGMA при мет. алкалозе — по клиническому триггеру
+  const triggers=[];
+  if(d.Lac>2) triggers.push(`лактат ${fixed(d.Lac,1)}`);
+  if(d.Gluc>15 && b.HCO3<30) triggers.push(`глюкоза ${fixed(d.Gluc,1)} (кетоацидоз?)`);
+  if(Math.abs(st.SIG)>5) triggers.push(`SIG ${fixed(st.SIG,1)}`);
+
+  if(triggers.length>0){
+    return{hasHAGMA:true,reason:`Скрытый HAGMA: АП_корр ${fixed(b.AGcorr)} >14 при HCO₃ ${fixed(b.HCO3,1)} (мет. алкалоз маскирует). Триггеры: ${triggers.join("; ")}.`};
+  }
+  return{hasHAGMA:false,reason:`АП_корр ${fixed(b.AGcorr)} >14 без мет. ацидоза. Оценить: гипернатриемия, гиперпротеинемия, лабораторная ошибка.`};
+}
+
+function clinicalFindings(d,b,st,p,dd,hagma){
   const findings=[],alerts=[];
   if(d.Alb<35)alerts.push(`Гипоальбуминемия: Alb ${fixed(d.Alb,1)} г/л. AG занижен; используйте AGcorr.`);
   if(d.Alb>50)findings.push(`Гиперпротеинемия (Alb ${fixed(d.Alb,1)} г/л): IgG-парапротеинемия → AG может быть ложно СНИЖЕН.`);
   if(d.Na>145)alerts.push(`Гипернатриемия: Na ${fixed(d.Na,1)} ммоль/л. AG ложно повышен из-за Na. Причины: дегидратация, несахарный диабет, осмотическая терапия.`);
   if(d.K<3.5)findings.push(`Гипокалиемия (K ${fixed(d.K,1)}): способствует мет. алкалозу. Причины: диуретики, рвота, гиперальдостеронизм.`);
-  if(d.K>5.5)findings.push(`Гиперкалиемия (K ${fixed(d.K,1)}): риск аритмий. Причины: ОПП/ХБП, гемолиз, ацидоз.`);
+  if(d.K>5.5)findings.push(`Гиперкалиемия (K ${fixed(d.K,1)}): риск аритмий.`);
+  // Гипохлоремия — НОВОЕ
+  if(d.Cl<98){
+    findings.push(`Гипохлоремия (Cl ${fixed(d.Cl,1)} <98). Часто при мет. алкалозе (рвота, диуретики, НГ-аспирация), но при HCO₃ <22 — возможны ЖКТ-потери.`);
+  }
+  // Гиперхлоремия
   const absHyperCl=d.Cl>107;
   const relHyperCl=(d.Na-d.Cl<38)||(d.Na/d.Cl<1.37);
   if(absHyperCl&&relHyperCl){
-    findings.push(`Гиперхлоремия (абсолютная + относительная): Cl ${fixed(d.Cl,1)} >107, Na−Cl ${fixed(d.Na-d.Cl)} <38. Причины: инфузия NaCl 0.9%, диарея, RTA.`);
+    findings.push(`Гиперхлоремия (абсолютная + относительная): Cl ${fixed(d.Cl,1)} >107, Na−Cl ${fixed(d.Na-d.Cl)} <38.`);
   }else if(absHyperCl){
     findings.push(`Гиперхлоремия (абсолютная): Cl ${fixed(d.Cl,1)} >107.`);
   }else if(relHyperCl){
     findings.push(`Относительная гиперхлоремия (низкая SID): Cl в норме, но Na−Cl ${fixed(d.Na-d.Cl)} <38 или Na/Cl ${fixed(d.Na/d.Cl,3)} <1.37.`);
   }
-  const hasHAGMA=b.AGcorr>14&&(b.HCO3<22||b.SBE<-2);
-  if(hasHAGMA){
+  // HAGMA
+  if(hagma.hasHAGMA){
     if(d.Lac>2){
-      findings.push(`HAGMA + лактат-ацидоз (Lac ${fixed(d.Lac,1)}).`);
+      findings.push(`HAGMA + лактат-ацидоз (Lac ${fixed(d.Lac,1)}). ${hagma.reason}`);
+    }else if(d.Gluc>15){
+      findings.push(`HAGMA с нормальным L-лактатом, гипергликемия ${fixed(d.Gluc,1)}. <b>Кетоацидоз?</b> Рекомендовано: кетоны крови/мочи, β-гидроксибутират. ${hagma.reason}`);
     }else{
-      findings.push(`HAGMA с нормальным L-лактатом (${fixed(d.Lac,1)}). Исключить: D-лактат (синдром короткого кишечника, избыток фруктозы), кетоны, уремию, токсины. Рекомендовано: D-лактат, β-гидроксибутират, осмолярный gap, UAG.`);
+      findings.push(`HAGMA. ${hagma.reason} Исключить: D-лактат, кетоны, уремию, токсины. Рекомендовано: D-лактат, β-ГБ, осмолярный gap, UAG.`);
     }
+  }else if(hagma.reason){
+    findings.push(hagma.reason);
   }
   if(st.SIG>5)findings.push(`SIG повышен (${fixed(st.SIG,1)}): возможен вклад неизмеряемых анионов.`);
   if(st.SIG<-5)findings.push(`SIG отрицательный (${fixed(st.SIG,1)}): проверьте единицы и модель Stewart.`);
   if(b.PF<=300)alerts.push(`P/F = ${fixed(b.PF,0)} — гипоксемия. Не равно автоматическому диагнозу ОРДС.`);
   if(d.pO2>0&&d.FiO2>21&&b.A_a_est>300)alerts.push(`A–a градиент повышен (${fixed(b.A_a_est,0)}). Формула ориентировочная.`);
-  return{findings,alerts,hasHAGMA,absHyperCl,relHyperCl};
+  return{findings,alerts};
 }
 
-function syndrome(d,b,p,dd,st,fin){
+function syndrome(d,b,p,dd,st,hagma){
   const parts=[];
+  // Респираторный — только если НЕ компенсация
   if(p.resp==="respiratory acidosis")parts.push("респираторный ацидоз");
   if(p.resp==="respiratory alkalosis")parts.push("респираторный алкалоз");
   if(p.met==="metabolic acidosis")parts.push("метаболический ацидоз");
   if(p.met==="metabolic alkalosis")parts.push("метаболический алкалоз");
-  let title="Расстройств КОС нет";
-  if(parts.length===1)title="Изолированное нарушение КОС";
-  else if(parts.length===2)title="Смешанное нарушение КОС";
-  else if(parts.length>=3)title="Тройное (множественное) нарушение КОС";
-  let detail=parts.join(" + ");
-  if(fin.hasHAGMA){
-    if(Number.isFinite(dd.value))detail+=(detail?" · ":"")+dd.classification;
-    else detail+=(detail?" · ":"")+"HAGMA";
+
+  // Скрытый HAGMA — добавить в компоненты
+  let hagmaType="";
+  if(hagma.hasHAGMA){
+    if(Number.isFinite(dd.value)){
+      hagmaType=dd.classification;
+    }else if(b.HCO3>26){
+      hagmaType="HAGMA (скрытый, маскирован мет. алкалозом)";
+    }else{
+      hagmaType="HAGMA";
+    }
   }
-  if(!detail && b.AGcorr>14 && b.HCO3>=22)detail="AG высокий без мет. ацидоза — оценить причину (гипернатриемия, лабораторная ошибка, гипопротеинемия).";
-  return{title,detail};
+
+  let title="Расстройств КОС нет";
+  const nComponents=parts.length+(hagma.hasHAGMA?1:0);
+  if(nComponents===1)title="Изолированное нарушение КОС";
+  else if(nComponents===2)title="Смешанное нарушение КОС";
+  else if(nComponents>=3)title="⚠ ТРОЙНОЕ (МНОЖЕСТВЕННОЕ) НАРУШЕНИЕ КОС";
+
+  let detail=parts.join(" + ");
+  if(hagmaType)detail+=(detail?" · ":"")+hagmaType;
+
+  // Компенсация — только если есть
+  if(p.respIsCompensation){
+    if(p.met==="metabolic acidosis") detail+=(detail?" ":"")+"· респираторная компенсация адекватна";
+    if(p.met==="metabolic alkalosis") detail+=(detail?" ":"")+"· респираторная компенсация адекватна";
+  }
+
+  if(!detail && b.AGcorr>14 && !hagma.hasHAGMA) detail="AG высокий без мет. ацидоза — оценить причину (гипернатриемия, лабораторная ошибка, гипопротеинемия).";
+  return{title,detail,components:parts};
 }
 
 function ardsAssessment(d,b){
@@ -467,7 +533,7 @@ function ardsAssessment(d,b){
   return{status:`Критерии Berlin: ОРДС ${sev} степени`,detail:`P/F ${fixed(b.PF,0)} при PEEP ${fixed(d.PEEP,1)}. Требуется верификация.`};
 }
 
-function render(d,b,p,comp,dd,st,fin,syn,ards){
+function render(d,b,p,comp,dd,st,fin,hagma,syn,ards){
   const synEl=document.getElementById("syndrome");
   if(synEl)synEl.innerHTML=`<div class="syndrome"><div class="syn-title">СИНДРОМАЛЬНЫЙ ДИАГНОЗ</div><div class="syn-main">${escapeHTML(syn.title)}</div><div class="syn-detail">${escapeHTML(syn.detail||"—")}</div><div class="syn-detail" style="margin-top:8px"><b>Оксигенация:</b> ${escapeHTML(ards.status)}<br>${escapeHTML(ards.detail)}</div></div>`;
 
@@ -479,6 +545,7 @@ function render(d,b,p,comp,dd,st,fin,syn,ards){
     ["ΔAG",fixed(b.deltaAG)],["ΔHCO₃⁻",fixed(b.deltaHCO3)],
     ["ΔΔ",Number.isFinite(dd.value)?fixed(dd.value,2):"не применимо"],
     ["Классификация ΔΔ",dd.classification],
+    ["HAGMA (с учётом маскировки)",hagma.hasHAGMA?"ЕСТЬ":"нет"],
     ["— SBE-разбивка —",""],["SBE_FW (вода)",fixed(b.SBE_FW)],["SBE_Cl (хлор)",fixed(b.SBE_Cl)],
     ["SBE_Alb (альбумин)",fixed(b.SBE_Alb)],["SBE_UA (прочие анионы)",fixed(b.SBE_UA)],
     ["— Стюарт ("+(d.sidModel==='charged'?'с ×2':'упрощённая')+") —",""],
@@ -491,9 +558,10 @@ function render(d,b,p,comp,dd,st,fin,syn,ards){
   const logs=[];
   logs.push(`<b>pH вектор:</b> ${fixed(d.pH,3)} → ${p.acidBase}.`);
   if(p.resp)logs.push(`<b>Респираторный:</b> ${p.resp}, pCO₂ ${fixed(d.pCO2,1)}.`);
+  if(p.respIsCompensation)logs.push(`<b>Респираторный (компенсация):</b> pCO₂ ${fixed(d.pCO2,1)} — компенсаторный для мет. ${p.met==='metabolic acidosis'?'ацидоза':'алкалоза'}.`);
   if(p.met)logs.push(`<b>Метаболический:</b> ${p.met}, HCO₃⁻ ${fixed(b.HCO3,1)}, SBE ${fixed(b.SBE,1)}.`);
-  if(d.sbeMode==='calc')logs.push(`<b>SBE рассчитан (Van Slyke):</b> ${fixed(b.SBE_calc,1)}.`);
-  if(fin.hasHAGMA)logs.push(`<b>HAGMA:</b> АП_корр ${fixed(b.AGcorr)} >14 при HCO₃⁻ ${fixed(b.HCO3,1)} / SBE ${fixed(b.SBE,1)}.`);
+  if(d.sbeMode==='calc')logs.push(`<b>SBE рассчитан:</b> ${fixed(b.SBE_calc,1)}.`);
+  if(hagma.hasHAGMA)logs.push(`<b>HAGMA:</b> ${hagma.reason}`);
   if(d.Na>145)logs.push(`<b>Гипернатриемия:</b> Na ${fixed(d.Na,1)} >145 — интерпретировать АП с осторожностью.`);
 
   let diagHTML=`<h3>Ход анализа</h3><ul>${logs.map(l=>`<li>${l}</li>`).join('')}</ul>`;
@@ -514,11 +582,19 @@ function render(d,b,p,comp,dd,st,fin,syn,ards){
     <tr><td>SBE_Alb</td><td>(0.148 pH − 0.818) × (40 − Alb)</td><td>${fixed(b.SBE_Alb)}</td></tr>
     <tr><td>SBE_UA</td><td>SBE − FW − Cl − Alb</td><td>${fixed(b.SBE_UA)}</td></tr>
     </tbody></table></details>
+    <details><summary>🧮 HAGMA — логика определения</summary>
+    <p>HAGMA определяется по <b>АП_корр > 14</b> + один из критериев:</p>
+    <ul style="margin:8px 0 8px 20px">
+      <li>HCO₃⁻ &lt; 22 <b>или</b> SBE &lt; −2 (классический)</li>
+      <li><b>Скрытый HAGMA:</b> Лактат &gt; 2, или гипергликемия &gt; 15 + HCO₃ &lt; 30, или |SIG| &gt; 5 — при нормальном/повышенном HCO₃⁻</li>
+    </ul>
+    <p>При мет. алкалозе ΔΔ <b>не применим</b> — HAGMA оценивается по АП + клинические триггеры.</p>
+    </details>
     <details><summary>🧮 АП и ΔΔ</summary>
     <div class="fml">АП = Na − (Cl + HCO₃⁻)</div>
     <div class="fml">АП_корр = АП + 0.25 × (40 − Alb)</div>
-    <div class="fml">ΔΔ = ΔAG / ΔHCO₃⁻</div>
-    <p>Пороги (табл. 4.6): &lt;0.4 NAGMA · 0.4–0.9 смешанный · 0.9–2.0 HAGMA · &gt;2.0 HAGMA+алкалоз.</p>
+    <div class="fml">ΔΔ = ΔAG / ΔHCO₃⁻ (только при HCO₃ &lt; 22)</div>
+    <p>Пороги: &lt;0.4 NAGMA · 0.4–0.9 смешанный · 0.9–2.0 HAGMA · &gt;2.0 HAGMA+алкалоз.</p>
     </details>
     <details><summary>🧮 SBE (Van Slyke)</summary>
     <div class="fml">SBE = HCO₃⁻ − 24.4 + 16.2 × (pH − 7.4)</div>
@@ -527,14 +603,10 @@ function render(d,b,p,comp,dd,st,fin,syn,ards){
     <div class="fml">SIDa (${d.sidModel==='charged'?'с ×2':'упрощённая'}) = Na + K ${d.sidModel==='charged'?'+ 2Ca + 2Mg':'+ Ca + Mg'} − Cl − Lactate</div>
     <div class="fml">SIDe = HCO₃⁻ + Alb⁻ + PO₄⁻</div>
     <div class="fml">SIG = SIDa − SIDe</div>
-    </details>
-    <details><summary>🌬 Компенсация</summary>
-    <div class="fml">Мет. ацидоз: pCO₂ = 1.5×HCO₃⁻ + 8 ± 2</div>
-    <div class="fml">Мет. алкалоз: pCO₂ = 0.7×HCO₃⁻ + 21 ± 2</div>
     </details>`;
 
   const strip=s=>s.replace(/<[^>]+>/g,'');
-  const L=["═══ ICU NAVIGATOR v23.1 UNIVERSAL ═══","","Дата: "+new Date().toLocaleString('ru-RU'),""];
+  const L=["═══ ICU NAVIGATOR v23.2 UNIVERSAL ═══","","Дата: "+new Date().toLocaleString('ru-RU'),""];
   L.push("── ВХОД ──");
   L.push(`pH ${fixed(d.pH,3)}  pCO₂ ${fixed(d.pCO2,1)}  HCO₃⁻ ${fixed(b.HCO3,1)}  SBE ${fixed(b.SBE,1)}`);
   L.push(`Na ${fixed(d.Na,1)}  K ${fixed(d.K,1)}  Cl ${fixed(d.Cl,1)}  Ca ${fixed(d.Ca,2)}  Mg ${fixed(d.Mg,2)}`);
@@ -548,7 +620,7 @@ function render(d,b,p,comp,dd,st,fin,syn,ards){
   L.push("","── КОМПЕНСАЦИЯ ──",comp.text);comp.checks.forEach(c=>L.push("• "+strip(c)));
   if(fin.findings.length){L.push("","── НАХОДКИ ──");fin.findings.forEach(f=>L.push("• "+strip(f)));}
   if(fin.alerts.length){L.push("","── ВНИМАНИЕ ──");fin.alerts.forEach(a=>L.push("• "+strip(a)));}
-  L.push("","Сформировано: ICU Navigator v23.1 Universal Core");
+  L.push("","Сформировано: ICU Navigator v23.2 Universal Core");
   lastReport=L.join("\n");
 }
 
@@ -566,9 +638,16 @@ function runCalculation(save=false){
   try{
     const d=readInputs(),err=validate(d);
     if(err){showToast(err);return}
-    const b=calcBasic(d),p=detectPrimary(d,b),comp=compensation(d,b,p),dd=calcDeltaDelta(d,b),st=calcStewart(d,b);
-    const fin=clinicalFindings(d,b,st,p,dd),syn=syndrome(d,b,p,dd,st,fin),ards=ardsAssessment(d,b);
-    render(d,b,p,comp,dd,st,fin,syn,ards);
+    const b=calcBasic(d);
+    const p=detectPrimary(d,b);
+    const comp=compensation(d,b,p);
+    const dd=calcDeltaDelta(d,b);
+    const st=calcStewart(d,b);
+    const hagma=detectHAGMA(d,b,st);
+    const fin=clinicalFindings(d,b,st,p,dd,hagma);
+    const syn=syndrome(d,b,p,dd,st,hagma);
+    const ards=ardsAssessment(d,b);
+    render(d,b,p,comp,dd,st,fin,hagma,syn,ards);
     updateRisk(d,b,p);
     if(save){saveHistory(makeHistory(d,syn));showToast("Расчёт сохранён");}
     try{drawCharts(b,d,st)}catch(e){}
@@ -576,11 +655,7 @@ function runCalculation(save=false){
   }catch(e){console.error("runCalculation:",e);}
 }
 
-function previewCalc(){
-  try{
-    if(document.getElementById("pH").value) runCalculation(false);
-  }catch(e){}
-}
+function previewCalc(){try{if(document.getElementById("pH").value)runCalculation(false)}catch(e){}}
 
 function liveValidate(){
   try{
@@ -654,8 +729,7 @@ function clearAll(){
   try{
     const vals={pH:7.40,pCO2:40,HCO3in:24,SBE:0,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:140,Cl:103,K:4,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:5.5};
     Object.entries(vals).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});
-    ["notes"].forEach(k=>{const e=document.getElementById(k);if(e)e.value=""});
-    ["sbeMode","naCorr","chronic"].forEach(k=>{const e=document.getElementById(k);if(e)e.value="input"});
+    const e=document.getElementById("notes");if(e)e.value="";
     const sm=document.getElementById("sbeMode");if(sm)sm.value="input";
     const nc=document.getElementById("naCorr");if(nc)nc.value="off";
     const ch=document.getElementById("chronic");if(ch)ch.value="auto";
@@ -751,7 +825,7 @@ function copyResult(){
 function shareResult(){
   try{
     if(!lastReport)runCalculation(false);
-    if(navigator.share)navigator.share({title:"ICU Navigator v23.1",text:lastReport}).catch(()=>{});
+    if(navigator.share)navigator.share({title:"ICU Navigator v23.2",text:lastReport}).catch(()=>{});
     else copyResult();
   }catch(e){}
 }
