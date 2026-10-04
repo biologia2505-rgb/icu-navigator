@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v18.1 Cyber Deck</title>
+<title>ICU Navigator v18.2 Cyber Deck</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -251,7 +251,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <div class="container">
 <div class="header">
 <div>
-  <h1>⚡ ICU NAVIGATOR <span style="font-size:11px;background:var(--okbg);color:var(--ok);padding:4px 10px;border-radius:20px;vertical-align:middle;font-weight:700">v18.1 COMMAND</span></h1>
+  <h1>⚡ ICU NAVIGATOR <span style="font-size:11px;background:var(--okbg);color:var(--ok);padding:4px 10px;border-radius:20px;vertical-align:middle;font-weight:700">v18.2 COMMAND</span></h1>
   <div class="sub">Кибер-медицинский пульт анализа КОС, Стюарта и прогноза рисков</div>
 </div>
 <div class="header-actions">
@@ -289,7 +289,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <label>pCO₂ (мм рт.ст.)</label><input id="pCO2" type="number" step="0.1" value="40" oninput="validateField('pCO2')"><div class="field-hint" id="hint-pCO2">Норма: 35–45</div>
 <label>HCO₃⁻ лаб. (ммоль/л)</label><input id="HCO3in" type="number" step="0.1" value="24" oninput="validateField('HCO3in')"><div class="field-hint" id="hint-HCO3in">Норма: 22–26</div>
 <label>Источник SBE</label>
-<select id="sbeMode">
+<select id="sbeMode" onchange="calc()">
   <option value="input">От анализатора (ввести вручную)</option>
   <option value="calc">Рассчитать (Van Slyke)</option>
 </select>
@@ -466,7 +466,6 @@ function calc(){
   const SIG=SIDa-SIDe;
   const allNormal=(pH>=7.35&&pH<=7.45)&&(pCO2>=35&&pCO2<=45)&&(HCO3>=22&&HCO3<=26)&&(SBE>=-2&&SBE<=2);
 
-  // Эксклюзивный расчет интегрального риска летальности (%)
   let riskScore = 0;
   if(pH < 7.2 || pH > 7.6) riskScore += 35;
   else if(pH < 7.3 || pH > 7.5) riskScore += 15;
@@ -603,13 +602,66 @@ function calc(){
     <div>Если "Рассчитан": SBE = ${fixed(HCO3,1)} − 24.4 + 16.2 × (${fixed(pH,3)} − 7.4) = <b>${fixed(SBE_calc,1)}</b></div>
     </details>`;
 
+  // === ФОРМИРОВАНИЕ ПОЛНОГО ОТЧЁТА (с исходными данными) ===
   const strip=s=>s.replace(/<[^>]+>/g,'');
-  const L=["═══ ICU NAVIGATOR v18.1 COMMAND DECK ═══",""];
-  if(notes){ L.push("ЗАМЕТКИ:", notes, ""); }
-  L.push("ИНТЕГРАЛЬНЫЙ РИСК ОСР/ЛЕТАЛЬНОСТИ: " + riskScore + "%", "");
-  L.push("SBE источник: " + (sbeMode==='calc' ? 'РАССЧИТАН (Van Slyke) = ' + fixed(SBE_calc,1) : 'ВВЕДЁН ВРУЧНУЮ = ' + fixed(SBE,1)), "");
-  L.push("ДИАГНОЗ:", strip(finalHTML), "", "ИНФУЗИОННЫЙ ПРОТОКОЛ:", strip(infusionAdvice), "", "ПАРАМЕТРЫ:");
-  rows.forEach(r=>{ if(r[1]&&!r[0].startsWith('—')) L.push(`${r[0]}: ${r[1]}`); });
+  const L=["═══ ICU NAVIGATOR v18.2 COMMAND DECK ═══",""];
+  L.push("Дата: " + new Date().toLocaleString('ru-RU'), "");
+  L.push("── ИСХОДНЫЕ ДАННЫЕ ──");
+  L.push(`pH: ${fixed(pH,3)}   pCO₂: ${fixed(pCO2,1)}   HCO₃⁻ (лаб.): ${fixed(HCO3in,1)}   HCO₃⁻ (расч.): ${fixed(HCO3calc,1)}`);
+  L.push(`SBE (${sbeMode==='calc' ? 'рассчитан Van Slyke' : 'входной'}): ${fixed(SBE,1)}`);
+  if (sbeMode === 'input') L.push(`SBE (проверка Van Slyke): ${fixed(SBE_calc,1)}`);
+  L.push(`Лактат: ${fixed(Lac,1)}   pO₂: ${fixed(pO2,1)}   FiO₂: ${fixed(FiO2,0)}%   P/F: ${fixed(PF,0)}`);
+  L.push(`Na⁺: ${fixed(Na,1)}   K⁺: ${fixed(K,1)}   Cl⁻: ${fixed(Cl,1)}   Ca²⁺: ${fixed(Ca,2)}   Mg²⁺: ${fixed(Mg,2)}`);
+  L.push(`Альбумин: ${fixed(Alb,1)}   PO₄: ${fixed(PO4,2)}   Глюкоза: ${fixed(Gluc,1)}`);
+  L.push(`Коррекция Na на глюкозу: ${naCorrMode==='on' ? 'Включена (Katz)' : 'Выключена'}   Na⁺ (исп.): ${fixed(NaCorr,1)}`);
+  L.push(`Хроничность: ${chronicMode==='auto' ? 'Авто' : chronicMode==='acute' ? 'Острое' : 'Хроническое'}`);
+  L.push("");
+  if(notes){ L.push("── КЛИНИЧЕСКИЙ ПРОТОКОЛ / ЗАМЕТКИ ──"); L.push(notes); L.push(""); }
+  L.push("── ИНТЕГРАЛЬНЫЙ РИСК ОСР/ЛЕТАЛЬНОСТИ ──");
+  L.push(riskScore + "%");
+  L.push("");
+  L.push("── РАСЧЁТНЫЕ ПОКАЗАТЕЛИ ──");
+  rows.forEach(r=>{ if(r[1] && !r[0].startsWith('—')) L.push(`${r[0]}: ${r[1]}`); });
+  L.push("");
+  L.push("── ХОД АНАЛИЗА ──");
+  logs.forEach(l=>L.push("• " + strip(l)));
+  L.push("");
+  L.push("── КОМПЕНСАТОРНЫЙ ОТВЕТ ──");
+  L.push(winterInfo);
+  compCheck.forEach(c=>L.push("• " + strip(c)));
+  L.push("");
+  L.push("── ОКСИГЕНАЦИЯ ──");
+  L.push(strip(oxyTag));
+  L.push("");
+  L.push("── ФИЗИКО-ХИМИЯ (СТЮАРТ) ──");
+  L.push(strip(sigHTML));
+  L.push("");
+  L.push("── ДИАГНОЗ ──");
+  L.push(strip(finalHTML));
+  if(findings.length>0){
+    L.push("");
+    L.push("── ДОПОЛНИТЕЛЬНЫЕ НАХОДКИ ──");
+    findings.forEach((f,i)=>{
+      L.push(`${i+1}. ${f.name}. ${strip(f.detail)}`);
+      L.push(`   Причины: ${f.causes.join('; ')}`);
+      L.push(`   Тактика: ${strip(f.recommendation)}`);
+    });
+  }
+  if(alerts.length>0){
+    L.push("");
+    L.push("── ВНИМАНИЕ ──");
+    alerts.forEach(a=>L.push(strip(a)));
+  }
+  if(recs.length>0){
+    L.push("");
+    L.push("── РЕКОМЕНДАЦИИ ──");
+    recs.forEach(r=>L.push(strip(r)));
+  }
+  L.push("");
+  L.push("── ИНФУЗИОННЫЙ ПРОТОКОЛ ──");
+  L.push(strip(infusionAdvice));
+  L.push("");
+  L.push("Сформировано: ICU Navigator v18.2 Command Deck");
   lastReport=L.join("\n");
 
   try{ drawGamble(NaCorr,K,Ca,Mg,Cl,HCO3,Lac,SIG>0?SIG:0); }catch(e){}
