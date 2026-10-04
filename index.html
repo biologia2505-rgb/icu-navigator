@@ -299,3 +299,410 @@ function calcBasic(d){
   const HCO3calc=.03*d.pCO2*Math.pow(10,d.pH-6.1);
   const HCO3=Number.isFinite(d.HCO3in)?d.HCO3in:HCO3calc;
   let NaCorr=d.Na;
+  if(d.naCorr==="on" && d.Gluc>5.5) NaCorr=d.Na+1.6*((d.Gluc-5.5)/5.5);
+  // AG в г/л
+  const AG=d.Na-(d.Cl+HCO3);
+  const AGcorr=AG+0.25*(40-d.Alb);
+  const deltaAG=AGcorr-12;
+  const deltaHCO3=24-HCO3;
+  const deltaDelta=(HCO3<22 && deltaHCO3>0)?deltaAG/deltaHCO3:NaN;
+  // SBE
+  const SBE_calc=HCO3-24.4+16.2*(d.pH-7.4);
+  const SBE=d.sbeMode==="calc"?SBE_calc:(isNaN(d.SBE_input)?SBE_calc:d.SBE_input);
+  // SBE-разбивка
+  const SBE_FW=0.3*(d.Na-140);
+  const SBE_Cl=104-(d.Cl*140/d.Na);
+  const SBE_Alb=(0.148*d.pH-0.818)*(40-d.Alb);
+  const SBE_UA=SBE-SBE_FW-SBE_Cl-SBE_Alb;
+  // Оксигенация
+  const PF=d.pO2/(d.FiO2/100);
+  const A_a_est=d.FiO2>20?(d.FiO2/100*713-d.pCO2/0.8-d.pO2):NaN;
+  return{HCO3calc,HCO3,NaCorr,AG,AGcorr,deltaAG,deltaHCO3,deltaDelta,SBE_calc,SBE,SBE_FW,SBE_Cl,SBE_Alb,SBE_UA,PF,A_a_est};
+}
+
+function calcStewart(d,b){
+  let SIDa;
+  if(d.sidModel==="charged"){
+    SIDa=b.NaCorr+d.K+2*d.Ca+2*d.Mg-d.Cl-d.Lac;
+  }else{
+    SIDa=b.NaCorr+d.K+d.Ca+d.Mg-d.Cl-d.Lac;
+  }
+  const Alb_gdl=d.Alb/10;
+  const Alb_charge=Alb_gdl*(0.123*d.pH-0.631)*10;
+  const PO4_charge=d.PO4*(0.309*d.pH-0.469);
+  const SIDe=b.HCO3+Alb_charge+PO4_charge;
+  const SIG=SIDa-SIDe;
+  return{SIDa,Alb_charge,PO4_charge,SIDe,SIG};
+}
+
+function detectPrimary(d,b){
+  const out={acidBase:"normal",resp:null,met:null};
+  if(d.pH<7.35)out.acidBase="acidemia";
+  else if(d.pH>7.45)out.acidBase="alkalemia";
+  if(d.pCO2>45)out.resp="respiratory acidosis";
+  else if(d.pCO2<35)out.resp="respiratory alkalosis";
+  if(b.HCO3<22||b.SBE<-2)out.met="metabolic acidosis";
+  else if(b.HCO3>26||b.SBE>2)out.met="metabolic alkalosis";
+  return out;
+}
+
+function compensation(d,b,p){
+  const r={text:"",checks:[]};
+  if(p.met==="metabolic acidosis"){
+    const lo=1.5*b.HCO3+8-2,hi=1.5*b.HCO3+8+2;
+    r.text=`Winter's: ожидаемый pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
+    if(d.pCO2>hi)r.checks.push("pCO₂ выше ожидаемого → сопутствующий респираторный ацидоз.");
+    else if(d.pCO2<lo)r.checks.push("pCO₂ ниже ожидаемого → сопутствующий респираторный алкалоз.");
+    else r.checks.push("✅ Респираторная компенсация адекватна.");
+    return r;
+  }
+  if(p.met==="metabolic alkalosis"){
+    const lo=0.7*b.HCO3+21-2,hi=0.7*b.HCO3+21+2;
+    r.text=`Ожидаемый pCO₂ при мет. алкалозе = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
+    if(d.pCO2>hi)r.checks.push("pCO₂ выше ожидаемого → сопутствующий респираторный ацидоз.");
+    else if(d.pCO2<lo)r.checks.push("pCO₂ ниже ожидаемого → сопутствующий респираторный алкалоз.");
+    else r.checks.push("✅ Респираторная компенсация адекватна.");
+    return r;
+  }
+  if(p.resp==="respiratory acidosis"){
+    if(d.chronic==="acute"){
+      const expH=24+0.1*(d.pCO2-40);
+      r.text=`Острое: HCO₃⁻ ожидаемо ≈ ${fixed(expH,1)}.`;
+      if(b.HCO3>expH+3)r.checks.push("HCO₃⁻ выше ожидаемого → + мет. алкалоз.");
+      else if(b.HCO3<expH-3)r.checks.push("HCO₃⁻ ниже ожидаемого → + мет. ацидоз.");
+      else r.checks.push("Компенсация соответствует острому респ. ацидозу.");
+    }else if(d.chronic==="chronic"){
+      const expH=24+0.35*(d.pCO2-40);
+      r.text=`Хроническое: HCO₃⁻ ожидаемо ≈ ${fixed(expH,1)}.`;
+      if(b.HCO3>expH+4)r.checks.push("HCO₃⁻ выше ожидаемого → + мет. алкалоз.");
+      else if(b.HCO3<expH-4)r.checks.push("HCO₃⁻ ниже ожидаемого → + мет. ацидоз.");
+      else r.checks.push("Компенсация соответствует хроническому респ. ацидозу.");
+    }else r.text="Хроничность не задана — точную оценку не выполняем.";
+    return r;
+  }
+  if(p.resp==="respiratory alkalosis"){
+    if(d.chronic==="acute"){
+      const expH=24-0.2*(40-d.pCO2);
+      r.text=`Острое: HCO₃⁻ ожидаемо ≈ ${fixed(expH,1)}.`;
+      if(b.HCO3<expH-3)r.checks.push("HCO₃⁻ ниже ожидаемого → + мет. ацидоз.");
+      else if(b.HCO3>expH+3)r.checks.push("HCO₃⁻ выше ожидаемого → + мет. алкалоз.");
+      else r.checks.push("Компенсация соответствует острому респ. алкалозу.");
+    }else if(d.chronic==="chronic"){
+      const expH=24-0.4*(40-d.pCO2);
+      r.text=`Хроническое: HCO₃⁻ ожидаемо ≈ ${fixed(expH,1)}.`;
+      if(b.HCO3<expH-4)r.checks.push("HCO₃⁻ ниже ожидаемого → + мет. ацидоз.");
+      else if(b.HCO3>expH+4)r.checks.push("HCO₃⁻ выше ожидаемого → + мет. алкалоз.");
+      else r.checks.push("Компенсация соответствует хроническому респ. алкалозу.");
+    }else r.text="Хроничность не задана — точную оценку не выполняем.";
+    return r;
+  }
+  r.text="Явного первичного нарушения по введённым данным не определено.";
+  return r;
+}
+
+function calcDeltaDelta(d,b){
+  if(!(b.HCO3<22 && b.deltaAG>0))return{value:NaN,classification:"не применимо"};
+  const dd=b.deltaDelta;
+  let classification;
+  if(dd<0.4)classification="Гиперхлоремический ацидоз (NAGMA)";
+  else if(dd<0.9)classification="Смешанный (NAGMA + HAGMA)";
+  else if(dd<=2.0)classification="HAGMA (изолированный)";
+  else classification="HAGMA + метаболический алкалоз";
+  return{value:dd,classification};
+}
+
+function clinicalFindings(d,b,st,p,dd){
+  const findings=[],alerts=[];
+  // Гиперальбуминемия / гипоальбуминемия
+  if(d.Alb<35)alerts.push(`Гипоальбуминемия: Alb ${fixed(d.Alb,1)} г/л. AG занижен; используйте AGcorr.`);
+  if(d.Alb>50)findings.push(`Гиперпротеинемия (Alb ${fixed(d.Alb,1)} г/л): IgG-парапротеинемия → AG может быть ложно СНИЖЕН.`);
+  // Гипернатриемия
+  if(d.Na>145)alerts.push(`Гипернатриемия: Na ${fixed(d.Na,1)} ммоль/л. AG ложно повышен из-за Na. Причины: дегидратация, несахарный диабет, осмотическая терапия.`);
+  // Гипокалиемия / гиперкалиемия
+  if(d.K<3.5)findings.push(`Гипокалиемия (K ${fixed(d.K,1)}): способствует мет. алкалозу. Причины: диуретики, рвота, гиперальдостеронизм.`);
+  if(d.K>5.5)findings.push(`Гиперкалиемия (K ${fixed(d.K,1)}): риск аритмий. Причины: ОПП/ХБП, гемолиз, ацидоз.`);
+  // Гиперхлоремия 2 уровня
+  const absHyperCl=d.Cl>107;
+  const relHyperCl=(d.Na-d.Cl<38)||(d.Na/d.Cl<1.37);
+  if(absHyperCl&&relHyperCl){
+    findings.push(`Гиперхлоремия (абсолютная + относительная): Cl ${fixed(d.Cl,1)} >107, Na−Cl ${fixed(d.Na-d.Cl)} <38. Причины: инфузия NaCl 0.9%, диарея, RTA.`);
+  }else if(absHyperCl){
+    findings.push(`Гиперхлоремия (абсолютная): Cl ${fixed(d.Cl,1)} >107.`);
+  }else if(relHyperCl){
+    findings.push(`Относительная гиперхлоремия (низкая SID): Cl в норме, но Na−Cl ${fixed(d.Na-d.Cl)} <38 или Na/Cl ${fixed(d.Na/d.Cl,3)} <1.37.`);
+  }
+  // HAGMA
+  const hasHAGMA=b.AGcorr>14&&(b.HCO3<22||b.SBE<-2);
+  if(hasHAGMA){
+    if(d.Lac>2){
+      findings.push(`HAGMA + лактат-ацидоз (Lac ${fixed(d.Lac,1)}).`);
+    }else{
+      findings.push(`HAGMA с нормальным L-лактатом (${fixed(d.Lac,1)}). Исключить: D-лактат (синдром короткого кишечника, избыток фруктозы), кетоны, уремию, токсины (метанол, ЭГ, салицилаты). Рекомендовано: D-лактат, β-гидроксибутират, осмолярный gap, UAG.`);
+    }
+  }
+  // SIG
+  if(st.SIG>5)findings.push(`SIG повышен (${fixed(st.SIG,1)}): возможен вклад неизмеряемых анионов.`);
+  if(st.SIG<-5)findings.push(`SIG отрицательный (${fixed(st.SIG,1)}): проверьте единицы и модель Stewart.`);
+  // Оксигенация
+  if(b.PF<=300)alerts.push(`P/F = ${fixed(b.PF,0)} — гипоксемия. Не равно автоматическому диагнозу ОРДС.`);
+  if(d.pO2>0&&d.FiO2>21&&b.A_a_est>300)alerts.push(`A–a градиент повышен (${fixed(b.A_a_est,0)}). Формула ориентировочная.`);
+  return{findings,alerts,hasHAGMA,absHyperCl,relHyperCl};
+}
+
+function syndrome(d,b,p,dd,st,fin){
+  const parts=[];
+  if(p.resp==="respiratory acidosis")parts.push("респираторный ацидоз");
+  if(p.resp==="respiratory alkalosis")parts.push("респираторный алкалоз");
+  if(p.met==="metabolic acidosis")parts.push("метаболический ацидоз");
+  if(p.met==="metabolic alkalosis")parts.push("метаболический алкалоз");
+  let title="Расстройств КОС нет";
+  if(parts.length===1)title="Изолированное нарушение КОС";
+  else if(parts.length===2)title="Смешанное нарушение КОС";
+  else if(parts.length>=3)title="Тройное (множественное) нарушение КОС";
+  let detail=parts.join(" + ");
+  if(fin.hasHAGMA){
+    if(Number.isFinite(dd.value))detail+=(detail?" · ":"")+dd.classification;
+    else detail+=(detail?" · ":"")+"HAGMA";
+  }
+  if(!detail && b.AGcorr>14 && b.HCO3>=22)detail="AG высокий без мет. ацидоза — оценить причину (гипернатриемия, лабораторная ошибка, гипопротеинемия).";
+  return{title,detail};
+}
+
+function ardsAssessment(d,b){
+  if(!Number.isFinite(b.PF)||d.PEEP<5)return{status:"Недостаточно данных для Berlin-оценки",detail:"Нужен PEEP/CPAP ≥5 см H₂O и клинический контекст."};
+  if(d.bilateral!=="yes"||d.timing!=="yes"||d.noncardiac!=="yes")return{status:"P/F снижен, критерии ОРДС не подтверждены",detail:"Нужны: timing, двусторонние изменения, оценка отёка."};
+  const sev=b.PF>200?"лёгкая":b.PF>100?"средняя":"тяжёлая";
+  return{status:`Критерии Berlin: ОРДС ${sev} степени`,detail:`P/F ${fixed(b.PF,0)} при PEEP ${fixed(d.PEEP,1)}. Требуется верификация.`};
+}
+
+function render(d,b,p,comp,dd,st,fin,syn,ards){
+  document.getElementById("syndrome").innerHTML=`<div class="syndrome"><div class="syn-title">СИНДРОМАЛЬНЫЙ ДИАГНОЗ</div><div class="syn-main">${escapeHTML(syn.title)}</div><div class="syn-detail">${escapeHTML(syn.detail||"—")}</div><div class="syn-detail" style="margin-top:8px"><b>Оксигенация:</b> ${escapeHTML(ards.status)}<br>${escapeHTML(ards.detail)}</div></div>`;
+
+  const rows=[
+    ["— КОС —",""],["HCO₃⁻ (лаб.)",fixed(d.HCO3in,1)+" ммоль/л"],["HCO₃⁻ (H-H)",fixed(b.HCO3calc,1)+" ммоль/л"],
+    ["SBE ("+(d.sbeMode==='calc'?'расчёт':'вход')+")",fixed(b.SBE,1)],["SBE (Van Slyke)",fixed(b.SBE_calc,1)],
+    ["— АП / ΔΔ —",""],["АП",fixed(b.AG)],
+    ["АП_корр (альбумин)",fixed(b.AGcorr)+(b.AGcorr>14?" ⚠":"")],
+    ["ΔAG",fixed(b.deltaAG)],["ΔHCO₃⁻",fixed(b.deltaHCO3)],
+    ["ΔΔ",Number.isFinite(dd.value)?fixed(dd.value,2):"не применимо"],
+    ["Классификация ΔΔ",dd.classification],
+    ["— SBE-разбивка —",""],["SBE_FW (вода)",fixed(b.SBE_FW)],["SBE_Cl (хлор)",fixed(b.SBE_Cl)],
+    ["SBE_Alb (альбумин)",fixed(b.SBE_Alb)],["SBE_UA (прочие анионы)",fixed(b.SBE_UA)],
+    ["— Стюарт ("+(d.sidModel==='charged'?'с ×2':'упрощённая')+") —",""],
+    ["SID_a",fixed(st.SIDa)],["SID_e",fixed(st.SIDe)],["SIG",fixed(st.SIG)],
+    ["— Оксигенация —",""],["P/F",fixed(b.PF,0)+" мм рт.ст."],["A–a градиент",fixed(b.A_a_est,0)]
+  ];
+  document.getElementById("results").innerHTML=rows.map(r=>r[0].startsWith('—')?`<div class="row section"><span>${r[0]}</span><span></span></div>`:`<div class="row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
+
+  const logs=[];
+  logs.push(`<b>pH вектор:</b> ${fixed(d.pH,3)} → ${p.acidBase}.`);
+  if(p.resp)logs.push(`<b>Респираторный:</b> ${p.resp}, pCO₂ ${fixed(d.pCO2,1)}.`);
+  if(p.met)logs.push(`<b>Метаболический:</b> ${p.met}, HCO₃⁻ ${fixed(b.HCO3,1)}, SBE ${fixed(b.SBE,1)}.`);
+  if(d.sbeMode==='calc')logs.push(`<b>SBE рассчитан (Van Slyke):</b> ${fixed(b.SBE_calc,1)}.`);
+  if(fin.hasHAGMA)logs.push(`<b>HAGMA:</b> АП_корр ${fixed(b.AGcorr)} >14 при HCO₃⁻ ${fixed(b.HCO3,1)} / SBE ${fixed(b.SBE,1)}.`);
+  if(d.Na>145)logs.push(`<b>Гипернатриемия:</b> Na ${fixed(d.Na,1)} >145 — интерпретировать АП с осторожностью.`);
+
+  let diagHTML=`<h3>Ход анализа</h3><ul>${logs.map(l=>`<li>${l}</li>`).join('')}</ul>`;
+  diagHTML+=`<h3>Компенсаторный ответ</h3><div>${escapeHTML(comp.text)}</div><ul>${comp.checks.map(c=>`<li>${escapeHTML(c)}</li>`).join('')}</ul>`;
+  if(fin.findings.length>0)diagHTML+=fin.findings.map(f=>`<div class="finding"><b>Находка:</b> ${escapeHTML(f)}</div>`).join('');
+  if(fin.alerts.length>0)diagHTML+=fin.alerts.map(a=>`<div class="alert">⚠ ${escapeHTML(a)}</div>`).join('');
+  diagHTML+=`<div class="rec"><b>Важно:</b> автоматические лечебные назначения не выдаются. Тактика зависит от причины и клинического состояния.</div>`;
+  document.getElementById("diagnosis").innerHTML=diagHTML;
+
+  document.getElementById("explanations").innerHTML=`
+    <details open><summary>📊 SBE-разбивка</summary>
+    <table><thead><tr><th>Компонент</th><th>Формула</th><th>Значение</th></tr></thead>
+    <tbody>
+    <tr><td>SBE_FW</td><td>0.3 × (Na − 140)</td><td>${fixed(b.SBE_FW)}</td></tr>
+    <tr><td>SBE_Cl</td><td>104 − Cl × 140 / Na</td><td>${fixed(b.SBE_Cl)}</td></tr>
+    <tr><td>SBE_Alb</td><td>(0.148 pH − 0.818) × (40 − Alb)</td><td>${fixed(b.SBE_Alb)}</td></tr>
+    <tr><td>SBE_UA</td><td>SBE − FW − Cl − Alb</td><td>${fixed(b.SBE_UA)}</td></tr>
+    </tbody></table></details>
+    <details><summary>🧮 АП и ΔΔ</summary>
+    <div class="fml">АП = Na − (Cl + HCO₃⁻)</div>
+    <div class="fml">АП_корр = АП + 0.25 × (40 − Alb)</div>
+    <div class="fml">ΔΔ = ΔAG / ΔHCO₃⁻</div>
+    <p>Пороги (табл. 4.6): &lt;0.4 NAGMA · 0.4–0.9 смешанный · 0.9–2.0 HAGMA · &gt;2.0 HAGMA+алкалоз.</p>
+    </details>
+    <details><summary>🧮 SBE (Van Slyke)</summary>
+    <div class="fml">SBE = HCO₃⁻ − 24.4 + 16.2 × (pH − 7.4)</div>
+    </details>
+    <details><summary>⚡ Stewart (SIDa/SIDe/SIG)</summary>
+    <div class="fml">SIDa (${d.sidModel==='charged'?'с ×2':'упрощённая'}) = Na + K ${d.sidModel==='charged'?'+ 2Ca + 2Mg':'+ Ca + Mg'} − Cl − Lactate</div>
+    <div class="fml">SIDe = HCO₃⁻ + Alb⁻ + PO₄⁻</div>
+    <div class="fml">SIG = SIDa − SIDe</div>
+    </details>
+    <details><summary>🌬 Компенсация</summary>
+    <div class="fml">Мет. ацидоз: pCO₂ = 1.5×HCO₃⁻ + 8 ± 2</div>
+    <div class="fml">Мет. алкалоз: pCO₂ = 0.7×HCO₃⁻ + 21 ± 2</div>
+    </details>`;
+
+  const strip=s=>s.replace(/<[^>]+>/g,'');
+  const L=["═══ ICU NAVIGATOR v23.0 UNIVERSAL ═══","","Дата: "+new Date().toLocaleString('ru-RU'),""];
+  L.push("── ВХОД ──");
+  L.push(`pH ${fixed(d.pH,3)}  pCO₂ ${fixed(d.pCO2,1)}  HCO₃⁻ ${fixed(b.HCO3,1)}  SBE ${fixed(b.SBE,1)}`);
+  L.push(`Na ${fixed(d.Na,1)}  K ${fixed(d.K,1)}  Cl ${fixed(d.Cl,1)}  Ca ${fixed(d.Ca,2)}  Mg ${fixed(d.Mg,2)}`);
+  L.push(`Alb ${fixed(d.Alb,1)}  PO₄ ${fixed(d.PO4,2)}  Gluc ${fixed(d.Gluc,1)}  Lac ${fixed(d.Lac,1)}`);
+  L.push(`pO₂ ${fixed(d.pO2,1)}  FiO₂ ${fixed(d.FiO2,0)}%  PEEP ${fixed(d.PEEP,1)}`);
+  if(d.notes){L.push("","── ЗАМЕТКИ ──",d.notes);}
+  L.push("","── СИНДРОМ ──",syn.title,syn.detail||"","","Оксигенация: "+ards.status,ards.detail);
+  L.push("","── РАСЧЁТЫ ──");
+  rows.forEach(r=>{if(r[1]&&!r[0].startsWith('—'))L.push(`${r[0]}: ${r[1]}`);});
+  L.push("","── ХОД ──");logs.forEach(l=>L.push("• "+strip(l)));
+  L.push("","── КОМПЕНСАЦИЯ ──",comp.text);comp.checks.forEach(c=>L.push("• "+strip(c)));
+  if(fin.findings.length){L.push("","── НАХОДКИ ──");fin.findings.forEach(f=>L.push("• "+strip(f)));}
+  if(fin.alerts.length){L.push("","── ВНИМАНИЕ ──");fin.alerts.forEach(a=>L.push("• "+strip(a)));}
+  L.push("","Сформировано: ICU Navigator v23.0 Universal Core");
+  lastReport=L.join("\n");
+}
+
+function makeHistory(d,syn){
+  return{
+    date:new Date().toLocaleString('ru-RU'),
+    diag:syn.title+(syn.detail?": "+syn.detail:""),
+    data:Object.fromEntries(["pH","pCO2","HCO3in","SBE","Lac","pO2","FiO2","PEEP","Na","Cl","K","Ca","Mg","Alb","PO4","Gluc"].map(k=>[k,d[k]])),
+    notes:d.notes,sbeMode:d.sbeMode,naCorr:d.naCorr,chronic:d.chronic,sidModel:d.sidModel,
+    bilateral:d.bilateral,timing:d.timing,noncardiac:d.noncardiac
+  };
+}
+
+function runCalculation(save=false){
+  const d=readInputs(),err=validate(d);
+  if(err){showToast(err);return}
+  const b=calcBasic(d),p=detectPrimary(d,b),comp=compensation(d,b,p),dd=calcDeltaDelta(d,b),st=calcStewart(d,b);
+  const fin=clinicalFindings(d,b,st,p,dd),syn=syndrome(d,b,p,dd,st,fin),ards=ardsAssessment(d,b);
+  render(d,b,p,comp,dd,st,fin,syn,ards);
+  updateRisk(d,b,p);
+  if(save){saveHistory(makeHistory(d,syn));showToast("Расчёт сохранён");}
+  try{drawCharts(b,d,st)}catch(e){}
+  switchTab("results");
+}
+
+function previewCalc(){try{if(document.getElementById("pH").value)runCalculation(false)}catch(e){}}
+
+function liveValidate(){
+  Object.entries(ranges).forEach(([id,[lo,hi]])=>{
+    const e=document.getElementById(id);if(!e)return;const v=parseFloat(e.value);
+    e.classList.remove("ok-field","warn-field","bad-field");
+    if(!Number.isFinite(v))return;
+    if(v>=lo&&v<=hi)e.classList.add("ok-field");
+    else if(v<lo*.95||v>hi*1.05)e.classList.add("bad-field");
+    else e.classList.add("warn-field");
+  });
+}
+
+function updateRisk(d,b,p){
+  let risk=0;
+  if(d.pH<7.2||d.pH>7.6)risk+=35;else if(d.pH<7.3||d.pH>7.5)risk+=15;
+  if(d.Lac>4)risk+=30;else if(d.Lac>2)risk+=15;
+  if(b.PF<100)risk+=30;else if(b.PF<200)risk+=20;else if(b.PF<300)risk+=10;
+  if(Math.abs(b.SBE)>10)risk+=20;else if(Math.abs(b.SBE)>5)risk+=10;
+  risk=Math.min(98,risk);
+  const e=document.getElementById("riskBadge");
+  if(e){e.textContent=risk+"%";e.style.color=risk>50?"var(--bad)":risk>20?"var(--warn)":"var(--ok)";}
+}
+
+function drawCharts(b,d,st){
+  const isDark=document.documentElement.getAttribute('data-theme')!=='light';
+  const txtColor=isDark?'#f1f5f9':'#1e293b';
+  const ctx=document.getElementById("gamble");
+  if(!ctx)return;
+  if(gChart)gChart.destroy();
+  gChart=new Chart(ctx,{type:"bar",data:{labels:["Катионы (+)","Анионы (−)"],datasets:[
+    {label:"Na⁺",data:[b.NaCorr,0],backgroundColor:"#5eead4"},
+    {label:"K⁺",data:[d.K,0],backgroundColor:"#7dd3fc"},
+    {label:"Ca²⁺",data:[d.Ca,0],backgroundColor:"#a5b4fc"},
+    {label:"Mg²⁺",data:[d.Mg,0],backgroundColor:"#c4b5fd"},
+    {label:"Cl⁻",data:[0,d.Cl],backgroundColor:"#fda4af"},
+    {label:"HCO₃⁻",data:[0,b.HCO3],backgroundColor:"#fcd34d"},
+    {label:"Лактат",data:[0,d.Lac],backgroundColor:"#f0abfc"},
+    {label:"SIG",data:[0,st.SIG>0?st.SIG:0],backgroundColor:"#94a3b8"}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:txtColor,font:{family:"JetBrains Mono",size:11}}}},scales:{x:{stacked:true,ticks:{color:txtColor}},y:{stacked:true,ticks:{color:txtColor},title:{display:true,text:"мЭкв/л",color:txtColor}}}}});
+
+  const sctx=document.getElementById("siggaard");
+  if(!sctx)return;
+  if(sChart)sChart.destroy();
+  const fn=(h,p)=>h/(.03*Math.pow(10,p-6.1));
+  const ph=[];for(let x=7;x<=7.8;x+=.02)ph.push(+x.toFixed(3));
+  const colors=['#e0f2fe','#bae6fd','#7dd3fc','#5eead4','#2dd4bf','#14b8a6','#0d9488','#0f766e'];
+  const ds=[];
+  ds.push({label:'Алкалоз',data:ph.map(x=>({x,y:fn(30,x)})).concat(ph.slice().reverse().map(x=>({x,y:fn(24,x)}))),borderColor:'transparent',backgroundColor:'rgba(244,114,182,.08)',fill:true,pointRadius:0,order:20});
+  ds.push({label:'Ацидоз',data:ph.map(x=>({x,y:fn(15,x)})).concat(ph.slice().reverse().map(x=>({x,y:fn(24,x)}))),borderColor:'transparent',backgroundColor:'rgba(252,211,77,.08)',fill:true,pointRadius:0,order:21});
+  [5,10,15,20,24,30,35,40].forEach((h,i)=>{const nrm=h===24;ds.push({label:"HCO₃⁻ "+h,data:ph.map(x=>({x,y:fn(h,x)})),borderColor:nrm?'#10b981':colors[i],borderWidth:nrm?2.5:1.2,borderDash:nrm?[]:[4,4],pointRadius:0,order:nrm?1:5})});
+  ds.push({label:"Пациент",data:[{x:d.pH,y:d.pCO2}],borderColor:'#e11d48',backgroundColor:'#e11d48',pointRadius:10,pointBorderColor:'#fff',pointBorderWidth:2,showLine:false,order:0});
+  sChart=new Chart(sctx,{type:"line",data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:txtColor,font:{family:"JetBrains Mono",size:10},filter:i=>!i.text.includes('Ацидоз')&&!i.text.includes('Алкалоз')}}},scales:{x:{type:"linear",min:7,max:7.8,title:{display:true,text:"pH",color:txtColor},ticks:{color:txtColor}},y:{min:0,max:120,title:{display:true,text:"pCO₂",color:txtColor},ticks:{color:txtColor}}}}});
+}
+
+function loadPreset(n){
+  const p=presets[n];if(!p)return;
+  Object.entries(p).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});
+  ["bilateral","timing","noncardiac"].forEach(k=>document.getElementById(k).value="unknown");
+  liveValidate();runCalculation(false);showToast("Пресет "+n+" загружен");
+}
+
+function clearAll(){
+  const vals={pH:7.40,pCO2:40,HCO3in:24,SBE:0,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:140,Cl:103,K:4,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:5.5};
+  Object.entries(vals).forEach(([k,v])=>document.getElementById(k).value=v);
+  document.getElementById("notes").value="";
+  document.getElementById("sbeMode").value="input";
+  document.getElementById("naCorr").value="off";
+  document.getElementById("chronic").value="auto";
+  document.getElementById("sidModel").value="charged";
+  ["bilateral","timing","noncardiac"].forEach(k=>document.getElementById(k).value="unknown");
+  liveValidate();runCalculation(false);showToast("Сброшено");
+}
+
+function switchTab(n){
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab===n));
+  document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id==="panel-"+n));
+  if(n==="charts")setTimeout(()=>{gChart?.resize();sChart?.resize()},50);
+}
+
+function toggleTheme(){
+  const next=(document.documentElement.dataset.theme||"dark")==="dark"?"light":"dark";
+  document.documentElement.dataset.theme=next;
+  document.getElementById("themeBtn").textContent=next==="dark"?"🌙":"☀️";
+  localStorage.setItem("icu_theme",next);
+  try{drawCharts(calcBasic(readInputs()),readInputs(),calcStewart(readInputs(),calcBasic(readInputs())))}catch(e){}
+}
+function initTheme(){
+  const t=localStorage.getItem("icu_theme")||"dark";
+  document.documentElement.dataset.theme=t;
+  document.getElementById("themeBtn").textContent=t==="dark"?"🌙":"☀️";
+}
+
+function getHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]")}catch{return[]}}
+function saveHistory(x){let h=getHistory();h.unshift(x);try{localStorage.setItem(HISTORY_KEY,JSON.stringify(h.slice(0,5)))}catch(e){}}
+function renderHistory(){
+  const list=document.getElementById("historyList"),h=getHistory();
+  if(!h.length){list.innerHTML='<div class="small-note">Нет сохранённых случаев.</div>';return}
+  list.innerHTML=h.map((x,i)=>`<div class="history-item" onclick="loadHistory(${i})"><div class="hi-date">${escapeHTML(x.date)}</div><div class="hi-main">pH ${fixed(parseFloat(x.data.pH),2)} · pCO₂ ${fixed(parseFloat(x.data.pCO2),0)} · HCO₃⁻ ${fixed(parseFloat(x.data.HCO3in),1)}</div><div class="hi-diag">${escapeHTML(x.diag)}</div></div>`).join("");
+}
+function loadHistory(i){
+  const x=getHistory()[i];if(!x)return;
+  Object.entries(x.data||{}).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});
+  ["notes","sbeMode","naCorr","chronic","sidModel","bilateral","timing","noncardiac"].forEach(k=>{if(x[k]!=null){const e=document.getElementById(k);if(e)e.value=x[k]}});
+  document.getElementById("historyPanel").classList.remove("show");
+  liveValidate();runCalculation(false);showToast("Загружено");
+}
+function toggleHistory(e){e?.stopPropagation();const p=document.getElementById("historyPanel");p.classList.toggle("show");if(p.classList.contains("show"))renderHistory()}
+function clearHistory(e){e?.stopPropagation();localStorage.removeItem(HISTORY_KEY);renderHistory();showToast("История очищена")}
+document.addEventListener("click",e=>{const p=document.getElementById("historyPanel"),b=document.getElementById("historyBtn");if(p.classList.contains("show")&&!p.contains(e.target)&&!b.contains(e.target))p.classList.remove("show")});
+
+function copyResult(){
+  if(!lastReport)runCalculation(false);
+  navigator.clipboard?.writeText(lastReport).then(()=>showToast("Скопировано")).catch(()=>{
+    const t=document.createElement("textarea");t.value=lastReport;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();showToast("Скопировано");
+  });
+}
+function shareResult(){
+  if(!lastReport)runCalculation(false);
+  if(navigator.share)navigator.share({title:"ICU Navigator v23.0",text:lastReport}).catch(()=>{});
+  else copyResult();
+}
+function showToast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
+
+window.addEventListener("load",()=>{initTheme();liveValidate();runCalculation(false)});
+</script>
+</body>
+</html>
