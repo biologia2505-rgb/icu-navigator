@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v19.0 Cyber Deck</title>
+<title>ICU Navigator v19.1 Cyber Deck</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -87,13 +87,14 @@ body {
   margin-bottom: 24px; background: var(--card); backdrop-filter: blur(20px);
   padding: 20px 28px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow);
   position: relative;
+  z-index: 500;
 }
 .header::before {
   content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--acc); box-shadow: 0 0 15px var(--acc);
 }
 .header h1 { font-size: 22px; margin: 0; color: var(--acc2); font-weight: 800; display: flex; align-items: center; gap: 12px; font-family: 'JetBrains Mono', monospace; }
 .header .sub { color: var(--mut); font-size: 12px; margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
-.header-actions { display: flex; gap: 10px; position: relative; }
+.header-actions { display: flex; gap: 10px; position: relative; z-index: 600; }
 .icon-btn {
   background: var(--card-solid); border: 1px solid var(--border); color: var(--txt);
   width: 44px; height: 44px; border-radius: 12px; cursor: pointer; font-size: 16px;
@@ -107,14 +108,17 @@ body {
 }
 .ticker-item span { color: var(--acc); font-weight: 700; }
 
-/* История */
+/* === ИСТОРИЯ — теперь поверх всего === */
 .history-panel {
-  position: absolute; top: 54px; right: 0;
-  width: 420px; max-width: 90vw; max-height: 480px; overflow-y: auto;
+  position: fixed; top: 100px; right: 30px;
+  width: 420px; max-width: 90vw; max-height: 70vh; overflow-y: auto;
   background: var(--card-solid); border: 1px solid var(--acc); border-radius: 16px;
-  box-shadow: 0 0 40px rgba(0, 240, 255, 0.25); padding: 16px; z-index: 100;
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.35), 0 20px 40px rgba(0,0,0,0.5);
+  padding: 16px; z-index: 99999;
   display: none;
+  animation: historyIn 0.2s ease;
 }
+@keyframes historyIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 .history-panel.show { display: block; }
 .history-panel h3 {
   font-size: 12px; color: var(--acc); margin: 0 0 12px; text-transform: uppercase;
@@ -141,6 +145,7 @@ body {
 .tabs {
   display: flex; gap: 8px; margin-bottom: 24px; background: var(--card); backdrop-filter: blur(20px);
   padding: 8px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow-x: auto;
+  position: relative; z-index: 100;
 }
 .tab {
   flex: 1; min-width: 130px; padding: 14px 20px; text-align: center; border-radius: 14px;
@@ -260,7 +265,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
   position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--card-solid);
   border: 1px solid var(--acc); color: var(--txt); padding: 14px 28px; border-radius: 16px;
   font-weight: 700; opacity: 0; transition: all 0.3s ease; pointer-events: none;
-  z-index: 999; box-shadow: 0 0 30px var(--acc-glow); font-family: 'JetBrains Mono', monospace;
+  z-index: 999999; box-shadow: 0 0 30px var(--acc-glow); font-family: 'JetBrains Mono', monospace;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(-5px); }
 
@@ -269,7 +274,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
   .tab { padding: 10px 12px; font-size: 11px; min-width: 90px; }
   .chart-box { height: 400px; }
   .grid { grid-template-columns: 1fr; }
-  .history-panel { width: 320px; }
+  .history-panel { width: 320px; right: 12px; top: 90px; }
 }
 </style>
 </head>
@@ -283,23 +288,22 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <div class="container">
 <div class="header">
 <div>
-  <h1>⚡ ICU NAVIGATOR <span style="font-size:11px;background:var(--okbg);color:var(--ok);padding:4px 10px;border-radius:20px;vertical-align:middle;font-weight:700">v19.0 COMMAND</span></h1>
+  <h1>⚡ ICU NAVIGATOR <span style="font-size:11px;background:var(--okbg);color:var(--ok);padding:4px 10px;border-radius:20px;vertical-align:middle;font-weight:700">v19.1 COMMAND</span></h1>
   <div class="sub">Кибер-медицинский пульт анализа КОС, Стюарта и прогноза рисков</div>
 </div>
 <div class="header-actions">
   <div class="status-ticker hidden-mobile">
     <div class="ticker-item">РИСК: <span id="riskBadge">РАСЧЕТ...</span></div>
   </div>
-  <div style="position:relative">
-    <button class="icon-btn" onclick="toggleHistory()" title="История пациентов" id="historyBtn">📁</button>
-    <div class="history-panel" id="historyPanel">
-      <h3>📁 Последние 5 случаев <button class="history-clear" onclick="clearHistory(event)">Очистить</button></h3>
-      <div id="historyList"></div>
-    </div>
-  </div>
+  <button class="icon-btn" onclick="toggleHistory(event)" title="История пациентов" id="historyBtn">📁</button>
   <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Сменить тему">☀️</button>
   <button class="icon-btn" onclick="shareResult()" title="Копировать отчет для консилиума">📤</button>
 </div>
+</div>
+
+<div class="history-panel" id="historyPanel">
+  <h3>📁 Последние 5 случаев <button class="history-clear" onclick="clearHistory(event)">Очистить</button></h3>
+  <div id="historyList"></div>
 </div>
 
 <div class="tabs">
@@ -403,7 +407,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <div class="card" style="margin-top:20px"><h2>📚 ИСТОРИЯ ПАЦИЕНТОВ</h2>
 <div style="line-height:1.7;font-size:14px;color:var(--mut);font-family:'JetBrains Mono',monospace">
 <p>Кнопка <b>📁</b> в шапке — открывает последние <b>5 случаев</b>.</p>
-<p>Каждый случай сохраняется автоматически при расчёте. Данные хранятся локально в браузере (localStorage) — не удаляются при обновлении страницы.</p>
+<p>Каждый случай сохраняется автоматически при расчёте. Данные хранятся локально в браузере (localStorage).</p>
 <p>Для загрузки случая — нажмите на запись. Для удаления — «Очистить».</p>
 </div></div>
 </div>
@@ -479,11 +483,13 @@ function loadHistoryItem(i){
   if(naCorrEl && item.naCorr) naCorrEl.value = item.naCorr;
   const chronicEl = document.getElementById('chronic');
   if(chronicEl && item.chronic) chronicEl.value = item.chronic;
-  toggleHistory();
+  const p = document.getElementById('historyPanel');
+  if(p) p.classList.remove('show');
   showToast('✓ Случай загружен');
   calc();
 }
-function toggleHistory(){
+function toggleHistory(ev){
+  if(ev) ev.stopPropagation();
   const p = document.getElementById('historyPanel');
   if(!p) return;
   if(p.classList.contains('show')) p.classList.remove('show');
@@ -494,7 +500,7 @@ document.addEventListener('click', function(e){
   const btn = document.getElementById('historyBtn');
   if(!p || !p.classList.contains('show')) return;
   if(!p.contains(e.target) && (!btn || !btn.contains(e.target))) p.classList.remove('show');
-});
+}, true);
 
 // ============ ТАБЫ ============
 function switchTab(n){
@@ -635,7 +641,6 @@ function calc(){
   if(hypoAlb) alerts.push(`<b>⚠ Гипоальбуминемия (Alb = ${fixed(Alb,1)}).</b> Маскирует метаболический ацидоз.`);
   if(hypoK) findings.push({name:`Гипокалиемия (K = ${fixed(K,1)})`, detail:"Способствует алкалозу.", causes:["Диуретики"], recommendation:"Восполнить K⁺ и Mg²⁺."});
 
-  // ======== РЕСПИРАТОРНЫЙ КОМПОНЕНТ — С ПРОВЕРКОЙ КОМПЕНСАЦИИ ========
   const respAcid=pCO2>45, respAlk=pCO2<35, metAcid=HCO3<22||SBE<-2, metAlk=HCO3>26||SBE>2;
   let respName='', respDetail='';
 
@@ -643,7 +648,6 @@ function calc(){
     if(metAlk){
       const lo=0.7*HCO3+21-2, hi=0.7*HCO3+21+2;
       if(pCO2>=lo && pCO2<=hi){
-        // компенсация — не в диагноз
         logs.push(`<b>Респираторный ацидоз (pCO₂ ${fixed(pCO2,1)}) — компенсаторный</b> для мет. алкалоза. Ожидаемый ${fixed(lo,1)}–${fixed(hi,1)}.`);
       } else if(pCO2>hi){
         let mode=chronicMode; if(chronicMode==='auto') mode=HCO3>28?'chronic':'acute';
@@ -659,7 +663,6 @@ function calc(){
     if(metAcid){
       const lo=1.5*HCO3+8-2, hi=1.5*HCO3+8+2;
       if(pCO2>=lo && pCO2<=hi){
-        // компенсация — не в диагноз
         logs.push(`<b>Респираторный алкалоз (pCO₂ ${fixed(pCO2,1)}) — компенсаторный</b> для мет. ацидоза. Winter's ${fixed(lo,1)}–${fixed(hi,1)}.`);
       } else if(pCO2<lo){
         let mode=chronicMode; if(chronicMode==='auto') mode=HCO3<20?'chronic':'acute';
@@ -674,7 +677,6 @@ function calc(){
   }
   if(respName) diagnoses.push({name:respName, detail:respDetail});
 
-  // ======== МЕТАБОЛИЧЕСКИЕ КОМПОНЕНТЫ ========
   if(AGcorr>14){ let d=`АП_корр ${fixed(AGcorr)} (>14).`; if(Lac>2) d+=` Лактат ${fixed(Lac,1)} → лактат-ацидоз.`; diagnoses.push({name:"HAGMA (Метаболический ацидоз с высоким АП)"+(Lac>2?" [лактат]":""), detail:d}); }
   if(deltaAP>2&&AGcorr<=14&&HCO3<24) diagnoses.push({name:"Метаболический ацидоз по SBE_UA", detail:`ΔАП = ${fixed(deltaAP)}.`});
 
@@ -746,9 +748,8 @@ function calc(){
     <div>Если "Рассчитан": SBE = ${fixed(HCO3,1)} − 24.4 + 16.2 × (${fixed(pH,3)} − 7.4) = <b>${fixed(SBE_calc,1)}</b></div>
     </details>`;
 
-  // === ОТЧЁТ ===
   const strip=s=>s.replace(/<[^>]+>/g,'');
-  const L=["═══ ICU NAVIGATOR v19.0 COMMAND DECK ═══",""];
+  const L=["═══ ICU NAVIGATOR v19.1 COMMAND DECK ═══",""];
   L.push("Дата: " + new Date().toLocaleString('ru-RU'), "");
   L.push("── ИСХОДНЫЕ ДАННЫЕ ──");
   L.push(`pH: ${fixed(pH,3)}   pCO₂: ${fixed(pCO2,1)}   HCO₃⁻ (лаб.): ${fixed(HCO3in,1)}   HCO₃⁻ (расч.): ${fixed(HCO3calc,1)}`);
@@ -778,26 +779,17 @@ function calc(){
   if(alerts.length>0){ L.push("", "── ВНИМАНИЕ ──"); alerts.forEach(a=>L.push(strip(a))); }
   if(recs.length>0){ L.push("", "── РЕКОМЕНДАЦИИ ──"); recs.forEach(r=>L.push(strip(r))); }
   L.push("", "── ИНФУЗИОННЫЙ ПРОТОКОЛ ──", strip(infusionAdvice));
-  L.push("", "Сформировано: ICU Navigator v19.0 Command Deck");
+  L.push("", "Сформировано: ICU Navigator v19.1 Command Deck");
   lastReport=L.join("\n");
 
-  // === СОХРАНЕНИЕ В ИСТОРИЮ ===
   try {
     const diagShort = diagnoses.length > 0 ? diagnoses.map(d=>d.name).join(' + ') : 'Норма';
     saveHistory({
       date: new Date().toLocaleString('ru-RU'),
-      pH: fixed(pH,2),
-      pCO2: fixed(pCO2,0),
-      HCO3: fixed(HCO3,1),
+      pH: fixed(pH,2), pCO2: fixed(pCO2,0), HCO3: fixed(HCO3,1),
       diag: diagShort,
-      data: {
-        pH, pCO2, HCO3in, SBE: SBE_input, Lac, pO2, FiO2,
-        Na, Cl, K, Ca, Mg, Alb, PO4, Gluc
-      },
-      notes: notes,
-      sbeMode: sbeMode,
-      naCorr: naCorrMode,
-      chronic: chronicMode
+      data: { pH, pCO2, HCO3in, SBE: SBE_input, Lac, pO2, FiO2, Na, Cl, K, Ca, Mg, Alb, PO4, Gluc },
+      notes: notes, sbeMode: sbeMode, naCorr: naCorrMode, chronic: chronicMode
     });
   } catch(e) {}
 
