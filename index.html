@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v18.0 Cyber Deck</title>
+<title>ICU Navigator v18.1 Cyber Deck</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -82,7 +82,6 @@ body {
 
 .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
 
-/* Шапка пульта */
 .header {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 24px; background: var(--card); backdrop-filter: blur(20px);
@@ -102,14 +101,12 @@ body {
 }
 .icon-btn:hover { background: var(--acc); color: #020617; border-color: var(--acc); box-shadow: 0 0 20px var(--acc-glow); }
 
-/* Живой статусбар в шапке */
 .status-ticker {
   display: flex; gap: 15px; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 12px;
   font-family: 'JetBrains Mono', monospace; font-size: 11.5px; border: 1px solid var(--border); align-items: center;
 }
 .ticker-item span { color: var(--acc); font-weight: 700; }
 
-/* Табы */
 .tabs {
   display: flex; gap: 8px; margin-bottom: 24px; background: var(--card); backdrop-filter: blur(20px);
   padding: 8px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow-x: auto;
@@ -124,7 +121,6 @@ body {
 .panel { display: none; opacity: 0; transition: opacity 0.3s ease; }
 .panel.active { display: block; opacity: 1; }
 
-/* Карточки */
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
 .card {
   background: var(--card); backdrop-filter: blur(20px);
@@ -138,7 +134,6 @@ body {
   display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace;
 }
 
-/* Элементы ввода */
 label { display: block; font-size: 11px; color: var(--mut); margin: 14px 0 6px; font-weight: 700; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
 input, select, textarea {
   width: 100%; padding: 12px 14px; background: var(--card-solid); border: 1.5px solid var(--border);
@@ -154,7 +149,6 @@ input.bad-field { border-color: var(--bad); background: var(--badbg); }
 .field-hint { font-size: 10.5px; color: var(--mut); margin-top: 5px; font-family: 'JetBrains Mono', monospace; }
 .field-hint.bad { color: var(--bad); }
 
-/* Кнопки */
 .btnrow { display: flex; gap: 14px; margin-top: 24px; flex-wrap: wrap; }
 button {
   flex: 1; min-width: 160px; padding: 16px; background: var(--acc); border: none; border-radius: 14px;
@@ -172,7 +166,6 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 }
 .preset-btn:hover { border-color: var(--acc); color: var(--acc); box-shadow: 0 0 15px var(--acc-glow); }
 
-/* Результаты */
 .row { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px dashed var(--border); font-size: 14.5px; gap: 12px; }
 .row span:first-child { color: var(--mut); font-weight: 500; }
 .row span:last-child { font-weight: 700; color: var(--txt); font-family: 'JetBrains Mono', monospace; text-align: right; }
@@ -205,7 +198,6 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 .alert { margin-top: 16px; padding: 16px; background: var(--warnbg); border-left: 4px solid var(--warn); border-radius: 12px; font-size: 14.5px; border: 1px solid var(--warn); }
 .rec { margin-top: 16px; padding: 16px; background: var(--okbg); border-left: 4px solid var(--ok); border-radius: 12px; font-size: 14.5px; border: 1px solid var(--ok); }
 
-/* Блок эксклюзивного протокола коррекции */
 .protocol-box {
   margin-top: 20px; padding: 20px; background: linear-gradient(135deg, rgba(255, 51, 102, 0.08), rgba(0, 240, 255, 0.05));
   border: 1px solid var(--acc); border-radius: var(--radius); font-family: 'JetBrains Mono', monospace; font-size: 13.5px;
@@ -259,7 +251,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <div class="container">
 <div class="header">
 <div>
-  <h1>⚡ ICU NAVIGATOR <span style="font-size:11px;background:var(--okbg);color:var(--ok);padding:4px 10px;border-radius:20px;vertical-align:middle;font-weight:700">v18.0 COMMAND</span></h1>
+  <h1>⚡ ICU NAVIGATOR <span style="font-size:11px;background:var(--okbg);color:var(--ok);padding:4px 10px;border-radius:20px;vertical-align:middle;font-weight:700">v18.1 COMMAND</span></h1>
   <div class="sub">Кибер-медицинский пульт анализа КОС, Стюарта и прогноза рисков</div>
 </div>
 <div class="header-actions">
@@ -296,7 +288,12 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <label>pH</label><input id="pH" type="number" step="0.001" value="7.40" oninput="validateField('pH')"><div class="field-hint" id="hint-pH">Норма: 7.35–7.45</div>
 <label>pCO₂ (мм рт.ст.)</label><input id="pCO2" type="number" step="0.1" value="40" oninput="validateField('pCO2')"><div class="field-hint" id="hint-pCO2">Норма: 35–45</div>
 <label>HCO₃⁻ лаб. (ммоль/л)</label><input id="HCO3in" type="number" step="0.1" value="24" oninput="validateField('HCO3in')"><div class="field-hint" id="hint-HCO3in">Норма: 22–26</div>
-<label>SBE (ммоль/л)</label><input id="SBE" type="number" step="0.1" value="0"><div class="field-hint">Норма: −2…+2</div>
+<label>Источник SBE</label>
+<select id="sbeMode">
+  <option value="input">От анализатора (ввести вручную)</option>
+  <option value="calc">Рассчитать (Van Slyke)</option>
+</select>
+<label>SBE (ммоль/л)</label><input id="SBE" type="number" step="0.1" value="0" oninput="calc()"><div class="field-hint" id="hint-SBE">Норма: −2…+2. При "Рассчитать" поле игнорируется.</div>
 <label>Лактат (ммоль/л)</label><input id="Lac" type="number" step="0.1" value="1" oninput="validateField('Lac')"><div class="field-hint" id="hint-Lac">Норма: &lt; 2</div>
 <label>pO₂ (мм рт.ст.)</label><input id="pO2" type="number" step="0.1" value="90">
 <label>FiO₂ (%)</label><input id="FiO2" type="number" step="1" value="21">
@@ -356,6 +353,13 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <div style="line-height:1.7;font-size:14px;color:var(--mut);font-family:'JetBrains Mono',monospace">
 <p>Мет. ацидоз: pCO₂ = 1.5 × HCO₃⁻ + 8 (±2)</p>
 <p>Мет. алкалоз: pCO₂ = 0.7 × HCO₃⁻ + 21 (±2)</p>
+</div></div>
+<div class="card" style="margin-top:20px"><h2>📚 РАСЧЕТ SBE (VAN SLYKE)</h2>
+<div style="line-height:1.7;font-size:14px;color:var(--mut);font-family:'JetBrains Mono',monospace">
+<p><b>SBE = HCO₃⁻ − 24.4 + 16.2 × (pH − 7.4)</b></p>
+<p>Используется, когда нет SBE от анализатора.</p>
+<p>Пример 4.8: HCO₃ 8, pH 7.18 → SBE = −19.96 ≈ −20</p>
+<p>Пример 4.9: HCO₃ 18, pH 7.19 → SBE = −9.8 ≈ −10</p>
 </div></div>
 </div>
 </div>
@@ -420,15 +424,22 @@ function fixed(x,n=2){return(isNaN(x)||!isFinite(x))?"—":x.toFixed(n);}
 let lastReport="";
 
 function calc(){
-  const pH=num('pH'), pCO2=num('pCO2'), HCO3in=num('HCO3in'), SBE=num('SBE'), Lac=num('Lac');
+  const pH=num('pH'), pCO2=num('pCO2'), HCO3in=num('HCO3in'), Lac=num('Lac');
   const pO2=num('pO2'), FiO2=num('FiO2');
   const Na=num('Na'), Cl=num('Cl'), K=num('K'), Ca=num('Ca'), Mg=num('Mg');
   const Alb=num('Alb'), PO4=num('PO4'), Gluc=num('Gluc');
   const notesEl=document.getElementById('notes'), notes=notesEl?notesEl.value:'';
   const naCorrMode=document.getElementById('naCorr').value, chronicMode=document.getElementById('chronic').value;
+  const sbeMode=(document.getElementById('sbeMode')||{}).value||'input';
 
   const HCO3calc=0.03*pCO2*Math.pow(10,pH-6.1);
   const HCO3=HCO3in||HCO3calc;
+
+  // === РАСЧЁТ SBE ===
+  const SBE_input=num('SBE');
+  const SBE_calc = HCO3 - 24.4 + 16.2*(pH - 7.4);
+  const SBE = (sbeMode === 'calc') ? SBE_calc : (isNaN(SBE_input) ? SBE_calc : SBE_input);
+
   let NaCorr=Na; if(naCorrMode==='on'&&Gluc>5.5) NaCorr=Na+1.6*((Gluc-5.5)/5.5);
   const PF=pO2/(FiO2/100);
   const AG=NaCorr-(Cl+HCO3);
@@ -442,7 +453,7 @@ function calc(){
   const SBE_UA=SBE-SBE_FW-SBE_Cl-SBE_Alb;
   const deltaAP=-SBE_UA;
   const SBE_expected=HCO3-24;
-  const SBEmismatch=Math.abs(SBE-SBE_expected)>5;
+  const SBEmismatch=Math.abs(SBE-SBE_expected)>5 && sbeMode === 'input';
   const NaMinusCl=Na-Cl, NaClRatio=Na/Cl;
   const absHyperCl=NaMinusCl<38, relHyperCl=NaClRatio<1.37;
   const hyperClType=absHyperCl&&relHyperCl?"абсолютная + относительная":absHyperCl?"абсолютная":relHyperCl?"относительная":"нет";
@@ -482,7 +493,8 @@ function calc(){
     ["АП скорректированный", fixed(AGcorr)],
     ["ΔAG / ΔHCO₃⁻", fixed(deltaDelta,2)],
     ["— SBE-анализ —",""],
-    ["SBE (входной)", fixed(SBE,1)+(SBEmismatch?" ⚠":'')],
+    ["SBE (" + (sbeMode==='calc' ? 'рассчитан' : 'входной') + ")", fixed(SBE,1)+(sbeMode==='calc'?` (Van Slyke)`:'')],
+    ["SBE (проверка: HCO₃ − 24.4 + 16.2×(pH−7.4))", fixed(SBE_calc,1)],
     ["SBE_FW (эффект воды)", fixed(SBE_FW)],
     ["SBE_Cl (эффект хлора)", fixed(SBE_Cl)],
     ["SBE_Alb (альбумин)", fixed(SBE_Alb)],
@@ -499,7 +511,11 @@ function calc(){
   let primary=pH<7.35?"ацидемия":pH>7.45?"алкалемия":"норма";
   logs.push(`<b>pH вектор:</b> ${fixed(pH,3)} → ${primary}.`);
 
-  if(SBEmismatch) alerts.push(`<b>⚠ SBE и HCO₃⁻ не согласованы.</b> Ожидаемый SBE ≈ ${fixed(SBE_expected,1)}, введён ${fixed(SBE,1)}.`);
+  if(sbeMode === 'calc') {
+    logs.push(`<b>SBE рассчитан</b> по Van Slyke: HCO₃⁻ ${fixed(HCO3,1)}, pH ${fixed(pH,3)} → SBE = ${fixed(SBE_calc,1)}.`);
+  } else if(sbeMode === 'input' && SBEmismatch) {
+    alerts.push(`<b>⚠ SBE и HCO₃⁻ не согласованы.</b> Ожидаемый SBE ≈ ${fixed(SBE_expected,1)}, введён ${fixed(SBE,1)}. Проверьте ввод или включите расчёт SBE.`);
+  }
   if(AG<8||AGcorr<8) findings.push({name:"Аномально низкий АП", detail:`АП = ${fixed(AG)}`, causes:["Парапротеинемия","Гиперкальциемия"], recommendation:"Проверить белок."});
   if(absHyperCl||relHyperCl) findings.push({name:`Гиперхлоремия (${hyperClType})`, detail:`Na−Cl = ${fixed(NaMinusCl)}`, causes:["Инфузия 0.9% NaCl"], recommendation:"Сбалансированные растворы."});
   if(hypoAlb) alerts.push(`<b>⚠ Гипоальбуминемия (Alb = ${fixed(Alb,1)}).</b> Маскирует метаболический ацидоз.`);
@@ -533,12 +549,16 @@ function calc(){
     if(pCO2>hi) compCheck.push(`pCO₂ выше ожид. → сопутствующий респ. ацидоз`);
     else if(pCO2<lo) compCheck.push(`pCO₂ ниже ожид. → сопутствующий респ. алкалоз`);
     else compCheck.push('✅ Респираторная компенсация адекватна');
+  } else if(metAlk){
+    const lo=0.7*HCO3+21-2, hi=0.7*HCO3+21+2; winterInfo=`Winter's: ожид. pCO₂ = ${fixed(lo,1)}–${fixed(hi,1)} мм рт.ст.`;
+    if(pCO2>hi) compCheck.push(`pCO₂ выше ожид. → сопутствующий респ. ацидоз`);
+    else if(pCO2<lo) compCheck.push(`pCO₂ ниже ожид. → сопутствующий респ. алкалоз`);
+    else compCheck.push('✅ Респираторная компенсация адекватна');
   }
 
   let oxyTag=PF>300?`<span class="tag ok">P/F = ${fixed(PF,0)} — Норма</span>`:PF>=200?`<span class="tag warn">P/F = ${fixed(PF,0)} — ОРДС легкой степени</span>`:PF>=100?`<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС средней степени</span>`:`<span class="tag bad">P/F = ${fixed(PF,0)} — ОРДС тяжелой степени</span>`;
   if(PF<=300) recs.push(`<b>Рекомендации по ИВЛ при ОРДС:</b><ul style="margin:6px 0 6px 20px"><li>PEEP ≥ 8 см H₂O, ДО 6 мл/кг</li><li>Плато &lt; 30, движущее давление &lt; 15</li><li>Прон-позиция при P/F &lt; 150</li></ul>`);
 
-  // Генератор умного протокола инфузионной коррекции
   let infusionAdvice = "⚖ Инфузионный статус стабилен. Продолжить текущую терапию.";
   if (SBE < -5) {
     let bzHCO3 = fixed(Math.abs(SBE) * 0.3 * 70, 0);
@@ -576,12 +596,18 @@ function calc(){
     <tr><td>SBE_Alb</td><td>(0.148pH − 0.818) × (40 − Alb)</td><td>${fixed(SBE_Alb)}</td></tr>
     <tr><td>SBE_UA</td><td>SBE − FW − Cl − Alb</td><td>${fixed(SBE_UA)}</td></tr>
     <tr class="total"><td colspan="2">Сумма вклада</td><td>${fixed(SBE_FW+SBE_Cl+SBE_Alb+SBE_UA,1)}</td></tr>
-    </tbody></table></details>`;
+    </tbody></table></details>
+    <details><summary>🧮 SBE (Van Slyke)</summary>
+    <div class="fml">SBE = HCO₃⁻ − 24.4 + 16.2 × (pH − 7.4)</div>
+    <div>Текущий режим: <b>${sbeMode==='calc' ? 'Рассчитан' : 'Введён вручную'}</b></div>
+    <div>Если "Рассчитан": SBE = ${fixed(HCO3,1)} − 24.4 + 16.2 × (${fixed(pH,3)} − 7.4) = <b>${fixed(SBE_calc,1)}</b></div>
+    </details>`;
 
   const strip=s=>s.replace(/<[^>]+>/g,'');
-  const L=["═══ ICU NAVIGATOR v18.0 COMMAND DECK ═══",""];
+  const L=["═══ ICU NAVIGATOR v18.1 COMMAND DECK ═══",""];
   if(notes){ L.push("ЗАМЕТКИ:", notes, ""); }
   L.push("ИНТЕГРАЛЬНЫЙ РИСК ОСР/ЛЕТАЛЬНОСТИ: " + riskScore + "%", "");
+  L.push("SBE источник: " + (sbeMode==='calc' ? 'РАССЧИТАН (Van Slyke) = ' + fixed(SBE_calc,1) : 'ВВЕДЁН ВРУЧНУЮ = ' + fixed(SBE,1)), "");
   L.push("ДИАГНОЗ:", strip(finalHTML), "", "ИНФУЗИОННЫЙ ПРОТОКОЛ:", strip(infusionAdvice), "", "ПАРАМЕТРЫ:");
   rows.forEach(r=>{ if(r[1]&&!r[0].startsWith('—')) L.push(`${r[0]}: ${r[1]}`); });
   lastReport=L.join("\n");
