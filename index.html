@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v19.1 Cyber Deck</title>
+<title>ICU Navigator v20.0 Cyber Deck</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -108,7 +108,6 @@ body {
 }
 .ticker-item span { color: var(--acc); font-weight: 700; }
 
-/* === ИСТОРИЯ — теперь поверх всего === */
 .history-panel {
   position: fixed; top: 100px; right: 30px;
   width: 420px; max-width: 90vw; max-height: 70vh; overflow-y: auto;
@@ -288,7 +287,7 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <div class="container">
 <div class="header">
 <div>
-  <h1>⚡ ICU NAVIGATOR <span style="font-size:11px;background:var(--okbg);color:var(--ok);padding:4px 10px;border-radius:20px;vertical-align:middle;font-weight:700">v19.1 COMMAND</span></h1>
+  <h1>⚡ ICU NAVIGATOR <span style="font-size:11px;background:var(--okbg);color:var(--ok);padding:4px 10px;border-radius:20px;vertical-align:middle;font-weight:700">v20.0 COMMAND</span></h1>
   <div class="sub">Кибер-медицинский пульт анализа КОС, Стюарта и прогноза рисков</div>
 </div>
 <div class="header-actions">
@@ -397,18 +396,22 @@ button.ghost:hover { border-color: var(--acc); color: var(--acc); background: va
 <p>Мет. ацидоз: pCO₂ = 1.5 × HCO₃⁻ + 8 (±2)</p>
 <p>Мет. алкалоз: pCO₂ = 0.7 × HCO₃⁻ + 21 (±2)</p>
 </div></div>
-<div class="card" style="margin-top:20px"><h2>📚 РАСЧЕТ SBE (VAN SLYKE)</h2>
+<div class="card" style="margin-top:20px"><h2>📚 ТАБЛИЦА 4.6 — ЗНАЧЕНИЯ ΔΔ</h2>
 <div style="line-height:1.7;font-size:14px;color:var(--mut);font-family:'JetBrains Mono',monospace">
-<p><b>SBE = HCO₃⁻ − 24.4 + 16.2 × (pH − 7.4)</b></p>
-<p>Используется, когда нет SBE от анализатора.</p>
-<p>Пример 4.8: HCO₃ 8, pH 7.18 → SBE = −19.96 ≈ −20</p>
-<p>Пример 4.9: HCO₃ 18, pH 7.19 → SBE = −9.8 ≈ −10</p>
+<p><b>ΔΔ &lt; 0.4</b> → Гиперхлоремический ацидоз (NAGMA)</p>
+<p><b>ΔΔ 0.4–0.9</b> → Смешанный (NAGMA + HAGMA)</p>
+<p><b>ΔΔ 0.9–2.0</b> → Ацидоз с увеличенным АП (HAGMA)</p>
+<p><b>ΔΔ &gt; 2.0</b> → HAGMA + метаболический алкалоз</p>
+</div></div>
+<div class="card" style="margin-top:20px"><h2>📚 ГИПЕРХЛОРЕМИЯ — 2 УРОВНЯ</h2>
+<div style="line-height:1.7;font-size:14px;color:var(--mut);font-family:'JetBrains Mono',monospace">
+<p><b>Абсолютная:</b> Cl⁻ &gt; 107 ммоль/л</p>
+<p><b>Относительная:</b> Cl⁻ в норме, но Na − Cl &lt; 38 или Na/Cl &lt; 1.37 → низкая SID</p>
+<p>Относительная гиперхлоремия способствует мет. ацидозу (окисляющий эффект низкой SID).</p>
 </div></div>
 <div class="card" style="margin-top:20px"><h2>📚 ИСТОРИЯ ПАЦИЕНТОВ</h2>
 <div style="line-height:1.7;font-size:14px;color:var(--mut);font-family:'JetBrains Mono',monospace">
-<p>Кнопка <b>📁</b> в шапке — открывает последние <b>5 случаев</b>.</p>
-<p>Каждый случай сохраняется автоматически при расчёте. Данные хранятся локально в браузере (localStorage).</p>
-<p>Для загрузки случая — нажмите на запись. Для удаления — «Очистить».</p>
+<p>Кнопка <b>📁</b> в шапке — последние <b>5 случаев</b>. Сохраняется автоматически.</p>
 </div></div>
 </div>
 </div>
@@ -434,8 +437,8 @@ function initTheme(){
   if(btn) btn.textContent = s === 'dark' ? '☀️' : '🌙';
 }
 
-// ============ ИСТОРИЯ (localStorage, 5 последних) ============
-const HISTORY_KEY = 'icu_history_v19';
+// ============ ИСТОРИЯ ============
+const HISTORY_KEY = 'icu_history_v20';
 function getHistory(){
   try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) { return []; }
 }
@@ -575,9 +578,12 @@ function calc(){
   const deltaAP=-SBE_UA;
   const SBE_expected=HCO3-24;
   const SBEmismatch=Math.abs(SBE-SBE_expected)>5 && sbeMode === 'input';
+
+  // === ГИПЕРХЛОРЕМИЯ: АБСОЛЮТНАЯ + ОТНОСИТЕЛЬНАЯ ===
   const NaMinusCl=Na-Cl, NaClRatio=Na/Cl;
-  const absHyperCl=NaMinusCl<38, relHyperCl=NaClRatio<1.37;
-  const hyperClType=absHyperCl&&relHyperCl?"абсолютная + относительная":absHyperCl?"абсолютная":relHyperCl?"относительная":"нет";
+  const absHyperCl = Cl > 107;                    // абсолютная: Cl > 107
+  const relHyperCl = (NaMinusCl < 38) || (NaClRatio < 1.37);  // относительная: низкая SID
+
   const hypoAlb=Alb<35, hypoNa=Na<135, hypoK=K<3.5;
   const SIDa=NaCorr+K+Mg-Cl-Lac;
   const AlbGdl=Alb/10;
@@ -602,16 +608,34 @@ function calc(){
     riskBadge.style.color = riskScore > 50 ? 'var(--bad)' : riskScore > 20 ? 'var(--warn)' : 'var(--ok)';
   }
 
+  // === КЛАССИФИКАЦИЯ ΔΔ (по таблице 4.6) ===
+  let ddDiag = "—";
+  if(!isNaN(deltaDelta)){
+    if(deltaDelta < 0.4) ddDiag = "Гиперхлоремический ацидоз (NAGMA)";
+    else if(deltaDelta >= 0.4 && deltaDelta < 0.9) ddDiag = "Смешанный (NAGMA + HAGMA)";
+    else if(deltaDelta >= 0.9 && deltaDelta <= 2.0) ddDiag = "Ацидоз с увеличенным АП (HAGMA)";
+    else if(deltaDelta > 2.0) ddDiag = "HAGMA + метаболический алкалоз";
+  }
+
   const rows=[
     ["HCO₃⁻ (лаб.)", fixed(HCO3in,1)+" ммоль/л"],
     ["HCO₃⁻ (расч.)", fixed(HCO3calc,1)+" ммоль/л"],
     ["Na⁺ (исп.)", fixed(NaCorr,1)+" ммоль/л"],
+    ["Cl⁻", fixed(Cl,1)+" ммоль/л"],
     ["P/F ratio", fixed(PF,0)+" мм рт.ст."],
     ["Интегральный риск осложнений", riskScore + " %"],
     ["— Анионный промежуток —",""],
     ["АП (Anion Gap)", fixed(AG)],
     ["АП скорректированный", fixed(AGcorr)],
-    ["ΔAG / ΔHCO₃⁻", fixed(deltaDelta,2)],
+    ["ΔAG", fixed(deltaAG)],
+    ["ΔHCO₃⁻", fixed(deltaHCO3)],
+    ["ΔΔ (дельта-разница)", isNaN(deltaDelta) ? "не применимо" : fixed(deltaDelta,2)],
+    ["Классификация ΔΔ (табл. 4.6)", ddDiag],
+    ["— Гиперхлоремия —",""],
+    ["Cl⁻ (абсолютная)", absHyperCl ? `ДА (Cl ${fixed(Cl,1)} > 107)` : "нет (Cl ≤ 107)"],
+    ["Na − Cl", fixed(NaMinusCl) + (NaMinusCl < 38 ? " (< 38 — низкая SID)" : " (норма ≥ 38)")],
+    ["Na/Cl", fixed(NaClRatio,3) + (NaClRatio < 1.37 ? " (< 1.37 — низкая SID)" : " (норма ≥ 1.37)")],
+    ["Относительная гиперхлоремия", relHyperCl ? "ДА (низкая SID)" : "нет"],
     ["— SBE-анализ —",""],
     ["SBE (" + (sbeMode==='calc' ? 'рассчитан' : 'входной') + ")", fixed(SBE,1)+(sbeMode==='calc'?` (Van Slyke)`:'')],
     ["SBE (проверка)", fixed(SBE_calc,1)],
@@ -636,11 +660,23 @@ function calc(){
   } else if(sbeMode === 'input' && SBEmismatch) {
     alerts.push(`<b>⚠ SBE и HCO₃⁻ не согласованы.</b> Ожидаемый SBE ≈ ${fixed(SBE_expected,1)}, введён ${fixed(SBE,1)}. Проверьте ввод или включите расчёт SBE.`);
   }
-  if(AG<8||AGcorr<8) findings.push({name:"Аномально низкий АП", detail:`АП = ${fixed(AG)}`, causes:["Парапротеинемия","Гиперкальциемия"], recommendation:"Проверить белок."});
-  if(absHyperCl||relHyperCl) findings.push({name:`Гиперхлоремия (${hyperClType})`, detail:`Na−Cl = ${fixed(NaMinusCl)}`, causes:["Инфузия 0.9% NaCl"], recommendation:"Сбалансированные растворы."});
-  if(hypoAlb) alerts.push(`<b>⚠ Гипоальбуминемия (Alb = ${fixed(Alb,1)}).</b> Маскирует метаболический ацидоз.`);
-  if(hypoK) findings.push({name:`Гипокалиемия (K = ${fixed(K,1)})`, detail:"Способствует алкалозу.", causes:["Диуретики"], recommendation:"Восполнить K⁺ и Mg²⁺."});
 
+  // === АНОМАЛЬНО НИЗКИЙ АП ===
+  if(AG<8||AGcorr<8) findings.push({name:"Аномально низкий АП", detail:`АП = ${fixed(AG)}, АП_корр = ${fixed(AGcorr)}`, causes:["Парапротеинемия (миелома)","Гиперкальциемия","Гипермагниемия","Литий","Бромиды","Лабораторная ошибка"], recommendation:"Электрофорез белков, иммунофиксация, Ca²⁺, Mg²⁺, литий."});
+
+  // === ГИПЕРХЛОРЕМИЯ: АБСОЛЮТНАЯ + ОТНОСИТЕЛЬНАЯ ===
+  if(absHyperCl && relHyperCl){
+    findings.push({name:"Гиперхлоремия (абсолютная + относительная)", detail:`Cl⁻ = ${fixed(Cl,1)} (>107); Na − Cl = ${fixed(NaMinusCl)} (<38); Na/Cl = ${fixed(NaClRatio,3)} (<1.37). Низкая SID.`, causes:["Инфузия 0.9% NaCl","Диарея","RTA","Ацетазоламид","Уретеросигмоидостомия","ХПН"], recommendation:"Заменить NaCl на сбалансированные растворы. Фуросемид для выведения Cl⁻."});
+  } else if(absHyperCl){
+    findings.push({name:"Гиперхлоремия (абсолютная)", detail:`Cl⁻ = ${fixed(Cl,1)} > 107.`, causes:["Инфузия 0.9% NaCl","Диарея","RTA","Ацетазоламид","Уретеросигмоидостомия","ХПН"], recommendation:"Заменить NaCl на сбалансированные растворы."});
+  } else if(relHyperCl){
+    findings.push({name:"Относительная гиперхлоремия (низкая SID)", detail:`Cl⁻ = ${fixed(Cl,1)} (норма), но Na − Cl = ${fixed(NaMinusCl)} (<38) и/или Na/Cl = ${fixed(NaClRatio,3)} (<1.37). Окисляющий эффект низкой SID.`, causes:["Смещение Na/Cl","Гипонатриемия пограничная","Инфузия NaCl"], recommendation:"Оценить SID, при необходимости — сбалансированные растворы."});
+  }
+
+  if(hypoAlb) alerts.push(`<b>⚠ Гипоальбуминемия (Alb = ${fixed(Alb,1)}).</b> Маскирует метаболический ацидоз.`);
+  if(hypoK) findings.push({name:`Гипокалиемия (K = ${fixed(K,1)})`, detail:"Способствует алкалозу.", causes:["Диуретики","Рвота","Гиперальдостеронизм"], recommendation:"Восполнить K⁺ и Mg²⁺."});
+
+  // === РЕСПИРАТОРНЫЙ КОМПОНЕНТ ===
   const respAcid=pCO2>45, respAlk=pCO2<35, metAcid=HCO3<22||SBE<-2, metAlk=HCO3>26||SBE>2;
   let respName='', respDetail='';
 
@@ -677,12 +713,21 @@ function calc(){
   }
   if(respName) diagnoses.push({name:respName, detail:respDetail});
 
+  // === МЕТАБОЛИЧЕСКИЕ КОМПОНЕНТЫ ===
   if(AGcorr>14){ let d=`АП_корр ${fixed(AGcorr)} (>14).`; if(Lac>2) d+=` Лактат ${fixed(Lac,1)} → лактат-ацидоз.`; diagnoses.push({name:"HAGMA (Метаболический ацидоз с высоким АП)"+(Lac>2?" [лактат]":""), detail:d}); }
   if(deltaAP>2&&AGcorr<=14&&HCO3<24) diagnoses.push({name:"Метаболический ацидоз по SBE_UA", detail:`ΔАП = ${fixed(deltaAP)}.`});
 
+  // === ΔΔ КЛАССИФИКАЦИЯ (по таблице 4.6) ===
   if(!isNaN(deltaDelta)){
-    if(deltaDelta<1) diagnoses.push({name:"NAGMA (Гиперхлоремический ацидоз)", detail:`ΔΔ = ${fixed(deltaDelta,2)} (<1).`});
-    else if(deltaDelta>2) diagnoses.push({name:"Сопутствующий метаболический алкалоз", detail:`ΔΔ = ${fixed(deltaDelta,2)} (>2).`});
+    if(deltaDelta < 0.4){
+      diagnoses.push({name:"Гиперхлоремический ацидоз (NAGMA)", detail:`ΔΔ = ${fixed(deltaDelta,2)} (<0.4).`});
+    } else if(deltaDelta >= 0.4 && deltaDelta < 0.9){
+      diagnoses.push({name:"Смешанный метаболический ацидоз (NAGMA + HAGMA)", detail:`ΔΔ = ${fixed(deltaDelta,2)} (0.4–0.9).`});
+    } else if(deltaDelta >= 0.9 && deltaDelta <= 2.0){
+      // HAGMA — отдельно не пишем, он уже в диагнозе
+    } else if(deltaDelta > 2.0){
+      diagnoses.push({name:"Сопутствующий метаболический алкалоз", detail:`ΔΔ = ${fixed(deltaDelta,2)} (>2).`});
+    }
   }
 
   if(metAlk&&!diagnoses.some(d=>d.name.includes("алкалоз"))) diagnoses.push({name:"Метаболический алкалоз", detail:`SBE ${fixed(SBE,1)}, HCO₃⁻ ${fixed(HCO3,1)}.`});
@@ -709,9 +754,9 @@ function calc(){
     let bzHCO3 = fixed(Math.abs(SBE) * 0.3 * 70, 0);
     infusionAdvice = `⚠️ Выраженный метаболический ацидоз (SBE = ${fixed(SBE,1)}).<br>• Рекомендован расчетный дефицит оснований.<br>• Возможна инфузия NaHCO₃ 4% — ок. <b>${bzHCO3} мл</b> под контролем pH и pCO₂.<br>• Избегать перегрузки 0.9% NaCl (риск NAGMA).`;
   } else if (absHyperCl || relHyperCl) {
-    infusionAdvice = `⚠️ Обнаружена гиперхлоремия.<br>• Срочно отменить 0.9% NaCl.<br>• Перевести пациента на сбалансированные кристаллоиды (Рингер, Стерофундин).`;
+    infusionAdvice = `⚠️ Обнаружена гиперхлоремия (${absHyperCl?'абсолютная':'относительная'}).<br>• Отменить 0.9% NaCl.<br>• Перевести пациента на сбалансированные кристаллоиды (Рингер, Стерофундин).`;
   } else if (Lac > 2.5) {
-    infusionAdvice = `⚠️ Лактат-ацидоз (Lac = ${fixed(Lac,1)}).<br>• Оценка перфузии, инотропная поддержка при гипотонии, санация очагов иппоксии.`;
+    infusionAdvice = `⚠️ Лактат-ацидоз (Lac = ${fixed(Lac,1)}).<br>• Оценка перфузии, инотропная поддержка при гипотонии, санация очагов ишемии.`;
   }
 
   const n=diagnoses.length;
@@ -746,10 +791,20 @@ function calc(){
     <div class="fml">SBE = HCO₃⁻ − 24.4 + 16.2 × (pH − 7.4)</div>
     <div>Текущий режим: <b>${sbeMode==='calc' ? 'Рассчитан' : 'Введён вручную'}</b></div>
     <div>Если "Рассчитан": SBE = ${fixed(HCO3,1)} − 24.4 + 16.2 × (${fixed(pH,3)} − 7.4) = <b>${fixed(SBE_calc,1)}</b></div>
+    </details>
+    <details><summary>📊 Таблица 4.6 — классификация ΔΔ</summary>
+    <table class="be-table"><thead><tr><th>ΔΔ</th><th>Диагноз</th></tr></thead>
+    <tbody>
+    <tr><td>&lt; 0.4</td><td>Гиперхлоремический ацидоз (NAGMA)</td></tr>
+    <tr><td>0.4 – 0.9</td><td>Смешанный (NAGMA + HAGMA)</td></tr>
+    <tr><td>0.9 – 2.0</td><td>Ацидоз с увеличенным АП (HAGMA)</td></tr>
+    <tr><td>&gt; 2.0</td><td>HAGMA + метаболический алкалоз</td></tr>
+    </tbody></table>
+    <div style="margin-top:8px;">Текущее ΔΔ = <b>${isNaN(deltaDelta)?'—':fixed(deltaDelta,2)}</b> → ${ddDiag}</div>
     </details>`;
 
   const strip=s=>s.replace(/<[^>]+>/g,'');
-  const L=["═══ ICU NAVIGATOR v19.1 COMMAND DECK ═══",""];
+  const L=["═══ ICU NAVIGATOR v20.0 COMMAND DECK ═══",""];
   L.push("Дата: " + new Date().toLocaleString('ru-RU'), "");
   L.push("── ИСХОДНЫЕ ДАННЫЕ ──");
   L.push(`pH: ${fixed(pH,3)}   pCO₂: ${fixed(pCO2,1)}   HCO₃⁻ (лаб.): ${fixed(HCO3in,1)}   HCO₃⁻ (расч.): ${fixed(HCO3calc,1)}`);
@@ -779,7 +834,7 @@ function calc(){
   if(alerts.length>0){ L.push("", "── ВНИМАНИЕ ──"); alerts.forEach(a=>L.push(strip(a))); }
   if(recs.length>0){ L.push("", "── РЕКОМЕНДАЦИИ ──"); recs.forEach(r=>L.push(strip(r))); }
   L.push("", "── ИНФУЗИОННЫЙ ПРОТОКОЛ ──", strip(infusionAdvice));
-  L.push("", "Сформировано: ICU Navigator v19.1 Command Deck");
+  L.push("", "Сформировано: ICU Navigator v20.0 Command Deck");
   lastReport=L.join("\n");
 
   try {
