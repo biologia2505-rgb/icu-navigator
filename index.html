@@ -3,77 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU Navigator v23.3 Universal Core</title>
+<title>ICU Navigator v23.4 Universal Core</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-#intro-screen{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:
-    linear-gradient(135deg,rgba(15,23,42,.93),rgba(30,41,59,.85)),
-    url('https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
-  z-index:99999;
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  text-align:center;padding:20px;
-  animation:introFadeOut .8s ease 2.2s forwards;
-  pointer-events:none;
-}
-#intro-screen .intro-icon{
-  font-size:64px;margin-bottom:16px;
-  filter:drop-shadow(0 0 30px rgba(94,234,212,.9));
-  animation:introPulse 2s ease-in-out infinite;
-}
-#intro-screen h1{
-  font-family:'JetBrains Mono',monospace;
-  font-size:clamp(28px,6vw,52px);font-weight:800;
-  margin:0 0 12px;
-  background:linear-gradient(135deg,#5eead4 0%,#7dd3fc 50%,#c4b5fd 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  letter-spacing:2px;
-  text-shadow:0 0 40px rgba(94,234,212,.35);
-  animation:introSlideUp .9s ease .2s both;
-}
-#intro-screen .intro-sub{
-  font-family:'JetBrains Mono',monospace;
-  font-size:clamp(11px,2vw,14px);
-  color:#94a3b8;letter-spacing:4px;text-transform:uppercase;
-  margin:0 0 24px;
-  animation:introSlideUp .9s ease .4s both;
-}
-#intro-screen .intro-line{
-  width:80px;height:2px;
-  background:linear-gradient(90deg,transparent,#5eead4,transparent);
-  animation:introSlideUp .9s ease .6s both;
-}
-#intro-screen .intro-version{
-  position:absolute;bottom:40px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;color:#475569;letter-spacing:2px;
-  animation:introSlideUp .9s ease .8s both;
-}
+#intro-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,rgba(15,23,42,.93),rgba(30,41,59,.85)),url('https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;animation:introFadeOut .8s ease 2.2s forwards;pointer-events:none}
+#intro-screen .intro-icon{font-size:64px;margin-bottom:16px;filter:drop-shadow(0 0 30px rgba(94,234,212,.9));animation:introPulse 2s ease-in-out infinite}
+#intro-screen h1{font-family:'JetBrains Mono',monospace;font-size:clamp(28px,6vw,52px);font-weight:800;margin:0 0 12px;background:linear-gradient(135deg,#5eead4 0%,#7dd3fc 50%,#c4b5fd 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;text-shadow:0 0 40px rgba(94,234,212,.35);animation:introSlideUp .9s ease .2s both}
+#intro-screen .intro-sub{font-family:'JetBrains Mono',monospace;font-size:clamp(11px,2vw,14px);color:#94a3b8;letter-spacing:4px;text-transform:uppercase;margin:0 0 24px;animation:introSlideUp .9s ease .4s both}
+#intro-screen .intro-line{width:80px;height:2px;background:linear-gradient(90deg,transparent,#5eead4,transparent);animation:introSlideUp .9s ease .6s both}
+#intro-screen .intro-version{position:absolute;bottom:40px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#475569;letter-spacing:2px;animation:introSlideUp .9s ease .8s both}
 @keyframes introFadeOut{to{opacity:0;visibility:hidden}}
 @keyframes introPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 @keyframes introSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-:root{
-  --bg:#0f1729;--bg1:rgba(94,234,212,.06);--bg2:rgba(244,114,182,.04);
-  --card:rgba(30,41,59,.76);--solid:#1e293b;--elev:#243348;
-  --acc:#5eead4;--glow:rgba(94,234,212,.22);--txt:#f1f5f9;--mut:#94a3b8;
-  --ok:#86efac;--okbg:rgba(134,239,172,.12);--warn:#fcd34d;--warnbg:rgba(252,211,77,.12);
-  --bad:#fda4af;--badbg:rgba(253,164,175,.14);--border:rgba(148,163,184,.18);
-  --shadow:0 8px 32px rgba(0,0,0,.35);--radius:18px;
-}
-[data-theme=light]{
-  --bg:#f4f1ea;--bg1:rgba(199,210,254,.35);--bg2:rgba(254,215,170,.3);
-  --card:rgba(255,253,248,.88);--solid:#fffdf8;--elev:#faf6ed;
-  --acc:#2563eb;--glow:rgba(37,99,235,.15);--txt:#1e293b;--mut:#78716c;
-  --ok:#059669;--okbg:rgba(5,150,105,.10);--warn:#b45309;--warnbg:rgba(180,83,9,.10);
-  --bad:#e11d48;--badbg:rgba(225,29,72,.08);--border:rgba(120,113,108,.18);
-  --shadow:0 4px 20px rgba(120,113,108,.08);
-}
+:root{--bg:#0f1729;--bg1:rgba(94,234,212,.06);--bg2:rgba(244,114,182,.04);--card:rgba(30,41,59,.76);--solid:#1e293b;--elev:#243348;--acc:#5eead4;--glow:rgba(94,234,212,.22);--txt:#f1f5f9;--mut:#94a3b8;--ok:#86efac;--okbg:rgba(134,239,172,.12);--warn:#fcd34d;--warnbg:rgba(252,211,77,.12);--bad:#fda4af;--badbg:rgba(253,164,175,.14);--border:rgba(148,163,184,.18);--shadow:0 8px 32px rgba(0,0,0,.35);--radius:18px}
+[data-theme=light]{--bg:#f4f1ea;--bg1:rgba(199,210,254,.35);--bg2:rgba(254,215,170,.3);--card:rgba(255,253,248,.88);--solid:#fffdf8;--elev:#faf6ed;--acc:#2563eb;--glow:rgba(37,99,235,.15);--txt:#1e293b;--mut:#78716c;--ok:#059669;--okbg:rgba(5,150,105,.10);--warn:#b45309;--warnbg:rgba(180,83,9,.10);--bad:#e11d48;--badbg:rgba(225,29,72,.08);--border:rgba(120,113,108,.18);--shadow:0 4px 20px rgba(120,113,108,.08)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);background-image:radial-gradient(circle at 0 0,var(--bg1),transparent 45%),radial-gradient(circle at 100% 100%,var(--bg2),transparent 45%);background-attachment:fixed;color:var(--txt);font-family:'Plus Jakarta Sans',system-ui,sans-serif;min-height:100vh;padding-bottom:60px;-webkit-font-smoothing:antialiased}
 .container{max-width:1400px;margin:auto;padding:24px 20px}
@@ -129,7 +77,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc);box
 details{margin:10px 0;padding:12px 15px;background:var(--solid);border:1px solid var(--border);border-radius:11px}
 summary{cursor:pointer;font:700 13px 'JetBrains Mono',monospace;padding:2px 0}
 summary:hover{color:var(--acc)}
-.fml{background:var(--bg);padding:11px;border-radius:8px;margin:9px 0;font:12px 'JetBrains Mono',monospace;color:var(--acc);overflow:auto;border-left:3px solid var(--acc)}
+.fml{background:var(--bg);padding:11px;border-radius:8px;margin:9px 0;font:12px 'JetBrains Mono',monospace;color:var(--acc);overflow:auto;border-left:3px solid var(--acc);white-space:pre-wrap;line-height:1.6}
 table{width:100%;border-collapse:collapse;font:12.5px 'JetBrains Mono',monospace;margin-top:8px}
 th,td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:left}
 th{color:var(--acc);background:var(--elev);font-size:10.5px;text-transform:uppercase}
@@ -148,34 +96,19 @@ td:last-child{text-align:right;font-weight:700}
 .bad-field{border-color:var(--bad)!important;background:var(--badbg)!important}
 .ok-field{border-color:var(--ok)!important}
 .small-note{font-size:11px;color:var(--mut);line-height:1.6;margin:8px 0 0}
-@media(max-width:650px){
-  .container{padding:12px}
-  .header{padding:14px;gap:10px}
-  .header h1{font-size:15px}
-  .header-actions{width:100%;justify-content:space-between}
-  .status-ticker{width:100%;text-align:center;order:3}
-  .icon-btn{width:40px;height:40px;font-size:14px;flex:1}
-  .tabs{margin:12px 0;padding:5px;gap:3px}
-  .tab{min-width:auto;padding:9px 5px;font-size:9.5px;flex:1;letter-spacing:0}
-  .grid{grid-template-columns:1fr;gap:12px}
-  .card,.chart-card{padding:15px;border-radius:14px}
-  .card h2{font-size:10.5px}
-  label{font-size:10px;margin:10px 0 4px}
-  input,select,textarea{padding:10px 12px;font-size:14px}
-  .btnrow{flex-direction:column;gap:8px}
-  button{min-width:auto;padding:13px;font-size:12px}
-  .preset-row{grid-template-columns:1fr}
-  .preset-btn{text-align:left;padding:11px 14px}
-  .row{font-size:13px;padding:8px 0}
-  .chart-box{height:360px}
-  .syndrome{padding:16px}
-  .syn-main{font-size:16px}
-  .syn-detail{font-size:12.5px}
-  .diag,.expl{padding:14px;font-size:13px}
-  .history-panel{width:calc(100vw - 24px);right:12px;top:78px;max-height:60vh}
-  .toast{left:12px;right:12px;transform:none;text-align:center;font-size:12px}
-  .toast.show{transform:none}
-}
+.score-card{padding:18px;background:var(--elev);border-radius:14px;border-left:5px solid var(--acc);margin-top:12px}
+.score-card h4{font:700 12px 'JetBrains Mono',monospace;color:var(--acc);margin:0 0 8px;text-transform:uppercase}
+.score-val{font:800 32px 'JetBrains Mono',monospace;color:var(--acc);margin:4px 0}
+.score-interp{font-size:13px;color:var(--mut);line-height:1.6}
+.score-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);font-size:12.5px}
+.score-row:last-child{border:none}
+.criteria-list{margin:8px 0 0 16px;font-size:13px;line-height:1.7}
+.criteria-list li{margin:4px 0}
+.badge-ok,.badge-warn,.badge-bad{display:inline-block;padding:3px 9px;border-radius:20px;font:700 10.5px 'JetBrains Mono',monospace;margin-left:6px}
+.badge-ok{background:var(--okbg);color:var(--ok)}
+.badge-warn{background:var(--warnbg);color:var(--warn)}
+.badge-bad{background:var(--badbg);color:var(--bad)}
+@media(max-width:650px){.container{padding:12px}.header{padding:14px;gap:10px}.header h1{font-size:15px}.header-actions{width:100%;justify-content:space-between}.status-ticker{width:100%;text-align:center;order:3}.icon-btn{width:40px;height:40px;font-size:14px;flex:1}.tabs{margin:12px 0;padding:5px;gap:3px}.tab{min-width:auto;padding:9px 5px;font-size:9.5px;flex:1;letter-spacing:0}.grid{grid-template-columns:1fr;gap:12px}.card,.chart-card{padding:15px;border-radius:14px}.card h2{font-size:10.5px}label{font-size:10px;margin:10px 0 4px}input,select,textarea{padding:10px 12px;font-size:14px}.btnrow{flex-direction:column;gap:8px}button{min-width:auto;padding:13px;font-size:12px}.preset-row{grid-template-columns:1fr}.preset-btn{text-align:left;padding:11px 14px}.row{font-size:13px;padding:8px 0}.chart-box{height:360px}.syndrome{padding:16px}.syn-main{font-size:16px}.syn-detail{font-size:12.5px}.diag,.expl{padding:14px;font-size:13px}.history-panel{width:calc(100vw - 24px);right:12px;top:78px;max-height:60vh}.toast{left:12px;right:12px;transform:none;text-align:center;font-size:12px}.toast.show{transform:none}.score-val{font-size:26px}}
 @media (max-width:380px){.tab{font-size:9px;padding:8px 4px}.header h1{font-size:13px}}
 </style>
 </head>
@@ -184,16 +117,16 @@ td:last-child{text-align:right;font-weight:700}
 <div id="intro-screen">
   <div class="intro-icon">⚡</div>
   <h1>ICU NAVIGATOR</h1>
-  <p class="intro-sub">Universal Core · Acid-Base · Stewart</p>
+  <p class="intro-sub">Universal Core · Acid-Base · Stewart · Scales</p>
   <div class="intro-line"></div>
-  <div class="intro-version">v23.3</div>
+  <div class="intro-version">v23.4</div>
 </div>
 
 <div class="container">
 <header class="header">
   <div>
-    <h1>⚡ ICU NAVIGATOR <span class="badge">v23.3</span></h1>
-    <div class="sub">Universal Core · Скрытый HAGMA · Подозрение на мет. алкалоз</div>
+    <h1>⚡ ICU NAVIGATOR <span class="badge">v23.4</span></h1>
+    <div class="sub">Universal Core · Осмоляльность · Шкалы ОРИТ (NEWS2, qSOFA, SOFA, APACHE II)</div>
   </div>
   <div class="header-actions">
     <div class="status-ticker">РИСК: <span id="riskBadge">—</span></div>
@@ -213,7 +146,8 @@ td:last-child{text-align:right;font-weight:700}
 
 <nav class="tabs">
   <button class="tab active" data-tab="input" onclick="switchTab('input')">ВВОД</button>
-  <button class="tab" data-tab="results" onclick="switchTab('results')">ДИАГНОЗ</button>
+  <button class="tab" data-tab="results" onclick="switchTab('results')">КОС</button>
+  <button class="tab" data-tab="scales" onclick="switchTab('scales')">ШКАЛЫ</button>
   <button class="tab" data-tab="charts" onclick="switchTab('charts')">ГРАФИКИ</button>
   <button class="tab" data-tab="info" onclick="switchTab('info')">СПРАВКА</button>
 </nav>
@@ -228,6 +162,7 @@ td:last-child{text-align:right;font-weight:700}
       <button class="preset-btn" onclick="loadPreset('4.9')">Пример 4.9</button>
       <button class="preset-btn" onclick="loadPreset('d-lactate')">D-лактат (Na 158.4)</button>
       <button class="preset-btn" onclick="loadPreset('mixed')">Смешанный (ΔΔ 1.5)</button>
+      <button class="preset-btn" onclick="loadPreset('dka')">ДКА</button>
       <button class="preset-btn" onclick="clearAll()">СБРОС</button>
     </div>
   </div>
@@ -257,9 +192,36 @@ td:last-child{text-align:right;font-weight:700}
       <label>Альбумин (г/л)</label><input id="Alb" type="number" step=".1" value="40" oninput="liveValidate();previewCalc()"><div class="hint">35–50</div>
       <label>PO₄ (ммоль/л)</label><input id="PO4" type="number" step=".01" value="1.1" oninput="previewCalc()">
       <label>Глюкоза (ммоль/л)</label><input id="Gluc" type="number" step=".1" value="5.5" oninput="liveValidate();previewCalc()"><div class="hint">≈3.9–5.5</div>
+      <label>Мочевина (ммоль/л)</label><input id="Ur" type="number" step=".1" value="5" oninput="previewCalc()"><div class="hint">2.5–8.3</div>
+      <label>Осмоляльность измеренная (мОсм/кг)</label><input id="Osm_in" type="number" step="1" value="" oninput="previewCalc()"><div class="hint">275–295 (если измерена)</div>
       <label>Коррекция Na на гипергликемию</label><select id="naCorr" onchange="previewCalc()"><option value="off">Выключена</option><option value="on">Katz 1.6</option></select>
       <label>Хроничность респ. нарушения</label><select id="chronic" onchange="previewCalc()"><option value="auto">Авто/не задано</option><option value="acute">Острое</option><option value="chronic">Хроническое</option></select>
       <label>Модель Stewart (SIDa)</label><select id="sidModel" onchange="previewCalc()"><option value="charged">С зарядами Ca/Mg (×2)</option><option value="simple">Упрощённая (без ×2)</option></select>
+    </div>
+
+    <div class="card"><h2>💓 ВИТАЛЬНЫЕ / ВОЗРАСТ</h2>
+      <label>ЧД (/мин)</label><input id="RR" type="number" step="1" value="16" oninput="previewCalc()"><div class="hint">12–20</div>
+      <label>SpO₂ (%)</label><input id="SpO2" type="number" step="1" value="98" oninput="previewCalc()"><div class="hint">≥94</div>
+      <label>Кислород (O₂)</label><select id="O2support" onchange="previewCalc()"><option value="no">Нет</option><option value="yes">Да (инсуффляция/ИВЛ/HFNC)</option></select>
+      <label>АД сист (мм рт.ст.)</label><input id="SBP" type="number" step="1" value="120" oninput="previewCalc()"><div class="hint">≥100</div>
+      <label>АД диаст (мм рт.ст.)</label><input id="DBP" type="number" step="1" value="80" oninput="previewCalc()">
+      <label>ЧСС (/мин)</label><input id="HR" type="number" step="1" value="80" oninput="previewCalc()"><div class="hint">60–100</div>
+      <label>Температура (°C)</label><input id="Temp" type="number" step=".1" value="36.8" oninput="previewCalc()"><div class="hint">36.0–38.0</div>
+      <label>Сознание (ACVPU)</label><select id="ACVPU" onchange="previewCalc()"><option value="A">A — Alert (ясное)</option><option value="C">C — Confusion (спутанность)</option><option value="V">V — Voice (реакция на голос)</option><option value="P">P — Pain (реакция на боль)</option><option value="U">U — Unresponsive (нет реакции)</option></select>
+      <label>GCS (3–15)</label><input id="GCS" type="number" step="1" value="15" oninput="previewCalc()"><div class="hint">15 — норма</div>
+      <label>Возраст (лет)</label><input id="Age" type="number" step="1" value="50" oninput="previewCalc()">
+      <label>Хроническое состояние</label><select id="Chronic" onchange="previewCalc()"><option value="none">Нет / плановое послеоперационное</option><option value="mild">Тяжёлое, не ОРИТ (APACHE 2 балла)</option><option value="severe">Тяжёлое, ОРИТ (APACHE 5 баллов)</option></select>
+    </div>
+
+    <div class="card"><h2>🩸 ГЕМАТОЛОГИЯ / БИОХИМИЯ</h2>
+      <label>Тромбоциты (×10³/µL)</label><input id="Plt" type="number" step="1" value="200" oninput="previewCalc()"><div class="hint">150–400</div>
+      <label>Лейкоциты (×10³/µL)</label><input id="WBC" type="number" step=".1" value="7" oninput="previewCalc()"><div class="hint">4–12</div>
+      <label>Палочкоядерные (%)</label><input id="Bands" type="number" step="1" value="3" oninput="previewCalc()">
+      <label>Гематокрит (%)</label><input id="Hct" type="number" step=".1" value="40" oninput="previewCalc()"><div class="hint">36–50</div>
+      <label>Креатинин (мкмоль/л)</label><input id="Cr" type="number" step="1" value="80" oninput="previewCalc()"><div class="hint">60–110</div>
+      <label>Билирубин общий (мкмоль/л)</label><input id="Bil" type="number" step="1" value="15" oninput="previewCalc()"><div class="hint">&lt; 21</div>
+      <label>Диурез (мл/сут)</label><input id="Urine" type="number" step="10" value="1500" oninput="previewCalc()">
+      <label>Вазопрессоры</label><select id="Vaso" onchange="previewCalc()"><option value="none">Нет</option><option value="dopa_low">Допамин ≤5 / Добутамин (любая)</option><option value="dopa_mid">Допамин &gt;5 / Эпи/Норэпи ≤0.1</option><option value="dopa_high">Допамин &gt;15 / Эпи/Норэпи &gt;0.1</option></select>
     </div>
   </div>
 
@@ -268,8 +230,9 @@ td:last-child{text-align:right;font-weight:700}
       <div><label>Двусторонние инфильтраты</label><select id="bilateral" onchange="previewCalc()"><option value="unknown">Не указано</option><option value="yes">Да</option><option value="no">Нет</option></select></div>
       <div><label>Начало ≤1 недели</label><select id="timing" onchange="previewCalc()"><option value="unknown">Не указано</option><option value="yes">Да</option><option value="no">Нет</option></select></div>
       <div><label>Отёк не от СН</label><select id="noncardiac" onchange="previewCalc()"><option value="unknown">Не указано</option><option value="yes">Да</option><option value="no">Нет</option></select></div>
+      <div><label>Подтверждённая инфекция (для сепсиса)</label><select id="infection" onchange="previewCalc()"><option value="unknown">Не указано</option><option value="yes">Да (позитивная культура / очаг)</option><option value="no">Нет</option></select></div>
     </div>
-    <p class="small-note">P/F — маркер оксигенации. Диагноз ОРДС не ставится по одному P/F.</p>
+    <p class="small-note">P/F — маркер оксигенации. ОРДС не ставится по одному P/F. Сепсис (Sepsis-3) = инфекция + SOFA ≥ 2.</p>
   </div>
 
   <div class="card" style="margin-top:16px"><h2>📝 ЗАМЕТКИ</h2><textarea id="notes" rows="4" placeholder="ИВЛ, гемодинамика, контекст..."></textarea></div>
@@ -280,7 +243,12 @@ td:last-child{text-align:right;font-weight:700}
   <div class="card"><h2>СИНДРОМАЛЬНЫЙ ДИАГНОЗ</h2><div id="syndrome"></div></div>
   <div class="card" style="margin-top:16px"><h2>РАСЧЁТЫ</h2><div id="results"></div></div>
   <div class="card" style="margin-top:16px"><h2>ХОД АНАЛИЗА</h2><div class="diag" id="diagnosis"></div></div>
-  <div class="card" style="margin-top:16px"><h2>ДЕТАЛИЗАЦИЯ</h2><div class="expl" id="explanations"></div></div>
+  <div class="card" style="margin-top:16px"><h2>ДЕТАЛИЗАЦИЯ / ФОРМУЛЫ</h2><div class="expl" id="explanations"></div></div>
+</section>
+
+<section class="panel" id="panel-scales">
+  <div class="card"><h2>📊 ШКАЛЫ ОРИТ</h2><div id="scalesResults"></div></div>
+  <div class="card" style="margin-top:16px"><h2>🦠 КРИТЕРИИ СЕПСИСА И СЕПТИЧЕСКОГО ШОКА (Sepsis-3)</h2><div id="sepsisResults"></div></div>
 </section>
 
 <section class="panel" id="panel-charts">
@@ -289,19 +257,18 @@ td:last-child{text-align:right;font-weight:700}
 </section>
 
 <section class="panel" id="panel-info">
-  <div class="card"><h2>ЧТО В v23.3</h2>
+  <div class="card"><h2>ЧТО В v23.4</h2>
     <ol style="line-height:1.8;font-size:13.5px">
-      <li><b>ΔΔ 1.5–2.0:</b> «HAGMA + подозрение на мет. алкалоз» (было: чистый HAGMA)</li>
-      <li><b>HAGMA + мет. алкалоз</b> — 2 компонента (не подтип)</li>
-      <li><b>SIDe при Alb &lt; 30</b> — коррекция на нормальный альбумин</li>
-      <li><b>pH 7.35–7.45 + отклонения</b> — не «норма», а «норма на фоне противоположных»</li>
-      <li><b>Интро-заставка</b> — возвращена</li>
-      <li><b>Скрытый HAGMA</b> — по АП + триггер</li>
-      <li><b>HAGMA + мет. ацидоз</b> — 1 компонент (HAGMA — подтип)</li>
-      <li><b>HAGMA + мет. алкалоз</b> — 2 компонента (ацидоз + алкалоз)</li>
-      <li><b>Гиперхлоремия</b> — из диагноза убрана, в расчётах осталась</li>
-      <li><b>Кетоацидоз-дифдиагноз</b> при гипергликемии + АП ↑</li>
-      <li><b>Гипохлоремия</b> (Cl &lt; 98) — отдельная находка</li>
+      <li><b>Осмоляльность</b> (Dorwart-Chalmers: 1.86×Na + Gluc + Ur + 9) + осмолярный gap</li>
+      <li><b>Поле мочевина</b> + <b>поле осмоляльность измеренная</b></li>
+      <li><b>Шкалы:</b> NEWS2, qSOFA, SIRS, SOFA, APACHE II</li>
+      <li><b>Критерии сепсиса</b> (Sepsis-3) и <b>септического шока</b></li>
+      <li><b>Проверка физиологических границ</b> (Na 1429 → не считать)</li>
+      <li><b>«Гиперпротеинемия» → «Гипопротеинемия»</b> — исправлено</li>
+      <li><b>Коррекция SID/SIG</b> на Na &gt; 145 (убраны артефакты)</li>
+      <li><b>Компенсация по pH</b> (декомп./частично комп./комп.)</li>
+      <li><b>Пошаговая подстановка</b> формул в детализации</li>
+      <li><b>Клиническая интерпретация</b> показателей</li>
     </ol>
     <div class="alert" style="margin-top:14px"><b>Важно:</b> расчётно-образовательный инструмент. Требует клинической верификации.</div>
   </div>
@@ -311,37 +278,39 @@ td:last-child{text-align:right;font-weight:700}
 
 <script>
 "use strict";
-const HISTORY_KEY="icu_history_v23";
+const HISTORY_KEY="icu_history_v234";
 let lastReport="",gChart=null,sChart=null;
 
 const presets={
-'4.5':{pH:7.39,pCO2:39,HCO3in:23,SBE:0,Lac:1,pO2:94,FiO2:21,PEEP:0,Na:124,Cl:100,K:3.9,Ca:1.2,Mg:.9,Alb:45,PO4:1.1,Gluc:5.5},
-'4.6':{pH:7.53,pCO2:32,HCO3in:27,SBE:4.7,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:144,Cl:93,K:4.2,Ca:1.2,Mg:.9,Alb:30,PO4:1.1,Gluc:24.9},
-'4.8':{pH:7.18,pCO2:20,HCO3in:8,SBE:-20,Lac:5,pO2:80,FiO2:21,PEEP:0,Na:130,Cl:105,K:3,Ca:1.2,Mg:.9,Alb:23,PO4:1.6,Gluc:5.5},
-'4.9':{pH:7.19,pCO2:48,HCO3in:18,SBE:-10.1,Lac:3.7,pO2:90,FiO2:21,PEEP:0,Na:145,Cl:111,K:4.5,Ca:1.17,Mg:.57,Alb:10,PO4:1.7,Gluc:5.5},
-'d-lactate':{pH:7.42,pCO2:38.5,HCO3in:24,SBE:.6,Lac:1,pO2:57.4,FiO2:30,PEEP:5,Na:158.4,Cl:103,K:4,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:5.5},
-'mixed':{pH:7.40,pCO2:28,HCO3in:17,SBE:-6,Lac:2,pO2:90,FiO2:21,PEEP:0,Na:140,Cl:105,K:4,Ca:1.2,Mg:.9,Alb:20,PO4:1.1,Gluc:6}
+'4.5':{pH:7.39,pCO2:39,HCO3in:23,SBE:0,Lac:1,pO2:94,FiO2:21,PEEP:0,Na:124,Cl:100,K:3.9,Ca:1.2,Mg:.9,Alb:45,PO4:1.1,Gluc:5.5,Ur:5},
+'4.6':{pH:7.53,pCO2:32,HCO3in:27,SBE:4.7,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:144,Cl:93,K:4.2,Ca:1.2,Mg:.9,Alb:30,PO4:1.1,Gluc:24.9,Ur:5},
+'4.8':{pH:7.18,pCO2:20,HCO3in:8,SBE:-20,Lac:5,pO2:80,FiO2:21,PEEP:0,Na:130,Cl:105,K:3,Ca:1.2,Mg:.9,Alb:23,PO4:1.6,Gluc:5.5,Ur:8},
+'4.9':{pH:7.19,pCO2:48,HCO3in:18,SBE:-10.1,Lac:3.7,pO2:90,FiO2:21,PEEP:0,Na:145,Cl:111,K:4.5,Ca:1.17,Mg:.57,Alb:10,PO4:1.7,Gluc:5.5,Ur:5.7},
+'d-lactate':{pH:7.42,pCO2:38.5,HCO3in:24,SBE:.6,Lac:1,pO2:57.4,FiO2:30,PEEP:5,Na:158.4,Cl:103,K:4,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:5.5,Ur:5},
+'mixed':{pH:7.40,pCO2:28,HCO3in:17,SBE:-6,Lac:2,pO2:90,FiO2:21,PEEP:0,Na:140,Cl:105,K:4,Ca:1.2,Mg:.9,Alb:20,PO4:1.1,Gluc:6,Ur:5},
+'dka':{pH:6.82,pCO2:16,HCO3in:5,SBE:-28.8,Lac:1,pO2:93,FiO2:21,PEEP:0,Na:129,Cl:90,K:6.2,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:24,Ur:16.2}
 };
 
 const ranges={pH:[7.35,7.45],pCO2:[35,45],HCO3in:[22,26],Lac:[0,2],Na:[135,145],Cl:[98,107],K:[3.5,5],Alb:[35,50],Gluc:[3.9,5.5]};
 
+const physiologic={pH:[6.5,8.0],pCO2:[5,150],HCO3in:[1,50],SBE_input:[-45,45],Lac:[0,30],Na:[100,200],Cl:[60,140],K:[1,10],Ca:[.5,3],Mg:[.3,2.5],Alb:[10,80],PO4:[.1,5],Gluc:[1,60],Ur:[.5,50],pO2:[20,600],FiO2:[21,100]};
+
 function num(id){const e=document.getElementById(id);return e?parseFloat(e.value):NaN}
 function fixed(x,n=2){return Number.isFinite(x)?x.toFixed(n):"—"}
 function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function getSelect(id){const e=document.getElementById(id);return e?e.value:""}
 
 function readInputs(){
   return{
     pH:num("pH"),pCO2:num("pCO2"),HCO3in:num("HCO3in"),SBE_input:num("SBE"),Lac:num("Lac"),
     pO2:num("pO2"),FiO2:num("FiO2"),PEEP:num("PEEP"),
     Na:num("Na"),Cl:num("Cl"),K:num("K"),Ca:num("Ca"),Mg:num("Mg"),
-    Alb:num("Alb"),PO4:num("PO4"),Gluc:num("Gluc"),
-    sbeMode:(document.getElementById("sbeMode")||{}).value||"input",
-    naCorr:(document.getElementById("naCorr")||{}).value||"off",
-    chronic:(document.getElementById("chronic")||{}).value||"auto",
-    sidModel:(document.getElementById("sidModel")||{}).value||"charged",
-    bilateral:(document.getElementById("bilateral")||{}).value||"unknown",
-    timing:(document.getElementById("timing")||{}).value||"unknown",
-    noncardiac:(document.getElementById("noncardiac")||{}).value||"unknown",
+    Alb:num("Alb"),PO4:num("PO4"),Gluc:num("Gluc"),Ur:num("Ur"),Osm_in:num("Osm_in"),
+    RR:num("RR"),SpO2:num("SpO2"),SBP:num("SBP"),DBP:num("DBP"),HR:num("HR"),Temp:num("Temp"),GCS:num("GCS"),Age:num("Age"),
+    Plt:num("Plt"),WBC:num("WBC"),Bands:num("Bands"),Hct:num("Hct"),Cr:num("Cr"),Bil:num("Bil"),Urine:num("Urine"),
+    sbeMode:getSelect("sbeMode"),naCorr:getSelect("naCorr"),chronic:getSelect("chronic"),sidModel:getSelect("sidModel"),
+    O2support:getSelect("O2support"),ACVPU:getSelect("ACVPU"),Chronic:getSelect("Chronic"),Vaso:getSelect("Vaso"),
+    bilateral:getSelect("bilateral"),timing:getSelect("timing"),noncardiac:getSelect("noncardiac"),infection:getSelect("infection"),
     notes:((document.getElementById("notes")||{}).value||"").trim()
   };
 }
@@ -356,6 +325,18 @@ function validate(d){
   return "";
 }
 
+function physiologicWarnings(d){
+  const w=[];
+  Object.entries(physiologic).forEach(([k,[lo,hi]])=>{
+    const v=d[k];
+    if(Number.isFinite(v)&&(v<lo||v>hi)){
+      const names={pH:"pH",pCO2:"pCO₂",HCO3in:"HCO₃⁻",SBE_input:"SBE",Lac:"Лактат",Na:"Na⁺",Cl:"Cl⁻",K:"K⁺",Ca:"Ca²⁺",Mg:"Mg²⁺",Alb:"Альбумин",PO4:"PO₄",Gluc:"Глюкоза",Ur:"Мочевина",pO2:"pO₂",FiO2:"FiO₂"};
+      w.push(`${names[k]||k} = ${v} — вне физиологических границ (${lo}–${hi})`);
+    }
+  });
+  return w;
+}
+
 function calcBasic(d){
   const HCO3calc=.03*d.pCO2*Math.pow(10,d.pH-6.1);
   const HCO3=Number.isFinite(d.HCO3in)?d.HCO3in:HCO3calc;
@@ -363,6 +344,7 @@ function calcBasic(d){
   if(d.naCorr==="on" && d.Gluc>5.5) NaCorr=d.Na+1.6*((d.Gluc-5.5)/5.5);
   const AG=d.Na-(d.Cl+HCO3);
   const AGcorr=AG+0.25*(40-d.Alb);
+  const AG_Na_corr=d.Na>140?AGcorr-(d.Na-140):AGcorr;
   const deltaAG=AGcorr-12;
   const deltaHCO3=24-HCO3;
   const deltaDelta=(HCO3<22 && deltaHCO3>0)?deltaAG/deltaHCO3:NaN;
@@ -374,7 +356,9 @@ function calcBasic(d){
   const SBE_UA=SBE-SBE_FW-SBE_Cl-SBE_Alb;
   const PF=d.pO2/(d.FiO2/100);
   const A_a_est=d.FiO2>20?(d.FiO2/100*713-d.pCO2/0.8-d.pO2):NaN;
-  return{HCO3calc,HCO3,NaCorr,AG,AGcorr,deltaAG,deltaHCO3,deltaDelta,SBE_calc,SBE,SBE_FW,SBE_Cl,SBE_Alb,SBE_UA,PF,A_a_est};
+  const Osm_calc=1.86*d.Na+d.Gluc+d.Ur+9;
+  const Osm_gap=Number.isFinite(d.Osm_in)?(d.Osm_in-Osm_calc):NaN;
+  return{HCO3calc,HCO3,NaCorr,AG,AGcorr,AG_Na_corr,deltaAG,deltaHCO3,deltaDelta,SBE_calc,SBE,SBE_FW,SBE_Cl,SBE_Alb,SBE_UA,PF,A_a_est,Osm_calc,Osm_gap};
 }
 
 function calcStewart(d,b){
@@ -388,7 +372,6 @@ function calcStewart(d,b){
   const Alb_charge=Alb_gdl*(0.123*d.pH-0.631)*10;
   const PO4_charge=d.PO4*(0.309*d.pH-0.469);
   const SIDe=b.HCO3+Alb_charge+PO4_charge;
-  // SIDe с коррекцией на нормальный альбумин (40 г/л) при гипоальбуминемии
   let SIDe_corr=SIDe;
   if(d.Alb<30){
     const Alb_charge_norm=(40/10)*(0.123*d.pH-0.631)*10;
@@ -396,17 +379,16 @@ function calcStewart(d,b){
   }
   const SIG=SIDa-SIDe;
   const SIG_corr=SIDa-SIDe_corr;
-  return{SIDa,Alb_charge,PO4_charge,SIDe,SIDe_corr,SIG,SIG_corr};
+  const SIG_Na_corr=d.Na>145?(SIG-(d.Na-140)):SIG;
+  return{SIDa,Alb_charge,PO4_charge,SIDe,SIDe_corr,SIG,SIG_corr,SIG_Na_corr};
 }
 
 function detectPrimary(d,b){
   const out={acidBase:"normal",resp:null,met:null,respIsCompensation:false,bothOpposite:false};
   if(d.pH<7.35)out.acidBase="acidemia";
   else if(d.pH>7.45)out.acidBase="alkalemia";
-
   if(b.HCO3<22||b.SBE<-2)out.met="metabolic acidosis";
   else if(b.HCO3>26||b.SBE>2)out.met="metabolic alkalosis";
-
   if(d.pCO2>45){
     if(out.met==="metabolic alkalosis"){
       const lo=0.7*b.HCO3+21-2, hi=0.7*b.HCO3+21+2;
@@ -424,14 +406,8 @@ function detectPrimary(d,b){
       out.resp="respiratory alkalosis";
     }
   }
-
-  // Проверка: pH норма, но есть отклонения в обе стороны
-  if(out.acidBase==="normal" && out.met && out.resp && out.resp!=="compensation"){
-    out.bothOpposite=true;
-  }
-  if(out.acidBase==="normal" && ((out.met==="metabolic acidosis" && out.respIsCompensation) || (out.met==="metabolic alkalosis" && out.respIsCompensation))){
-    out.bothOpposite=true;
-  }
+  if(out.acidBase==="normal" && out.met && out.resp){ out.bothOpposite=true; }
+  if(out.acidBase==="normal" && out.met && out.respIsCompensation){ out.bothOpposite=true; }
   return out;
 }
 
@@ -489,6 +465,12 @@ function compensation(d,b,p){
   return r;
 }
 
+function phCompensation(d){
+  if(d.pH<7.2||d.pH>7.6)return{status:"Декомпенсированный",detail:"pH вне 7.2–7.6"};
+  if(d.pH<7.35||d.pH>7.45)return{status:"Частично компенсированный",detail:"pH 7.2–7.35 или 7.45–7.6"};
+  return{status:"Компенсированный",detail:"pH в норме 7.35–7.45"};
+}
+
 function calcDeltaDelta(d,b){
   if(!(b.HCO3<22 && b.deltaAG>0)){
     if(b.HCO3>26) return{value:NaN,classification:"не применимо (мет. алкалоз — ΔΔ не работает)"};
@@ -514,18 +496,30 @@ function detectHAGMA(d,b,st){
   if(triggers.length>0){
     return{hasHAGMA:true,reason:`Скрытый HAGMA: АП_корр ${fixed(b.AGcorr)} >14 при HCO₃ ${fixed(b.HCO3,1)} (мет. алкалоз маскирует). Триггеры: ${triggers.join("; ")}.`};
   }
-  return{hasHAGMA:false,reason:`АП_корр ${fixed(b.AGcorr)} >14 без мет. ацидоза. Оценить: гипернатриемия, гиперпротеинемия, лабораторная ошибка.`};
+  return{hasHAGMA:false,reason:`АП_корр ${fixed(b.AGcorr)} >14 без мет. ацидоза. Оценить: гипернатриемия, гипопротеинемия, лабораторная ошибка, лекарства (натриевые соли).`};
 }
 
 function clinicalFindings(d,b,st,p,dd,hagma){
   const findings=[],alerts=[];
   if(d.Alb<35)alerts.push(`Гипоальбуминемия: Alb ${fixed(d.Alb,1)} г/л. AG занижен; используйте AGcorr.`);
   if(d.Alb>50)findings.push(`Гиперпротеинемия (Alb ${fixed(d.Alb,1)} г/л): IgG-парапротеинемия → AG может быть ложно СНИЖЕН.`);
-  if(d.Na>145)alerts.push(`Гипернатриемия: Na ${fixed(d.Na,1)} ммоль/л. AG ложно повышен из-за Na.`);
+  if(d.Na>145)alerts.push(`Гипернатриемия: Na ${fixed(d.Na,1)} ммоль/л. AG скорректирован на Na: ${fixed(b.AG_Na_corr,2)} (норма ≤14). SIG скорр. на Na: ${fixed(st.SIG_Na_corr,2)}.`);
+  if(d.Na<135)alerts.push(`Гипонатриемия: Na ${fixed(d.Na,1)} ммоль/л. AG/SID могут быть искажены.`);
   if(d.K<3.5)findings.push(`Гипокалиемия (K ${fixed(d.K,1)}): способствует мет. алкалозу.`);
-  if(d.K>5.5)findings.push(`Гиперкалиемия (K ${fixed(d.K,1)}): риск аритмий.`);
+  if(d.K>5.5){
+    findings.push(`Гиперкалиемия (K ${fixed(d.K,1)}): риск аритмий.`);
+    if(d.Gluc>15)findings.push(`⚠ Гиперкалиемия при гипергликемии (ДКА?): общий пул K ↓ (дефицит 3–5 ммоль/кг), несмотря на высокий K плазмы. При коррекции ацидоза K резко ↓ → контроль каждые 2 ч.`);
+  }
   if(d.Cl<98){
     findings.push(`Гипохлоремия (Cl ${fixed(d.Cl,1)} <98). Часто при мет. алкалозе (рвота, диуретики).`);
+  }
+  if(d.Cl>107){
+    const rel = (d.Na-d.Cl<38)||(d.Na/d.Cl<1.37);
+    if(rel) findings.push(`Гиперхлоремия абсолютная (Cl ${fixed(d.Cl,1)} >107) + относительная (Na−Cl ${fixed(d.Na-d.Cl,1)}, Na/Cl ${fixed(d.Na/d.Cl,3)}).`);
+    else findings.push(`Гиперхлоремия абсолютная (Cl ${fixed(d.Cl,1)} >107).`);
+  }
+  if((d.Na-d.Cl<38 || d.Na/d.Cl<1.37) && d.Cl<=107){
+    findings.push(`Относительная гиперхлоремия / низкая SID (Cl ${fixed(d.Cl,1)} норма, но Na−Cl ${fixed(d.Na-d.Cl,1)} <38 и/или Na/Cl ${fixed(d.Na/d.Cl,3)} <1.37).`);
   }
   if(hagma.hasHAGMA){
     if(d.Lac>2){
@@ -533,74 +527,58 @@ function clinicalFindings(d,b,st,p,dd,hagma){
     }else if(d.Gluc>15){
       findings.push(`HAGMA + гипергликемия ${fixed(d.Gluc,1)}. <b>Кетоацидоз?</b> Рекомендовано: кетоны, β-ГБ. ${hagma.reason}`);
     }else{
-      findings.push(`HAGMA. ${hagma.reason}`);
+      findings.push(`HAGMA. ${hagma.reason} Источники: D-лактат, кетоны, уремия, токсины. Рекомендовано: D-лактат, β-ГБ, осмолярный gap, UAG.`);
     }
   }else if(hagma.reason){
     findings.push(hagma.reason);
   }
-  if(st.SIG>5)findings.push(`SIG повышен (${fixed(st.SIG,1)}): возможен вклад неизмеряемых анионов.`);
+  if(Number.isFinite(st.SIG)&&st.SIG>5)findings.push(`SIG повышен (${fixed(st.SIG,1)}): возможен вклад неизмеряемых анионов.`);
   if(d.Alb<30 && st.SIG_corr!==st.SIG){
     findings.push(`SIG с коррекцией на нормальный альбумин: ${fixed(st.SIG_corr,1)} (без коррекции ${fixed(st.SIG,1)}). Гипоальбуминемия завышает SIG.`);
+  }
+  if(Number.isFinite(b.Osm_gap)){
+    if(b.Osm_gap>20){
+      findings.push(`⚠ Осмолярный gap ${fixed(b.Osm_gap,1)} мОсм/кг (>20). Токсические спирты (метанол, этиленгликоль), маннитол, глицин. Рекомендовано: срочно ЭГ/метанол, консультация токсиколога.`);
+    }else if(b.Osm_gap>10){
+      findings.push(`Осмолярный gap ${fixed(b.Osm_gap,1)} мОсм/кг (10–20, пограничный). Перепроверить лабораторию, оценить кетоны/лактат.`);
+    }
   }
   if(b.PF<=300)alerts.push(`P/F = ${fixed(b.PF,0)} — гипоксемия. Не равно диагнозу ОРДС.`);
   return{findings,alerts};
 }
 
-function syndrome(d,b,p,dd,st,hagma){
+function syndrome(d,b,p,dd,st,hagma,phComp){
   const parts=[];
   const hasMetAcid = p.met==="metabolic acidosis";
   const hasMetAlk = p.met==="metabolic alkalosis";
-
   if(p.resp==="respiratory acidosis")parts.push("респираторный ацидоз");
   if(p.resp==="respiratory alkalosis")parts.push("респираторный алкалоз");
   if(hasMetAcid)parts.push("метаболический ацидоз");
   if(hasMetAlk)parts.push("метаболический алкалоз");
-
-  // HAGMA — подтип мет. ацидоза, не отдельный (если нет мет. алкалоза)
-  // HAGMA + мет. алкалоз — ДВА разных компонента (ацидоз + алкалоз)
   let hagmaType="";
   if(hagma.hasHAGMA){
     if(Number.isFinite(dd.value)){
-      if(dd.suspicion){
-        hagmaType="HAGMA + подозрение на мет. алкалоз";
-      }else{
-        hagmaType=dd.classification;
-      }
-    }else if(b.HCO3>26){
-      hagmaType="HAGMA (скрытый, маскирован мет. алкалозом)";
-    }else{
-      hagmaType="HAGMA";
-    }
+      if(dd.suspicion){ hagmaType="HAGMA + подозрение на мет. алкалоз"; }
+      else{ hagmaType=dd.classification; }
+    }else if(b.HCO3>26){ hagmaType="HAGMA (скрытый, маскирован мет. алкалозом)"; }
+    else{ hagmaType="HAGMA"; }
   }
-
   let title="Расстройств КОС нет";
-  // Пересчёт компонентов:
-  // 1. Респираторный (resp) — если не компенсация
-  // 2. Метаболический ацидоз (metAcid) — 1
-  // 3. Метаболический алкалоз (metAlk) — 1
-  // 4. HAGMA — подтип мет. ацидоза, не добавляется отдельно, НО
-  //    если dd.suspicion — добавляется как "подозрение на мет. алкалоз" (+1)
-
   let nComponents=parts.length;
-  if(dd.suspicion && hasMetAcid) nComponents+=1; // подозрение на доп. мет. алкалоз
-
+  if(dd.suspicion && hasMetAcid) nComponents+=1;
   if(nComponents===0 && !hagma.hasHAGMA)title="Расстройств КОС нет";
   else if(nComponents<=1)title="Изолированное нарушение КОС";
   else if(nComponents===2)title="Смешанное нарушение КОС";
   else if(nComponents>=3)title="⚠ ТРОЙНОЕ (МНОЖЕСТВЕННОЕ) НАРУШЕНИЕ КОС";
-
   let detail=parts.join(" + ");
   if(hagmaType)detail+=(detail?" · ":"")+hagmaType;
-
   if(p.respIsCompensation && (hasMetAcid||hasMetAlk)){
     detail+=(detail?" ":"")+"· респираторная компенсация адекватна";
   }
-
-  // pH норма, но есть противоположные нарушения
+  detail+=(detail?" · ":"")+"степень: "+phComp.status;
   if(p.bothOpposite && p.acidBase==="normal"){
     detail+=(detail?" ":"")+"· pH нормальный вследствие взаимного влияния процессов";
   }
-
   if(!detail && b.AGcorr>14 && !hagma.hasHAGMA) detail="AG высокий без мет. ацидоза — оценить причину.";
   return{title,detail,components:parts};
 }
@@ -612,7 +590,217 @@ function ardsAssessment(d,b){
   return{status:`Критерии Berlin: ОРДС ${sev} степени`,detail:`P/F ${fixed(b.PF,0)} при PEEP ${fixed(d.PEEP,1)}.`};
 }
 
-function render(d,b,p,comp,dd,st,fin,hagma,syn,ards){
+// ============ ШКАЛЫ ============
+function calcNEWS2(d){
+  const items=[];
+  // ЧД
+  let rr=0;
+  if(d.RR<=8)rr=3; else if(d.RR<=11)rr=1; else if(d.RR<=20)rr=0; else if(d.RR<=24)rr=2; else rr=3;
+  items.push({name:"ЧД ("+d.RR+"/мин)",score:rr});
+  // SpO₂
+  let spo=0;
+  if(d.SpO2<=91)spo=3; else if(d.SpO2<=93)spo=2; else if(d.SpO2<=95)spo=1; else spo=0;
+  items.push({name:"SpO₂ ("+d.SpO2+"%)",score:spo});
+  // Кислород
+  const o2 = d.O2support==="yes"?2:0;
+  items.push({name:"Кислород",score:o2});
+  // АД сист
+  let sbp=0;
+  if(d.SBP<=90)sbp=3; else if(d.SBP<=100)sbp=2; else if(d.SBP<=110)sbp=1; else if(d.SBP<=219)sbp=0; else sbp=3;
+  items.push({name:"АД сист ("+d.SBP+")",score:sbp});
+  // ЧСС
+  let hr=0;
+  if(d.HR<=40)hr=3; else if(d.HR<=50)hr=1; else if(d.HR<=90)hr=0; else if(d.HR<=110)hr=1; else if(d.HR<=130)hr=2; else hr=3;
+  items.push({name:"ЧСС ("+d.HR+")",score:hr});
+  // Сознание
+  const acvpu = d.ACVPU==="A"?0:3;
+  items.push({name:"Сознание ("+d.ACVPU+")",score:acvpu});
+  // Температура
+  let t=0;
+  if(d.Temp<=35.0)t=3; else if(d.Temp<=36.0)t=1; else if(d.Temp<=38.0)t=0; else if(d.Temp<=39.0)t=1; else t=2;
+  items.push({name:"Температура ("+d.Temp+"°C)",score:t});
+  const total=items.reduce((s,i)=>s+i.score,0);
+  const anyThree=items.some(i=>i.score===3);
+  let interp, level;
+  if(total>=7||anyThree){ interp="Высокий риск — неотложная оценка, ОРИТ"; level="bad"; }
+  else if(total>=5){ interp="Средний риск — срочная оценка"; level="warn"; }
+  else if(total>=1){ interp="Низкий риск — плановое наблюдение"; level="ok"; }
+  else { interp="Норма"; level="ok"; }
+  return{name:"NEWS2",total,items,interp,level};
+}
+
+function calcQSOFA(d){
+  const items=[];
+  items.push({name:"ЧД ≥ 22/мин",score:d.RR>=22?1:0,val:d.RR});
+  items.push({name:"АД сист ≤ 100 мм рт.ст.",score:d.SBP<=100?1:0,val:d.SBP});
+  items.push({name:"GCS < 15",score:d.GCS<15?1:0,val:d.GCS});
+  const total=items.reduce((s,i)=>s+i.score,0);
+  let interp, level;
+  if(total>=2){ interp="Высокий риск сепсиса — оценка ОРИТ, SOFA"; level="bad"; }
+  else if(total===1){ interp="Промежуточный риск — наблюдение"; level="warn"; }
+  else { interp="Низкий риск"; level="ok"; }
+  return{name:"qSOFA",total,items,interp,level};
+}
+
+function calcSIRS(d){
+  const items=[];
+  items.push({name:"Температура >38°C или <36°C",score:(d.Temp>38||d.Temp<36)?1:0,val:d.Temp+"°C"});
+  items.push({name:"ЧСС > 90/мин",score:d.HR>90?1:0,val:d.HR});
+  items.push({name:"ЧД > 20/мин или pCO₂ < 32",score:(d.RR>20||d.pCO2<32)?1:0,val:`${d.RR} / pCO₂ ${d.pCO2}`});
+  items.push({name:"Лейкоциты >12 или <4 ×10⁹/л или палочк. >10%",score:(d.WBC>12||d.WBC<4||d.Bands>10)?1:0,val:`WBC ${d.WBC}, палочк. ${d.Bands}%`});
+  const total=items.reduce((s,i)=>s+i.score,0);
+  let interp, level;
+  if(total>=2){ interp="SIRS присутствует (≥2 критерия)"; level="bad"; }
+  else if(total===1){ interp="1 критерий — наблюдение"; level="warn"; }
+  else { interp="SIRS отсутствует"; level="ok"; }
+  return{name:"SIRS",total,items,interp,level};
+}
+
+function calcSOFA(d,b){
+  const items=[];
+  // Дыхание PaO2/FiO2
+  let resp=0;
+  if(b.PF>=400)resp=0; else if(b.PF>=300)resp=1; else if(b.PF>=200)resp=2; else if(b.PF>=100&&d.PEEP>=5)resp=3; else if(b.PF<100&&d.PEEP>=5)resp=4;
+  items.push({name:"PaO₂/FiO₂ = "+fixed(b.PF,0),score:resp});
+  // Коагуляция
+  let coa=0;
+  if(d.Plt>=150)coa=0; else if(d.Plt>=100)coa=1; else if(d.Plt>=50)coa=2; else if(d.Plt>=20)coa=3; else coa=4;
+  items.push({name:"Тромбоциты = "+d.Plt,score:coa});
+  // Печень (билирубин мг/дл)
+  const bilMgdl=d.Bil/17.1;
+  let liv=0;
+  if(bilMgdl<1.2)liv=0; else if(bilMgdl<2.0)liv=1; else if(bilMgdl<6.0)liv=2; else if(bilMgdl<12.0)liv=3; else liv=4;
+  items.push({name:`Билирубин = ${fixed(d.Bil,1)} мкмоль/л (${fixed(bilMgdl,2)} мг/дл)`,score:liv});
+  // ССС
+  const meanAP=(d.SBP+2*d.DBP)/3;
+  let cv=0;
+  if(d.Vaso==="none"&&meanAP<70)cv=1;
+  else if(d.Vaso==="dopa_low")cv=2;
+  else if(d.Vaso==="dopa_mid")cv=3;
+  else if(d.Vaso==="dopa_high")cv=4;
+  items.push({name:`ССС (сред.АД ${fixed(meanAP,1)}, вазопрессоры: ${d.Vaso})`,score:cv});
+  // ЦНС GCS
+  let cns=0;
+  if(d.GCS>=15)cns=0; else if(d.GCS>=13)cns=1; else if(d.GCS>=10)cns=2; else if(d.GCS>=6)cns=3; else cns=4;
+  items.push({name:"GCS = "+d.GCS,score:cns});
+  // Почки
+  const crMgdl=d.Cr/88.4;
+  let ren=0;
+  if(d.Urine<200)ren=4;
+  else if(d.Urine<500)ren=3;
+  else if(crMgdl>=5.0)ren=4;
+  else if(crMgdl>=3.5)ren=3;
+  else if(crMgdl>=2.0)ren=2;
+  else if(crMgdl>=1.2)ren=1;
+  items.push({name:`Креатинин = ${fixed(d.Cr,0)} мкмоль/л (диурез ${d.Urine} мл/сут)`,score:ren});
+  const total=items.reduce((s,i)=>s+i.score,0);
+  let interp, level;
+  if(total>=11){ interp="Тяжёлая полиорганная недостаточность — летальность ~95%"; level="bad"; }
+  else if(total>=6){ interp="Полиорганная недостаточность — летальность ~50%"; level="bad"; }
+  else if(total>=2){ interp="Органная дисфункция — летальность ~10%"; level="warn"; }
+  else { interp="Низкий риск"; level="ok"; }
+  return{name:"SOFA",total,items,interp,level};
+}
+
+function calcAPACHE2(d){
+  const items=[];
+  // Температура (ректальная)
+  let t=0;
+  if(d.Temp>=41)t=4; else if(d.Temp>=39)t=3; else if(d.Temp>=38.5)t=1; else if(d.Temp>=36)t=0; else if(d.Temp>=34)t=1; else if(d.Temp>=32)t=2; else if(d.Temp>=30)t=3; else t=4;
+  items.push({name:`Температура (°C)`,score:t,val:d.Temp});
+  // Среднее АД
+  const meanAP=(d.SBP+2*d.DBP)/3;
+  let map=0;
+  if(meanAP>=160)map=4; else if(meanAP>=130)map=3; else if(meanAP>=110)map=2; else if(meanAP>=70)map=0; else if(meanAP>=50)map=2; else map=4;
+  items.push({name:`Среднее АД`,score:map,val:fixed(meanAP,1)});
+  // ЧСС
+  let hr=0;
+  if(d.HR>=180)hr=4; else if(d.HR>=140)hr=3; else if(d.HR>=110)hr=2; else if(d.HR>=70)hr=0; else if(d.HR>=55)hr=2; else if(d.HR>=40)hr=3; else hr=4;
+  items.push({name:`ЧСС`,score:hr,val:d.HR});
+  // ЧД
+  let rr=0;
+  if(d.RR>=50)rr=4; else if(d.RR>=35)rr=3; else if(d.RR>=25)rr=1; else if(d.RR>=12)rr=0; else if(d.RR>=10)rr=1; else if(d.RR>=6)rr=2; else rr=4;
+  items.push({name:`ЧД`,score:rr,val:d.RR});
+  // Оксигенация (используем P/F как прокси)
+  let ox=0;
+  if(b.PF>=500)ox=0; else if(b.PF>=350)ox=1; else if(b.PF>=200)ox=2; else if(b.PF>=100)ox=3; else ox=4;
+  items.push({name:`PaO₂/FiO₂`,score:ox,val:fixed(b.PF,0)});
+  // pH
+  let ph=0;
+  if(d.pH>=7.7)ph=4; else if(d.pH>=7.6)ph=3; else if(d.pH>=7.5)ph=1; else if(d.pH>=7.33)ph=0; else if(d.pH>=7.25)ph=2; else if(d.pH>=7.15)ph=3; else ph=4;
+  items.push({name:`pH арт.`,score:ph,val:d.pH});
+  // Na
+  let na=0;
+  if(d.Na>=180)na=4; else if(d.Na>=160)na=3; else if(d.Na>=155)na=2; else if(d.Na>=150)na=1; else if(d.Na>=130)na=0; else if(d.Na>=120)na=2; else if(d.Na>=111)na=3; else na=4;
+  items.push({name:`Na⁺ (ммоль/л)`,score:na,val:d.Na});
+  // K
+  let k=0;
+  if(d.K>=7)k=4; else if(d.K>=6)k=3; else if(d.K>=5.5)k=1; else if(d.K>=3.5)k=0; else if(d.K>=3)k=1; else if(d.K>=2.5)k=2; else k=4;
+  items.push({name:`K⁺ (ммоль/л)`,score:k,val:d.K});
+  // Креатинин (мг/дл → ×2 если ОПП)
+  const crMgdl=d.Cr/88.4;
+  let cr=0;
+  if(crMgdl>=3.5)cr=4; else if(crMgdl>=2)cr=3; else if(crMgdl>=1.5)cr=2; else if(crMgdl>=0.6)cr=0; else cr=2;
+  items.push({name:`Креатинин (мг/дл)`,score:cr,val:fixed(crMgdl,2)});
+  // Hct
+  let hct=0;
+  if(d.Hct>=60)hct=4; else if(d.Hct>=50)hct=2; else if(d.Hct>=46)hct=1; else if(d.Hct>=30)hct=0; else if(d.Hct>=20)hct=2; else hct=4;
+  items.push({name:`Гематокрит (%)`,score:hct,val:d.Hct});
+  // WBC
+  const wbcK=d.WBC;
+  let wbc=0;
+  if(wbcK>=40)wbc=4; else if(wbcK>=20)wbc=2; else if(wbcK>=15)wbc=1; else if(wbcK>=3)wbc=0; else if(wbcK>=1)wbc=2; else wbc=4;
+  items.push({name:`Лейкоциты (×10⁹/л)`,score:wbc,val:d.WBC});
+  // GCS (15 - факт)
+  const gcsScore=15-d.GCS;
+  items.push({name:`GCS (дефицит 15-GCS)`,score:gcsScore,val:`GCS ${d.GCS} → ${gcsScore}`});
+  // Возраст
+  let ageScore=0;
+  if(d.Age<=44)ageScore=0; else if(d.Age<=54)ageScore=2; else if(d.Age<=64)ageScore=3; else if(d.Age<=74)ageScore=5; else ageScore=6;
+  items.push({name:`Возраст`,score:ageScore,val:d.Age+" лет"});
+  // Хроническое состояние
+  let chronicScore=0;
+  if(d.Chronic==="severe")chronicScore=5;
+  else if(d.Chronic==="mild")chronicScore=2;
+  items.push({name:`Хроническое состояние`,score:chronicScore,val:d.Chronic==="severe"?"Тяжёлое ОРИТ":d.Chronic==="mild"?"Тяжёлое не-ОРИТ":"Нет"});
+  const total=items.reduce((s,i)=>s+i.score,0);
+  let interp, level;
+  if(total>=35){ interp="Крайне высокая летальность (>80%)"; level="bad"; }
+  else if(total>=25){ interp="Высокая летальность (~55–75%)"; level="bad"; }
+  else if(total>=15){ interp="Средняя летальность (~25–40%)"; level="warn"; }
+  else if(total>=10){ interp="Умеренная летальность (~10–15%)"; level="warn"; }
+  else { interp="Низкая летальность (<10%)"; level="ok"; }
+  return{name:"APACHE II",total,items,interp,level};
+}
+
+function calcSepsis(d,b,sofa,qsofa){
+  const parts=[];
+  const hasInfection = d.infection==="yes";
+  const sofaDelta = sofa.total;
+  let sepsisStatus="—",shockStatus="—",level="ok";
+  if(hasInfection && sofaDelta>=2){
+    sepsisStatus="Сепсис (Sepsis-3): инфекция + SOFA ≥ 2";
+    level="bad";
+    if(d.Vaso!=="none" && d.Lac>2 && d.SBP<=100){
+      shockStatus="Септический шок (Sepsis-3): вазопрессоры + лактат >2 + гипотензия";
+      level="bad";
+    }else if(d.Lac>2){
+      shockStatus="Возможен септический шок: лактат >2, оценить вазопрессоры и АД";
+      level="warn";
+    }
+  }else if(hasInfection && sofaDelta<2){
+    sepsisStatus="Инфекция без органной дисфункции (SOFA < 2)";
+    level="warn";
+  }else if(qsofa.total>=2){
+    sepsisStatus="Подозрение на сепсис (qSOFA ≥ 2) — уточнить инфекцию и SOFA";
+    level="warn";
+  }else{
+    sepsisStatus="Критерии сепсиса не выполнены";
+  }
+  return{sepsisStatus,shockStatus,level,hasInfection,sofaDelta};
+}
+
+function render(d,b,p,comp,dd,st,fin,hagma,syn,ards,phComp,scales,sepsis){
   const synEl=document.getElementById("syndrome");
   if(synEl)synEl.innerHTML=`<div class="syndrome"><div class="syn-title">СИНДРОМАЛЬНЫЙ ДИАГНОЗ</div><div class="syn-main">${escapeHTML(syn.title)}</div><div class="syn-detail">${escapeHTML(syn.detail||"—")}</div><div class="syn-detail" style="margin-top:8px"><b>Оксигенация:</b> ${escapeHTML(ards.status)}<br>${escapeHTML(ards.detail)}</div></div>`;
 
@@ -621,6 +809,7 @@ function render(d,b,p,comp,dd,st,fin,hagma,syn,ards){
     ["SBE ("+(d.sbeMode==='calc'?'расчёт, ориентировочно':'вход')+")",fixed(b.SBE,1)],["SBE (Van Slyke)",fixed(b.SBE_calc,1)+" (без Hb — ориентировочно)"],
     ["— АП / ΔΔ —",""],["АП",fixed(b.AG)],
     ["АП_корр (альбумин)",fixed(b.AGcorr)+(b.AGcorr>14?" ⚠":"")],
+    ["АП_корр (Na корр.)",fixed(b.AG_Na_corr)+(d.Na>140?" ⚠ Na":"")],
     ["ΔAG",fixed(b.deltaAG)],["ΔHCO₃⁻",fixed(b.deltaHCO3)],
     ["ΔΔ",Number.isFinite(dd.value)?fixed(dd.value,2):"не применимо"],
     ["Классификация ΔΔ",dd.classification],
@@ -630,7 +819,13 @@ function render(d,b,p,comp,dd,st,fin,hagma,syn,ards){
     ["— Стюарт —",""],
     ["SID_a",fixed(st.SIDa)],["SID_e",fixed(st.SIDe)],["SIG",fixed(st.SIG)],
     ["SIG (корр. на Alb 40)",fixed(st.SIG_corr)+(d.Alb<30?" ⚠":"")],
-    ["— Оксигенация —",""],["P/F",fixed(b.PF,0)],["A–a градиент",fixed(b.A_a_est,0)]
+    ["SIG (корр. на Na)",fixed(st.SIG_Na_corr)+(d.Na>145?" ⚠ Na":"")],
+    ["— Осмоляльность —",""],
+    ["Осм_расч (Dorwart-Chalmers)",fixed(b.Osm_calc,1)+" мОсм/кг"],
+    ["Осм_изм (ввод)",Number.isFinite(d.Osm_in)?fixed(d.Osm_in,0)+" мОсм/кг":"—"],
+    ["Осмолярный gap",Number.isFinite(b.Osm_gap)?fixed(b.Osm_gap,1)+" мОсм/кг":"—"],
+    ["— Оксигенация —",""],["P/F",fixed(b.PF,0)],["A–a градиент",fixed(b.A_a_est,0)],
+    ["— Компенсация (по pH) —",""],["Степень",phComp.status]
   ];
   const resEl=document.getElementById("results");
   if(resEl)resEl.innerHTML=rows.map(r=>r[0].startsWith('—')?`<div class="row section"><span>${r[0]}</span><span></span></div>`:`<div class="row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
@@ -643,6 +838,8 @@ function render(d,b,p,comp,dd,st,fin,hagma,syn,ards){
   if(p.bothOpposite)logs.push(`<b>⚠ pH ${fixed(d.pH,3)} в норме, но есть противоположные нарушения:</b> мет. ацидоз + респ. алкалоз. <b>Не «КОС норма».</b>`);
   if(hagma.hasHAGMA)logs.push(`<b>HAGMA:</b> ${hagma.reason}`);
   if(dd.suspicion)logs.push(`<b>ΔΔ = ${fixed(dd.value,2)} (1.5–2.0):</b> подозрение на сопутствующий мет. алкалоз. Проверить анамнез.`);
+  if(d.Na>145)logs.push(`<b>Гипернатриемия:</b> Na ${fixed(d.Na,1)} >145 → AG корр. на Na: ${fixed(b.AG_Na_corr,2)}, SIG корр. на Na: ${fixed(st.SIG_Na_corr,2)}.`);
+  logs.push(`<b>Степень компенсации (по pH):</b> ${phComp.status}. ${phComp.detail}.`);
 
   let diagHTML=`<h3>Ход анализа</h3><ul>${logs.map(l=>`<li>${l}</li>`).join('')}</ul>`;
   diagHTML+=`<h3>Компенсаторный ответ</h3><div>${escapeHTML(comp.text)}</div><ul>${comp.checks.map(c=>`<li>${escapeHTML(c)}</li>`).join('')}</ul>`;
@@ -652,52 +849,128 @@ function render(d,b,p,comp,dd,st,fin,hagma,syn,ards){
   const diagEl=document.getElementById("diagnosis");
   if(diagEl)diagEl.innerHTML=diagHTML;
 
-  const explEl=document.getElementById("explanations");
-  if(explEl)explEl.innerHTML=`
-    <details open><summary>📊 ΔΔ — почему подозрение на мет. алкалоз при 1.5–2.0</summary>
-    <div class="fml">ΔΔ = ΔAG / ΔHCO₃⁻ = (АП_корр − 12) / (24 − HCO₃⁻)</div>
-    <p><b>= 1</b> → чистый HAGMA (кислота съедает HCO₃, АП растёт одинаково).</p>
-    <p><b>&lt; 1</b> → HAGMA + NAGMA (HCO₃ упал больше, чем вырос АП — потеря с Cl).</p>
-    <p><b>&gt; 1</b> → HAGMA + мет. алкалоз (HCO₃ упал меньше, чем вырос АП — есть доп. HCO₃).</p>
-    <p><b>Пороги:</b> &lt;0.4 NAGMA · 0.4–0.9 смешанный · 0.9–1.5 HAGMA · <b>1.5–2.0 подозрение на мет. алкалоз</b> · &gt;2.0 HAGMA + мет. алкалоз.</p>
+  // Детализация
+  const exEl=document.getElementById("explanations");
+  if(exEl)exEl.innerHTML=`
+    <details open><summary>📐 АП и АП_корр — пошагово</summary>
+    <div class="fml">АП = Na − (Cl + HCO₃⁻)
+   = ${fixed(d.Na,1)} − (${fixed(d.Cl,1)} + ${fixed(b.HCO3,1)})
+   = ${fixed(d.Na,1)} − ${fixed(d.Cl+b.HCO3,1)}
+   = ${fixed(b.AG)}
+
+АП_корр = АП + 0.25 × (40 − Alb)
+       = ${fixed(b.AG)} + 0.25 × (40 − ${fixed(d.Alb,1)})
+       = ${fixed(b.AG)} + ${fixed(0.25*(40-d.Alb),2)}
+       = ${fixed(b.AGcorr)}
+${d.Na>140?"\nАП (корр. на Na) = АП_корр − (Na − 140)\n             = "+fixed(b.AGcorr,2)+" − "+fixed(d.Na-140,1)+"\n             = "+fixed(b.AG_Na_corr,2):""}</div>
+    <p>Норма АП: 8–12 ммоль/л. Норма АП_корр: ≤14.</p>
     </details>
-    <details><summary>🧮 SBE (Van Slyke)</summary>
-    <div class="fml">SBE = HCO₃⁻ − 24.4 + 16.2 × (pH − 7.4)</div>
-    <p>Ориентировочная формула без Hb. Для точного расчёта нужен гемоглобин.</p>
+    <details><summary>📐 ΔΔ — пошагово</summary>
+    <div class="fml">ΔAG = АП_корр − 12 = ${fixed(b.AGcorr)} − 12 = ${fixed(b.deltaAG)}
+ΔHCO₃⁻ = 24 − HCO₃⁻ = 24 − ${fixed(b.HCO3,1)} = ${fixed(b.deltaHCO3)}
+ΔΔ = ΔAG / ΔHCO₃⁻ = ${fixed(b.deltaAG)} / ${fixed(b.deltaHCO3)} = ${Number.isFinite(b.deltaDelta)?fixed(b.deltaDelta,2):"—"}</div>
+    <p><b>Пороги:</b> &lt;0.4 NAGMA · 0.4–0.9 смешанный · 0.9–1.5 HAGMA · 1.5–2.0 подозрение на мет. алкалоз · &gt;2.0 HAGMA + мет. алкалоз.</p>
+    <p>Текущая классификация: <b>${dd.classification}</b></p>
     </details>
-    <details><summary>⚡ Stewart (SIDa/SIDe/SIG)</summary>
-    <div class="fml">SIDa (${d.sidModel==='charged'?'с ×2':'упрощённая'}) = Na + K ${d.sidModel==='charged'?'+ 2Ca + 2Mg':'+ Ca + Mg'} − Cl − Lactate</div>
-    <div class="fml">SIDe = HCO₃⁻ + Alb⁻ + PO₄⁻</div>
-    <div class="fml">SIG = SIDa − SIDe</div>
-    <p>При Alb &lt; 30 г/л SIG может быть <b>завышен</b> — используется коррекция на Alb 40.</p>
+    <details><summary>🧮 SBE (Van Slyke) + разбивка</summary>
+    <div class="fml">SBE = HCO₃⁻ − 24.4 + 16.2 × (pH − 7.4)
+    = ${fixed(b.HCO3,1)} − 24.4 + 16.2 × (${fixed(d.pH,3)} − 7.4)
+    = ${fixed(b.HCO3,1)} − 24.4 + 16.2 × ${fixed(d.pH-7.4,3)}
+    = ${fixed(b.HCO3,1)} − 24.4 + ${fixed(16.2*(d.pH-7.4),2)}
+    = ${fixed(b.SBE_calc,1)}
+
+Разбивка SBE:
+  SBE_FW  = 0.3 × (Na − 140)           = ${fixed(b.SBE_FW)}
+  SBE_Cl  = 104 − Cl × 140 / Na        = ${fixed(b.SBE_Cl)}
+  SBE_Alb = (0.148×pH − 0.818)×(40−Alb) = ${fixed(b.SBE_Alb)}
+  SBE_UA  = SBE − FW − Cl − Alb        = ${fixed(b.SBE_UA)}
+  Сумма: ${fixed(b.SBE_FW+b.SBE_Cl+b.SBE_Alb+b.SBE_UA,1)}</div>
+    </details>
+    <details><summary>⚡ Stewart (SID_a, SID_e, SIG)</summary>
+    <div class="fml">SID_a (${d.sidModel==='charged'?'с ×2':'упрощённая'}) = Na + K ${d.sidModel==='charged'?'+ 2Ca + 2Mg':'+ Ca + Mg'} − Cl − Lac
+      = ${fixed(b.NaCorr,1)} + ${fixed(d.K,1)} ${d.sidModel==='charged'?'+ 2×'+fixed(d.Ca,2)+' + 2×'+fixed(d.Mg,2):'+ '+fixed(d.Ca,2)+' + '+fixed(d.Mg,2)} − ${fixed(d.Cl,1)} − ${fixed(d.Lac,1)}
+      = ${fixed(st.SIDa)}
+
+Alb_charge = (Alb/10) × (0.123×pH − 0.631) × 10 = ${fixed(st.Alb_charge)}
+PO₄_charge = PO₄ × (0.309×pH − 0.469) = ${fixed(st.PO4_charge)}
+
+SID_e = HCO₃⁻ + Alb_charge + PO₄_charge = ${fixed(st.SIDe)}
+SIG = SID_a − SID_e = ${fixed(st.SIG)}
+${d.Alb<30?"\nSID_e (корр. на Alb 40) = "+fixed(st.SIDe_corr)+"\nSIG (корр. на Alb 40) = "+fixed(st.SIG_corr):""}
+${d.Na>145?"\nSIG (корр. на Na) = SIG − (Na−140) = "+fixed(st.SIG_Na_corr):""}</div>
+    <p><b>Норма SIG:</b> 0–2. <b>&gt;5</b> — накопление неизмеряемых анионов.</p>
+    </details>
+    <details><summary>💧 Осмоляльность (Dorwart-Chalmers)</summary>
+    <div class="fml">Осм_расч = 1.86 × Na + Gluc + Ur + 9
+        = 1.86 × ${fixed(d.Na,1)} + ${fixed(d.Gluc,1)} + ${fixed(d.Ur,1)} + 9
+        = ${fixed(1.86*d.Na,1)} + ${fixed(d.Gluc,1)} + ${fixed(d.Ur,1)} + 9
+        = ${fixed(b.Osm_calc,1)} мОсм/кг
+${Number.isFinite(d.Osm_in)?"\nОсм_изм = "+fixed(d.Osm_in,0)+" мОсм/кг\nОсм_gap = "+fixed(d.Osm_in,0)+" − "+fixed(b.Osm_calc,1)+" = "+fixed(b.Osm_gap,1)+" мОсм/кг":""}</div>
+    <p>Норма gap: &lt;10. <b>10–20</b> — пограничный. <b>&gt;20</b> — токсические спирты (метанол, ЭГ), маннитол, глицин.</p>
+    </details>
+    <details><summary>📊 Компенсация (Winter's / pH)</summary>
+    <div class="fml">Winter's: ${comp.text}</div>
+    <p><b>Степень компенсации (по pH):</b> ${phComp.status} — ${phComp.detail}.</p>
     </details>`;
 
+  // Отчёт
   const strip=s=>s.replace(/<[^>]+>/g,'');
-  const L=["═══ ICU NAVIGATOR v23.3 UNIVERSAL ═══","","Дата: "+new Date().toLocaleString('ru-RU'),""];
+  const L=["═══ ICU NAVIGATOR v23.4 UNIVERSAL ═══","","Дата: "+new Date().toLocaleString('ru-RU'),""];
   L.push("── ВХОД ──");
   L.push(`pH ${fixed(d.pH,3)}  pCO₂ ${fixed(d.pCO2,1)}  HCO₃⁻ ${fixed(b.HCO3,1)}  SBE ${fixed(b.SBE,1)}`);
   L.push(`Na ${fixed(d.Na,1)}  K ${fixed(d.K,1)}  Cl ${fixed(d.Cl,1)}  Ca ${fixed(d.Ca,2)}  Mg ${fixed(d.Mg,2)}`);
-  L.push(`Alb ${fixed(d.Alb,1)}  PO₄ ${fixed(d.PO4,2)}  Gluc ${fixed(d.Gluc,1)}  Lac ${fixed(d.Lac,1)}`);
+  L.push(`Alb ${fixed(d.Alb,1)}  PO₄ ${fixed(d.PO4,2)}  Gluc ${fixed(d.Gluc,1)}  Ur ${fixed(d.Ur,1)}  Lac ${fixed(d.Lac,1)}`);
   L.push(`pO₂ ${fixed(d.pO2,1)}  FiO₂ ${fixed(d.FiO2,0)}%  PEEP ${fixed(d.PEEP,1)}`);
+  L.push(`ЧД ${d.RR}  SpO₂ ${d.SpO2}%  АД ${d.SBP}/${d.DBP}  ЧСС ${d.HR}  T ${d.Temp}°C  GCS ${d.GCS}  Возраст ${d.Age}`);
   if(d.notes){L.push("","── ЗАМЕТКИ ──",d.notes);}
   L.push("","── СИНДРОМ ──",syn.title,syn.detail||"","","Оксигенация: "+ards.status,ards.detail);
+  L.push("","── ШКАЛЫ ──");
+  scales.forEach(s=>L.push(`${s.name}: ${s.total} — ${s.interp}`));
+  L.push("","── СЕПСИС ──",sepsis.sepsisStatus); if(sepsis.shockStatus!=="—")L.push(sepsis.shockStatus);
   L.push("","── РАСЧЁТЫ ──");
   rows.forEach(r=>{if(r[1]&&!r[0].startsWith('—'))L.push(`${r[0]}: ${r[1]}`);});
   L.push("","── ХОД ──");logs.forEach(l=>L.push("• "+strip(l)));
   L.push("","── КОМПЕНСАЦИЯ ──",comp.text);comp.checks.forEach(c=>L.push("• "+strip(c)));
   if(fin.findings.length){L.push("","── НАХОДКИ ──");fin.findings.forEach(f=>L.push("• "+strip(f)));}
   if(fin.alerts.length){L.push("","── ВНИМАНИЕ ──");fin.alerts.forEach(a=>L.push("• "+strip(a)));}
-  L.push("","Сформировано: ICU Navigator v23.3 Universal Core");
+  L.push("","Сформировано: ICU Navigator v23.4 Universal Core");
   lastReport=L.join("\n");
+}
+
+function renderScales(scales,sepsis,d){
+  const scEl=document.getElementById("scalesResults");
+  if(scEl)scEl.innerHTML=scales.map(s=>{
+    const itemsHTML=s.items.map(i=>`<div class="score-row"><span>${escapeHTML(i.name)}${i.val!=null?" = "+escapeHTML(String(i.val)):""}</span><span>${i.score}</span></div>`).join('');
+    return `<div class="score-card"><h4>${escapeHTML(s.name)}</h4><div class="score-val">${s.total}</div><div class="score-interp"><span class="badge-${s.level}">${escapeHTML(s.interp)}</span></div><div style="margin-top:10px">${itemsHTML}</div></div>`;
+  }).join('');
+
+  const spEl=document.getElementById("sepsisResults");
+  if(spEl)spEl.innerHTML=`
+    <div class="score-card" style="border-left-color:${sepsis.level==='bad'?'var(--bad)':sepsis.level==='warn'?'var(--warn)':'var(--ok)'}">
+      <h4>СЕПСИС (Sepsis-3)</h4>
+      <div class="score-val" style="font-size:16px">${escapeHTML(sepsis.sepsisStatus)}</div>
+      <div class="score-row"><span>Инфекция подтверждена</span><span>${sepsis.hasInfection?'Да':'Нет/не указано'}</span></div>
+      <div class="score-row"><span>SOFA</span><span>${sepsis.sofaDelta}</span></div>
+      ${sepsis.shockStatus!=="—"?`<div class="score-row" style="margin-top:8px"><span>Септический шок</span><span>${escapeHTML(sepsis.shockStatus)}</span></div>`:''}
+      <div class="criteria-list" style="margin-top:10px">
+        <b>Критерии Sepsis-3:</b>
+        <ul style="margin:6px 0 6px 16px">
+          <li><b>Сепсис</b> = инфекция + SOFA ≥ 2</li>
+          <li><b>Септический шок</b> = сепсис + вазопрессоры для сред.АД ≥65 + лактат &gt;2 на фоне инфузии</li>
+          <li><b>qSOFA</b> (вне ОРИТ): ЧД ≥22, изменённое сознание, сист.АД ≤100</li>
+        </ul>
+      </div>
+    </div>`;
 }
 
 function makeHistory(d,syn){
   return{
     date:new Date().toLocaleString('ru-RU'),
     diag:syn.title+(syn.detail?": "+syn.detail:""),
-    data:Object.fromEntries(["pH","pCO2","HCO3in","SBE","Lac","pO2","FiO2","PEEP","Na","Cl","K","Ca","Mg","Alb","PO4","Gluc"].map(k=>[k,d[k]])),
+    data:Object.fromEntries(["pH","pCO2","HCO3in","SBE","Lac","pO2","FiO2","PEEP","Na","Cl","K","Ca","Mg","Alb","PO4","Gluc","Ur","Osm_in","RR","SpO2","SBP","DBP","HR","Temp","GCS","Age","Plt","WBC","Bands","Hct","Cr","Bil","Urine"].map(k=>[k,d[k]])),
     notes:d.notes,sbeMode:d.sbeMode,naCorr:d.naCorr,chronic:d.chronic,sidModel:d.sidModel,
-    bilateral:d.bilateral,timing:d.timing,noncardiac:d.noncardiac
+    O2support:d.O2support,ACVPU:d.ACVPU,Chronic:d.Chronic,Vaso:d.Vaso,
+    bilateral:d.bilateral,timing:d.timing,noncardiac:d.noncardiac,infection:d.infection
   };
 }
 
@@ -705,17 +978,37 @@ function runCalculation(save=false){
   try{
     const d=readInputs(),err=validate(d);
     if(err){showToast(err);return}
+
+    // Проверка физиологических границ
+    const physioWarn=physiologicWarnings(d);
+    if(physioWarn.length>0){
+      const proceed=confirm("⚠ Нефизиологические значения:\n\n"+physioWarn.join("\n")+"\n\nРасчёты могут быть некорректны. Продолжить?");
+      if(!proceed){showToast("Проверьте ввод");return}
+    }
+
     const b=calcBasic(d);
     const p=detectPrimary(d,b);
     const comp=compensation(d,b,p);
+    const phComp=phCompensation(d);
     const dd=calcDeltaDelta(d,b);
     const st=calcStewart(d,b);
     const hagma=detectHAGMA(d,b,st);
     const fin=clinicalFindings(d,b,st,p,dd,hagma);
-    const syn=syndrome(d,b,p,dd,st,hagma);
+    const syn=syndrome(d,b,p,dd,st,hagma,phComp);
     const ards=ardsAssessment(d,b);
-    render(d,b,p,comp,dd,st,fin,hagma,syn,ards);
-    updateRisk(d,b,p);
+
+    // Шкалы
+    const news2=calcNEWS2(d);
+    const qsofa=calcQSOFA(d);
+    const sirs=calcSIRS(d);
+    const sofa=calcSOFA(d,b);
+    const apache2=calcAPACHE2(d);
+    const scales=[news2,qsofa,sirs,sofa,apache2];
+    const sepsis=calcSepsis(d,b,sofa,qsofa);
+
+    render(d,b,p,comp,dd,st,fin,hagma,syn,ards,phComp,scales,sepsis);
+    renderScales(scales,sepsis,d);
+    updateRisk(d,b,p,scales,sepsis);
     if(save){saveHistory(makeHistory(d,syn));showToast("Расчёт сохранён");}
     try{drawCharts(b,d,st)}catch(e){}
     if(save)switchTab("results");
@@ -737,13 +1030,17 @@ function liveValidate(){
   }catch(e){}
 }
 
-function updateRisk(d,b,p){
+function updateRisk(d,b,p,scales,sepsis){
   try{
     let risk=0;
-    if(d.pH<7.2||d.pH>7.6)risk+=35;else if(d.pH<7.3||d.pH>7.5)risk+=15;
-    if(d.Lac>4)risk+=30;else if(d.Lac>2)risk+=15;
-    if(b.PF<100)risk+=30;else if(b.PF<200)risk+=20;else if(b.PF<300)risk+=10;
-    if(Math.abs(b.SBE)>10)risk+=20;else if(Math.abs(b.SBE)>5)risk+=10;
+    if(d.pH<7.2||d.pH>7.6)risk+=30;else if(d.pH<7.3||d.pH>7.5)risk+=15;
+    if(d.Lac>4)risk+=20;else if(d.Lac>2)risk+=10;
+    if(b.PF<100)risk+=20;else if(b.PF<200)risk+=12;else if(b.PF<300)risk+=6;
+    if(Math.abs(b.SBE)>10)risk+=15;else if(Math.abs(b.SBE)>5)risk+=8;
+    const news=scales.find(s=>s.name==="NEWS2"); if(news){ if(news.total>=7)risk+=15;else if(news.total>=5)risk+=8;}
+    const sofa=scales.find(s=>s.name==="SOFA"); if(sofa){ if(sofa.total>=11)risk+=15;else if(sofa.total>=6)risk+=8;}
+    const apache=scales.find(s=>s.name==="APACHE II"); if(apache){ if(apache.total>=25)risk+=15;else if(apache.total>=15)risk+=8;}
+    if(sepsis.level==="bad")risk+=10;
     risk=Math.min(98,risk);
     const e=document.getElementById("riskBadge");
     if(e){e.textContent=risk+"%";e.style.color=risk>50?"var(--bad)":risk>20?"var(--warn)":"var(--ok)";}
@@ -787,17 +1084,17 @@ function loadPreset(n){
   try{
     const p=presets[n];if(!p)return;
     Object.entries(p).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});
-    ["bilateral","timing","noncardiac"].forEach(k=>{const e=document.getElementById(k);if(e)e.value="unknown"});
+    ["bilateral","timing","noncardiac","infection"].forEach(k=>{const e=document.getElementById(k);if(e)e.value="unknown"});
     liveValidate();runCalculation(false);showToast("Пресет "+n+" загружен");
   }catch(e){}
 }
 
 function clearAll(){
   try{
-    const vals={pH:7.40,pCO2:40,HCO3in:24,SBE:0,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:140,Cl:103,K:4,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:5.5};
+    const vals={pH:7.40,pCO2:40,HCO3in:24,SBE:0,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:140,Cl:103,K:4,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:5.5,Ur:5,Osm_in:"",RR:16,SpO2:98,SBP:120,DBP:80,HR:80,Temp:36.8,GCS:15,Age:50,Plt:200,WBC:7,Bands:3,Hct:40,Cr:80,Bil:15,Urine:1500};
     Object.entries(vals).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});
     const e=document.getElementById("notes");if(e)e.value="";
-    ["sbeMode","naCorr","chronic","sidModel","bilateral","timing","noncardiac"].forEach(k=>{const el=document.getElementById(k);if(el)el.value=el.id==="sbeMode"?"input":el.id==="naCorr"?"off":el.id==="chronic"?"auto":el.id==="sidModel"?"charged":"unknown"});
+    ["sbeMode","naCorr","chronic","sidModel","O2support","ACVPU","Chronic","Vaso","bilateral","timing","noncardiac","infection"].forEach(k=>{const el=document.getElementById(k);if(el)el.value=el.id==="sbeMode"?"input":el.id==="naCorr"?"off":el.id==="chronic"?"auto":el.id==="sidModel"?"charged":el.id==="O2support"?"no":el.id==="ACVPU"?"A":el.id==="Chronic"?"none":el.id==="Vaso"?"none":"unknown"});
     liveValidate();runCalculation(false);showToast("Сброшено");
   }catch(e){}
 }
@@ -849,7 +1146,7 @@ function loadHistory(i){
   try{
     const x=getHistory()[i];if(!x)return;
     Object.entries(x.data||{}).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});
-    ["notes","sbeMode","naCorr","chronic","sidModel","bilateral","timing","noncardiac"].forEach(k=>{if(x[k]!=null){const e=document.getElementById(k);if(e)e.value=x[k]}});
+    ["notes","sbeMode","naCorr","chronic","sidModel","O2support","ACVPU","Chronic","Vaso","bilateral","timing","noncardiac","infection"].forEach(k=>{if(x[k]!=null){const e=document.getElementById(k);if(e)e.value=x[k]}});
     const p=document.getElementById("historyPanel");if(p)p.classList.remove("show");
     liveValidate();runCalculation(false);showToast("Загружено");
   }catch(e){}
@@ -888,7 +1185,7 @@ function copyResult(){
 function shareResult(){
   try{
     if(!lastReport)runCalculation(false);
-    if(navigator.share)navigator.share({title:"ICU Navigator v23.3",text:lastReport}).catch(()=>{});
+    if(navigator.share)navigator.share({title:"ICU Navigator v23.4",text:lastReport}).catch(()=>{});
     else copyResult();
   }catch(e){}
 }
