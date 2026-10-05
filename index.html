@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU CORE</title>
+<title>ICU CORE v26.2</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,10 +11,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 /* === INTRO === */
-#intro-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0A0E1A;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;pointer-events:none;animation:introFadeOut .5s ease 1.8s forwards}
-#intro-screen .intro-title{font:700 clamp(32px,7vw,64px) 'Inter',sans-serif;color:#FAF9F7;letter-spacing:-.03em;margin:0;animation:introSlide 1.2s cubic-bezier(.16,1,.3,1) both;font-feature-settings:'cv11'}
+#intro-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1A1F2A 0%,#1E2A38 60%,#232F40 100%);z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;pointer-events:none;animation:introFadeOut .6s ease 1.8s forwards}
+#intro-screen .intro-title{font:700 clamp(32px,7vw,64px) 'Inter',sans-serif;color:#FAF9F7;letter-spacing:-.03em;margin:0;animation:introSlide 1.2s cubic-bezier(.16,1,.3,1) both}
 #intro-screen .intro-line{width:clamp(60px,15vw,120px);height:1.5px;background:linear-gradient(90deg,transparent,#7BA8A0,transparent);margin:24px 0;animation:introGrow 1.4s cubic-bezier(.16,1,.3,1) .3s both}
-#intro-screen .intro-sub{font:400 clamp(11px,2vw,14px) 'Inter',sans-serif;color:#8E8880;letter-spacing:.15em;text-transform:uppercase;margin:0;animation:introSlide 1s ease .5s both}
+#intro-screen .intro-sub{font:400 clamp(11px,2vw,14px) 'Inter',sans-serif;color:#A8B2BD;letter-spacing:.15em;text-transform:uppercase;margin:0;animation:introSlide 1s ease .5s both}
 @keyframes introFadeOut{to{opacity:0;visibility:hidden}}
 @keyframes introSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes introGrow{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
@@ -22,62 +22,67 @@
 /* === THEME === */
 :root{
   --bg:#FAF9F7;--card:#FFFFFF;--elev:#F5F3F0;--elev2:#FAF9F7;
-  --txt:#1A1A1A;--txt2:#4A4A4A;--mut:#6B6B6B;--mut2:#8E8E8E;
+  --txt:#1A1A1A;--txt2:#3A3A3A;--mut:#5A5A5A;--mut2:#7A7A7A;
   --border:#E8E6E3;--border2:#F0EEEA;
   --acc:#294056;--acc-soft:#EDF1F5;--acc-hover:#1E2F40;
-  --ok:#4A7C59;--ok-bg:#EFF5F0;--warn:#B8860B;--warn-bg:#FBF6E8;--bad:#A94442;--bad-bg:#F7EEED;
+  --ok:#3F7A4F;--ok-bg:#EBF3EC;--warn:#A87B0B;--warn-bg:#F8F2E0;--bad:#9E3A38;--bad-bg:#F5E8E7;
   --radius:10px;--radius-sm:8px;
-  --shadow:0 1px 2px rgba(26,26,26,.04),0 1px 3px rgba(26,26,26,.03);
-  --shadow-md:0 4px 16px rgba(41,64,86,.06);
-  --shadow-lg:0 8px 32px rgba(41,64,86,.08);
+  --shadow:0 1px 2px rgba(26,26,26,.05),0 1px 3px rgba(26,26,26,.04);
+  --shadow-md:0 4px 16px rgba(41,64,86,.08);
+  --shadow-lg:0 8px 32px rgba(41,64,86,.10);
+  --t:.18s cubic-bezier(.2,0,.2,1);
 }
 [data-theme=dark]{
-  --bg:#141210;--card:#1F1D1A;--elev:#2A2723;--elev2:#1A1815;
-  --txt:#F5F3F0;--txt2:#C9C4BC;--mut:#8E8880;--mut2:#6B655D;
-  --border:#2F2C28;--border2:#262320;
+  --bg:#15171C;--card:#1D2026;--elev:#262A32;--elev2:#1A1D22;
+  --txt:#F2F3F5;--txt2:#C8CBD2;--mut:#8A8F99;--mut2:#6A6F79;
+  --border:#2C3038;--border2:#242830;
   --acc:#7BA8A0;--acc-soft:#1A2B2E;--acc-hover:#8EBBB3;
-  --ok:#7BA88A;--ok-bg:#1A2B1F;--warn:#D4A644;--warn-bg:#2B2418;--bad:#C97069;--bad-bg:#2B1A18;
-  --shadow:0 1px 2px rgba(0,0,0,.3);--shadow-md:0 4px 16px rgba(0,0,0,.4);--shadow-lg:0 8px 32px rgba(0,0,0,.5);
+  --ok:#6FAB7E;--ok-bg:#16281B;--warn:#D4A644;--warn-bg:#2B2418;--bad:#C97069;--bad-bg:#2B1A18;
+  --shadow:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 16px rgba(0,0,0,.5);--shadow-lg:0 8px 32px rgba(0,0,0,.6);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter',-apple-system,system-ui,sans-serif;font-size:14px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased;font-feature-settings:'cv11','ss01';padding-bottom:60px}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter',-apple-system,system-ui,sans-serif;font-size:14px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased;font-feature-settings:'cv11','ss01';padding-bottom:60px;transition:background var(--t),color var(--t)}
 .container{max-width:1280px;margin:0 auto;padding:28px 24px}
 
-/* === HEADER — sticky === */
-.header{position:sticky;top:0;z-index:50;background:var(--bg);padding:16px 0 14px;margin-bottom:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+/* === HEADER === */
+.header{position:sticky;top:0;z-index:50;background:var(--bg);padding:16px 0 14px;margin-bottom:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;transition:background var(--t),border-color var(--t)}
 .header-brand{display:flex;align-items:center;gap:12px}
-.header-logo{width:28px;height:28px;color:var(--acc);stroke-width:1.5}
+.header-logo{width:28px;height:28px;color:var(--acc);stroke-width:1.5;transition:color var(--t)}
 .header h1{font-size:18px;font-weight:700;margin:0;letter-spacing:-.02em;color:var(--txt);display:flex;align-items:baseline;gap:10px}
-.version{font-size:10px;font-weight:500;color:var(--mut);padding:2px 7px;background:var(--elev);border-radius:20px;font-family:'JetBrains Mono',monospace;letter-spacing:0}
+.version{font-size:10px;font-weight:500;color:var(--mut);padding:2px 7px;background:var(--elev);border-radius:20px;font-family:'JetBrains Mono',monospace}
 .header-sub{font-size:11.5px;color:var(--mut);margin-top:2px;font-weight:400}
 .header-actions{display:flex;gap:6px;align-items:center}
-.icon-btn{width:34px;height:34px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);color:var(--txt2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;padding:0}
-.icon-btn:hover{background:var(--elev);color:var(--txt);border-color:var(--mut2)}
+.icon-btn{width:34px;height:34px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);color:var(--txt2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--t);padding:0}
+.icon-btn:hover{background:var(--elev);color:var(--txt);border-color:var(--mut2);transform:translateY(-1px)}
+.icon-btn:active{transform:scale(.94)}
 .icon-btn svg{width:15px;height:15px;stroke-width:1.5}
-.risk-pill{font-size:12px;padding:5px 12px;border-radius:20px;background:var(--card);border:1px solid var(--border);color:var(--txt2);font-family:'JetBrains Mono',monospace;font-weight:600;display:flex;align-items:center;gap:7px}
-.risk-dot{width:6px;height:6px;border-radius:50%;background:var(--mut2);transition:.2s}
+.risk-pill{font-size:12px;padding:5px 12px;border-radius:20px;background:var(--card);border:1px solid var(--border);color:var(--txt2);font-family:'JetBrains Mono',monospace;font-weight:600;display:flex;align-items:center;gap:7px;transition:all var(--t)}
+.risk-dot{width:6px;height:6px;border-radius:50%;background:var(--mut2);transition:all .3s}
 .risk-pill.ok .risk-dot{background:var(--ok);box-shadow:0 0 0 3px var(--ok-bg)}
 .risk-pill.warn .risk-dot{background:var(--warn);box-shadow:0 0 0 3px var(--warn-bg)}
 .risk-pill.bad .risk-dot{background:var(--bad);box-shadow:0 0 0 3px var(--bad-bg)}
 
 /* === TABS === */
-.tabs{display:flex;gap:2px;margin-bottom:22px;padding:4px;background:var(--elev);border-radius:var(--radius);overflow-x:auto}
-.tab{flex:1;min-width:80px;padding:8px 12px;border:0;border-radius:6px;background:transparent;color:var(--mut);font:500 12px 'Inter',sans-serif;cursor:pointer;transition:.15s;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px}
+.tabs{display:flex;gap:2px;margin-bottom:22px;padding:4px;background:var(--elev);border-radius:var(--radius);overflow-x:auto;transition:background var(--t)}
+.tab{flex:1;min-width:80px;padding:8px 12px;border:0;border-radius:6px;background:transparent;color:var(--mut);font:500 12px 'Inter',sans-serif;cursor:pointer;transition:all var(--t);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px}
 .tab:hover{color:var(--txt)}
+.tab:active{transform:scale(.97)}
 .tab.active{background:var(--card);color:var(--txt);font-weight:600;box-shadow:var(--shadow)}
-.tab svg{width:13px;height:13px;opacity:.6;stroke-width:1.75}
+.tab svg{width:13px;height:13px;opacity:.6;stroke-width:1.75;transition:all var(--t)}
 .tab.active svg{opacity:1;color:var(--acc)}
 
 .panel{display:none}
-.panel.active{display:block;animation:fadeIn .18s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.panel.active{display:block;animation:panelIn .22s cubic-bezier(.2,0,.2,1)}
+@keyframes panelIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
 /* === CARD === */
-.card,.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.card,.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:background var(--t),border-color var(--t),box-shadow var(--t)}
 .card + .card{margin-top:12px}
 .card h2{font-size:11px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:8px}
 .card h2 svg{width:13px;height:13px;stroke-width:1.75;color:var(--acc)}
-.card h2 .toggle-mode{margin-left:auto;font-size:10px;color:var(--acc);cursor:pointer;font-weight:600;text-transform:none;letter-spacing:0;padding:3px 8px;background:var(--acc-soft);border-radius:6px;border:0}
+.card h2 .toggle-mode{margin-left:auto;font-size:10px;color:var(--acc);cursor:pointer;font-weight:600;text-transform:none;letter-spacing:0;padding:3px 8px;background:var(--acc-soft);border-radius:6px;border:0;transition:all var(--t)}
+.card h2 .toggle-mode:hover{transform:translateY(-1px)}
+.card h2 .toggle-mode:active{transform:scale(.95)}
 
 /* === GRID === */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:12px;align-items:start}
@@ -90,11 +95,11 @@ body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter',-apple-s
 .field-group:last-child{margin-bottom:0}
 .group-label{font:600 10px 'Inter',sans-serif;color:var(--mut2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;padding-bottom:5px;border-bottom:1px dashed var(--border2)}
 
-label{display:block;font:500 10px 'Inter',sans-serif;color:var(--mut);margin:0 0 4px;letter-spacing:.02em;text-transform:uppercase}
-input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);color:var(--txt);font:500 14px 'JetBrains Mono',monospace;transition:.15s;font-variant-numeric:tabular-nums}
+label{display:block;font:600 11px 'Inter',sans-serif;color:var(--txt2);margin:0 0 4px;letter-spacing:.02em;text-transform:uppercase}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);color:var(--txt);font:500 14px 'JetBrains Mono',monospace;transition:all var(--t);font-variant-numeric:tabular-nums}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft)}
 input::placeholder,textarea::placeholder{color:var(--mut2);font-family:'Inter',sans-serif;font-weight:400}
-.hint{font:400 10px 'Inter',sans-serif;color:var(--mut2);margin-top:3px}
+.hint{font:400 10px 'Inter',sans-serif;color:var(--mut2);margin-top:3px;line-height:1.35}
 textarea{font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;resize:vertical;min-height:70px}
 
 input.ok-field{border-color:var(--ok);background:var(--ok-bg)}
@@ -102,15 +107,18 @@ input.warn-field{border-color:var(--warn);background:var(--warn-bg)}
 input.bad-field{border-color:var(--bad);background:var(--bad-bg)}
 
 .btnrow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-button.primary{flex:1;min-width:140px;padding:12px 20px;border:0;border-radius:var(--radius-sm);background:var(--acc);color:#fff;font:600 13px 'Inter',sans-serif;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:8px}
-button.primary:hover{background:var(--acc-hover);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+button.primary{flex:1;min-width:140px;padding:12px 20px;border:0;border-radius:var(--radius-sm);background:linear-gradient(180deg,var(--acc) 0%,var(--acc-hover) 100%);color:#fff;font:600 13px 'Inter',sans-serif;cursor:pointer;transition:all var(--t);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+button.primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(41,64,86,.22)}
+button.primary:active{transform:scale(.98) translateY(0)}
 button.primary svg{width:14px;height:14px;stroke-width:2}
-button.ghost{background:var(--card);border:1px solid var(--border);color:var(--txt2);flex:0 0 auto;min-width:auto;padding:12px 18px;border-radius:var(--radius-sm);font:500 13px 'Inter',sans-serif;cursor:pointer;transition:.15s}
-button.ghost:hover{background:var(--elev);color:var(--txt);border-color:var(--mut2)}
+button.ghost{background:var(--card);border:1px solid var(--border);color:var(--txt2);flex:0 0 auto;min-width:auto;padding:12px 18px;border-radius:var(--radius-sm);font:500 13px 'Inter',sans-serif;cursor:pointer;transition:all var(--t)}
+button.ghost:hover{background:var(--elev);color:var(--txt);border-color:var(--mut2);transform:translateY(-1px)}
+button.ghost:active{transform:scale(.98) translateY(0)}
 
-.preset-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
-.preset-btn{padding:9px 12px;border-radius:var(--radius-sm);background:var(--elev2);border:1px solid var(--border);color:var(--txt2);cursor:pointer;font:500 12px 'Inter',sans-serif;transition:.15s;text-align:left}
-.preset-btn:hover{background:var(--elev);color:var(--txt);border-color:var(--mut2)}
+.preset-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.preset-btn{padding:9px 12px;border-radius:var(--radius-sm);background:var(--elev2);border:1px solid var(--border);color:var(--txt2);cursor:pointer;font:500 12px 'Inter',sans-serif;transition:all var(--t);text-align:center}
+.preset-btn:hover{background:var(--elev);color:var(--txt);border-color:var(--mut2);transform:translateY(-1px)}
+.preset-btn:active{transform:scale(.97) translateY(0)}
 
 /* === RESULT CARDS === */
 .result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
@@ -134,18 +142,23 @@ button.ghost:hover{background:var(--elev);color:var(--txt);border-color:var(--mu
 
 /* === DASHBOARD === */
 .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.dash-tile{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);transition:.2s;position:relative;overflow:hidden}
-.dash-tile::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--mut2);transition:.2s}
-.dash-tile.ok::before{background:var(--ok)}
-.dash-tile.warn::before{background:var(--warn)}
-.dash-tile.bad::before{background:var(--bad)}
+.dash-tile{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);transition:all .25s cubic-bezier(.2,0,.2,1);position:relative;overflow:hidden}
+.dash-tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.dash-tile.ok{background:linear-gradient(135deg,var(--ok-bg) 0%,var(--card) 55%)}
+.dash-tile.warn{background:linear-gradient(135deg,var(--warn-bg) 0%,var(--card) 55%)}
+.dash-tile.bad{background:linear-gradient(135deg,var(--bad-bg) 0%,var(--card) 55%)}
 .dash-label{font:500 10px 'Inter',sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
 .dash-value{font:600 24px 'JetBrains Mono',monospace;color:var(--txt);line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.dash-tile.ok .dash-value{color:var(--ok)}
+.dash-tile.warn .dash-value{color:var(--warn)}
+.dash-tile.bad .dash-value{color:var(--bad)}
 .dash-unit{font-size:10px;color:var(--mut2);font-weight:500;margin-top:3px;font-family:'JetBrains Mono',monospace}
-.dash-status{font:500 11px 'Inter',sans-serif;margin-top:5px}
+.dash-status{font:600 11px 'Inter',sans-serif;margin-top:5px}
 .dash-status.ok{color:var(--ok)}
 .dash-status.warn{color:var(--warn)}
 .dash-status.bad{color:var(--bad)}
+.dash-tile.bad::after{content:'';position:absolute;top:14px;right:14px;width:8px;height:8px;border-radius:50%;background:var(--bad);animation:pulseBad 1.8s ease-in-out infinite}
+@keyframes pulseBad{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(158,58,56,.45)}50%{opacity:.75;box-shadow:0 0 0 6px rgba(158,58,56,0)}}
 
 .dash-summary{padding:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px}
 .dash-summary h3{font:600 10px 'Inter',sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin:0 0 10px}
@@ -157,15 +170,17 @@ button.ghost:hover{background:var(--elev);color:var(--txt);border-color:var(--mu
 .dash-scale .val{font:600 18px 'JetBrains Mono',monospace;color:var(--txt);margin:3px 0;font-variant-numeric:tabular-nums}
 .dash-scale .interp{font-size:10px;color:var(--mut2);line-height:1.3}
 .dash-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-.dash-actions button{flex:1;min-width:160px;padding:12px;border-radius:var(--radius-sm);font:600 13px 'Inter',sans-serif;cursor:pointer;transition:.15s;border:0;display:flex;align-items:center;justify-content:center;gap:8px}
-.dash-actions .primary{background:var(--acc);color:#fff}
-.dash-actions .primary:hover{background:var(--acc-hover);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.dash-actions button{flex:1;min-width:160px;padding:12px;border-radius:var(--radius-sm);font:600 13px 'Inter',sans-serif;cursor:pointer;transition:all var(--t);border:0;display:flex;align-items:center;justify-content:center;gap:8px}
+.dash-actions .primary{background:linear-gradient(180deg,var(--acc) 0%,var(--acc-hover) 100%);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.dash-actions .primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(41,64,86,.22)}
+.dash-actions .primary:active{transform:scale(.98) translateY(0)}
 .dash-actions .ghost{background:var(--card);border:1px solid var(--border);color:var(--txt2)}
-.dash-actions .ghost:hover{background:var(--elev);border-color:var(--mut2);color:var(--txt)}
+.dash-actions .ghost:hover{background:var(--elev);border-color:var(--mut2);color:var(--txt);transform:translateY(-1px)}
+.dash-actions .ghost:active{transform:scale(.98) translateY(0)}
 .dash-actions svg{width:14px;height:14px;stroke-width:2}
 
 /* === SCALES === */
-.score-card{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:10px;transition:.15s}
+.score-card{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:10px;transition:all var(--t)}
 .score-card:hover{border-color:var(--mut2)}
 .score-card h4{font:600 12px 'Inter',sans-serif;color:var(--txt);margin:0 0 8px;text-transform:uppercase;letter-spacing:.05em}
 .score-val{font:600 28px 'JetBrains Mono',monospace;color:var(--txt);margin:4px 0;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
@@ -188,13 +203,14 @@ button.ghost:hover{background:var(--elev);color:var(--txt);border-color:var(--mu
 .balance-row span:last-child{font:600 12.5px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
 
 /* === DETAILS === */
-details{margin:8px 0;padding:0;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;transition:.15s}
+details{margin:8px 0;padding:0;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;transition:all var(--t)}
 details[open]{background:var(--elev2)}
-summary{cursor:pointer;font:500 13px 'Inter',sans-serif;padding:11px 14px;color:var(--txt);list-style:none;display:flex;justify-content:space-between;align-items:center;transition:.15s}
+summary{cursor:pointer;font:500 13px 'Inter',sans-serif;padding:11px 14px;color:var(--txt);list-style:none;display:flex;justify-content:space-between;align-items:center;transition:all var(--t);user-select:none}
 summary::-webkit-details-marker{display:none}
-summary::after{content:'+';font-family:'JetBrains Mono',monospace;color:var(--mut);font-size:16px;transition:.2s}
+summary::after{content:'+';font-family:'JetBrains Mono',monospace;color:var(--mut);font-size:16px;transition:transform .25s cubic-bezier(.2,0,.2,1)}
 details[open] summary::after{content:'−'}
 summary:hover{background:var(--elev2)}
+summary:active{transform:scale(.99)}
 .fml{background:var(--card);padding:14px 18px;margin:0;font:12px 'JetBrains Mono',monospace;color:var(--txt2);overflow-x:auto;white-space:pre-wrap;line-height:1.7;border-top:1px solid var(--border);font-variant-numeric:tabular-nums}
 
 .alert,.rec,.finding{margin-top:10px;padding:11px 14px;border-radius:var(--radius-sm);font-size:12.5px;line-height:1.55;border:1px solid;border-left-width:3px}
@@ -202,19 +218,19 @@ summary:hover{background:var(--elev2)}
 .rec{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
 .finding{background:var(--elev2);border-color:var(--border);color:var(--txt2);border-left-color:var(--acc)}
 
-.chart-box{height:380px;position:relative}
+.chart-box{height:420px;position:relative}
 
-.history-panel{position:fixed;top:76px;right:24px;width:360px;max-width:calc(100vw - 32px);max-height:60vh;overflow:auto;z-index:100;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:8px;box-shadow:var(--shadow-lg);display:none}
-.history-panel.show{display:block;animation:fadeIn .15s}
+.history-panel{position:fixed;top:76px;right:24px;width:360px;max-width:calc(100vw - 32px);max-height:60vh;overflow:auto;z-index:100;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:8px;box-shadow:var(--shadow-lg);display:none;animation:panelIn .18s cubic-bezier(.2,0,.2,1)}
+.history-panel.show{display:block}
 .history-header{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border2);margin-bottom:4px}
 .history-header b{font:600 11px 'Inter',sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
-.history-item{padding:11px 13px;border-radius:var(--radius-sm);cursor:pointer;transition:.15s}
-.history-item:hover{background:var(--elev2)}
+.history-item{padding:11px 13px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--t)}
+.history-item:hover{background:var(--elev2);transform:translateX(2px)}
 .hi-date{font:400 11px 'JetBrains Mono',monospace;color:var(--mut2);margin-bottom:4px}
 .hi-main{font:600 12px 'JetBrains Mono',monospace;color:var(--txt);margin-bottom:3px}
 .hi-diag{font:400 11px 'Inter',sans-serif;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--txt);color:var(--card);padding:11px 20px;border-radius:var(--radius-sm);opacity:0;pointer-events:none;transition:.25s;z-index:999;font:500 13px 'Inter',sans-serif;box-shadow:var(--shadow-lg)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--txt);color:var(--card);padding:11px 20px;border-radius:var(--radius-sm);opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.2,0,.2,1);z-index:999;font:500 13px 'Inter',sans-serif;box-shadow:var(--shadow-lg)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 table{width:100%;border-collapse:collapse;font:13px 'JetBrains Mono',monospace;margin-top:8px}
@@ -229,15 +245,13 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
 .diag ul{margin:6px 0 6px 20px;padding:0}
 .diag li{margin:5px 0}
 
-/* === QUICK MODE === */
 .quick-fields{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.quick-hidden{display:none}
-.quick-hidden.show{display:block}
 
 @media(max-width:900px){
   .grid{grid-template-columns:1fr}
   .field-row{grid-template-columns:repeat(2,1fr)}
   .result-grid{grid-template-columns:1fr}
+  .chart-box{height:360px}
 }
 @media(max-width:700px){
   .container{padding:16px 12px}
@@ -250,7 +264,7 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
   .card{padding:16px}
   .dash-grid{grid-template-columns:repeat(2,1fr);gap:8px}
   .dash-value{font-size:20px}
-  .chart-box{height:300px}
+  .chart-box{height:320px}
   .syn-title{font-size:16px}
   .dash-actions{flex-direction:column}
   .history-panel{width:calc(100vw - 24px);right:12px;top:68px}
@@ -258,6 +272,7 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
   .toast.show{transform:none}
   .field-row{grid-template-columns:repeat(2,1fr)}
   .quick-fields{grid-template-columns:repeat(2,1fr)}
+  .preset-row{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -274,7 +289,7 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
   <div class="header-brand">
     <svg class="header-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
     <div>
-      <h1>ICU CORE <span class="version">v25.0</span></h1>
+      <h1>ICU CORE <span class="version">v26.2</span></h1>
       <div class="header-sub">Acid-Base · Stewart · Scales · Balance</div>
     </div>
   </div>
@@ -294,7 +309,7 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
 <nav class="tabs">
   <button class="tab active" data-tab="dash" onclick="switchTab('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Главная</button>
   <button class="tab" data-tab="input" onclick="switchTab('input')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Ввод</button>
-  <button class="tab" data-tab="results" onclick="switchTab('results')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>КОС</button>
+  <button class="tab" data-tab="results" onclick="switchTab('results')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>Анализ КОС</button>
   <button class="tab" data-tab="scales" onclick="switchTab('scales')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg>Шкалы</button>
   <button class="tab" data-tab="balance" onclick="switchTab('balance')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M5 7l7-5 7 5M5 17l7 5 7-5"/></svg>Баланс</button>
   <button class="tab" data-tab="charts" onclick="switchTab('charts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><circle cx="9" cy="9" r="2"/><circle cx="17" cy="15" r="2"/></svg>Графики</button>
@@ -355,11 +370,12 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
       <button class="preset-btn" onclick="loadPreset('4.9')">Пример 4.9</button>
       <button class="preset-btn" onclick="loadPreset('d-lactate')">D-лактат</button>
       <button class="preset-btn" onclick="loadPreset('dka')">ДКА</button>
-      <button class="preset-btn" onclick="clearAll()">Сброс</button>
+    </div>
+    <div class="btnrow" style="margin-top:10px">
+      <button class="ghost" style="width:100%;flex:1" onclick="clearAll()">Сброс всех полей</button>
     </div>
   </div>
 
-  <!-- QUICK MODE -->
   <div class="card" id="quick-card"><h2>Быстрый ввод <button class="toggle-mode" onclick="showProMode()">Показать все поля</button></h2>
     <div class="quick-fields">
       <div><label>pH</label><input id="pH" type="number" step=".001" value="7.40" oninput="liveValidate();previewCalc()"><div class="hint">7.35–7.45</div></div>
@@ -373,8 +389,11 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
     </div>
   </div>
 
-  <!-- PRO MODE -->
   <div id="pro-mode" style="display:none">
+    <div class="card" style="margin-bottom:12px"><h2>Продвинутый режим <button class="toggle-mode" onclick="hideProMode()">Свернуть</button></h2>
+      <div class="small-note">Все 34 поля для точного расчёта. Можно свернуть обратно.</div>
+    </div>
+
     <div class="grid">
       <div class="card"><h2>Газы крови</h2>
         <div class="field-group">
@@ -400,7 +419,7 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
           <div class="group-label">Доп. электролиты</div>
           <div class="field-row">
             <div><label>Ca²⁺</label><input id="Ca" type="number" step=".01" value="1.2" oninput="previewCalc()"></div>
-            <div><label>Mg²⁺</label><input id="Mg" type="number" step=".01" value=".9" oninput="previewCalc()"></div>
+            <div><label>Mg²⁺</label><input id="Mg" type="number" step=".01" value="0.9" oninput="previewCalc()"></div>
             <div><label>Альбумин</label><input id="Alb" type="number" step=".1" value="40" oninput="liveValidate();previewCalc()"><div class="hint">35–50</div></div>
             <div><label>PO₄</label><input id="PO4" type="number" step=".01" value="1.1" oninput="previewCalc()"></div>
           </div>
@@ -410,14 +429,14 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
           <div class="field-row cols-3">
             <div><label>Мочевина</label><input id="Ur" type="number" step=".1" value="5" oninput="previewCalc()"><div class="hint">2.5–8.3</div></div>
             <div><label>Осмоляльность</label><input id="Osm_in" type="number" step="1" value="" oninput="previewCalc()"><div class="hint">275–295</div></div>
-            <div><label>Stewart</label><select id="sidModel" onchange="previewCalc()"><option value="charged">С ×2</option><option value="simple">Без ×2</option></select></div>
+            <div><label>Модель Стюарта</label><select id="sidModel" onchange="previewCalc()"><option value="charged">Полная модель</option><option value="simple">Упрощённая модель</option></select><div class="hint">Полная — Ca²⁺ и Mg²⁺ с зарядом 2. Упрощённая — как +1.</div></div>
           </div>
         </div>
       </div>
 
       <div class="card"><h2>Витальные</h2>
         <div class="field-group">
-          <div class="group-label">Гемодинамика</div>
+          <div class="group-label">Основные</div>
           <div class="field-row">
             <div><label>Вес (кг)</label><input id="Weight" type="number" step=".1" value="70" oninput="previewCalc()"></div>
             <div><label>ЧД</label><input id="RR" type="number" step="1" value="16" oninput="previewCalc()"></div>
@@ -426,35 +445,41 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
           </div>
         </div>
         <div class="field-group">
-          <div class="group-label">Гемодинамика + ЦНС</div>
+          <div class="group-label">Давление и температура</div>
           <div class="field-row">
             <div><label>АД сист</label><input id="SBP" type="number" step="1" value="120" oninput="previewCalc()"></div>
             <div><label>АД диаст</label><input id="DBP" type="number" step="1" value="80" oninput="previewCalc()"></div>
-            <div><label>Темп.</label><input id="Temp" type="number" step=".1" value="36.8" oninput="previewCalc()"></div>
-            <div><label>GCS</label><input id="GCS" type="number" step="1" value="15" oninput="previewCalc()"></div>
-          </div>
-        </div>
-        <div class="field-group">
-          <div class="group-label">Профиль</div>
-          <div class="field-row">
+            <div><label>Температура</label><input id="Temp" type="number" step=".1" value="36.8" oninput="previewCalc()"></div>
             <div><label>Возраст</label><input id="Age" type="number" step="1" value="50" oninput="previewCalc()"></div>
-            <div><label>Пол</label><select id="Sex" onchange="previewCalc()"><option value="M">М</option><option value="F">Ж</option></select></div>
-            <div><label>Сознание</label><select id="ACVPU" onchange="previewCalc()"><option value="A">A</option><option value="C">C</option><option value="V">V</option><option value="P">P</option><option value="U">U</option></select></div>
-            <div><label>O₂</label><select id="O2support" onchange="previewCalc()"><option value="no">Нет</option><option value="yes">Да</option></select></div>
-          </div>
-        </div>
-        <div class="field-group">
-          <div class="group-label">Хронич.</div>
-          <div class="field-row cols-2">
-            <div><label>Хроническое</label><select id="Chronic" onchange="previewCalc()"><option value="none">Нет</option><option value="mild">Тяж. не-ОРИТ</option><option value="severe">Тяж. ОРИТ</option></select></div>
-            <div><label>Острота</label><select id="acuity" onchange="previewCalc()"><option value="auto">Авто</option><option value="acute">Острое</option><option value="chronic">Хронич.</option></select></div>
           </div>
         </div>
       </div>
 
-      <div class="card"><h2>Лаборатория</h2>
+      <div class="card"><h2>Неврология</h2>
         <div class="field-group">
-          <div class="group-label">Кровь</div>
+          <div class="group-label">Сознание</div>
+          <div class="field-row cols-2">
+            <div><label>GCS</label><input id="GCS" type="number" step="1" value="15" oninput="previewCalc()"><div class="hint">3–15</div></div>
+            <div><label>ACVPU</label><select id="ACVPU" onchange="previewCalc()"><option value="A">A — бодр</option><option value="C">C — спутан</option><option value="V">V — голос</option><option value="P">P — боль</option><option value="U">U — нет</option></select></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card"><h2>Профиль</h2>
+        <div class="field-group">
+          <div class="group-label">Пациент</div>
+          <div class="field-row">
+            <div><label>Пол</label><select id="Sex" onchange="previewCalc()"><option value="M">М</option><option value="F">Ж</option></select></div>
+            <div><label>Кислородная поддержка</label><select id="O2support" onchange="previewCalc()"><option value="no">Нет</option><option value="yes">Да</option></select><div class="hint">Для шкалы NEWS2 — отдельно от SpO₂</div></div>
+            <div><label>Как давно нарушение Na/K</label><select id="acuity" onchange="previewCalc()"><option value="auto">Авто</option><option value="acute">Меньше 48 часов</option><option value="chronic">Больше 48 часов</option></select><div class="hint">Влияет на скорость коррекции Na/K</div></div>
+            <div><label>Хронические заболевания</label><select id="Chronic" onchange="previewCalc()"><option value="none">Нет</option><option value="mild">Тяжёлые вне ОРИТ</option><option value="severe">Тяжёлые в ОРИТ</option></select><div class="hint">Для APACHE II</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card"><h2>Анализы крови</h2>
+        <div class="field-group">
+          <div class="group-label">Гемограмма</div>
           <div class="field-row">
             <div><label>Тромбоциты</label><input id="Plt" type="number" step="1" value="200" oninput="previewCalc()"></div>
             <div><label>Лейкоциты</label><input id="WBC" type="number" step=".1" value="7" oninput="previewCalc()"></div>
@@ -467,12 +492,12 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
           <div class="field-row">
             <div><label>Креатинин</label><input id="Cr" type="number" step="1" value="80" oninput="previewCalc()"></div>
             <div><label>Билирубин</label><input id="Bil" type="number" step="1" value="15" oninput="previewCalc()"></div>
-            <div><label>Диурез</label><input id="Urine" type="number" step="10" value="1500" oninput="previewCalc()"></div>
+            <div><label>Диурез</label><input id="Urine" type="number" step="10" value="1500" oninput="previewCalc()"><div class="hint">норма 0.5–1.0 мл/кг/ч</div></div>
             <div><label>Вазопресс.</label><select id="Vaso" onchange="previewCalc()"><option value="none">Нет</option><option value="dopa_low">Допа ≤5</option><option value="dopa_mid">Допа &gt;5</option><option value="dopa_high">Допа &gt;15</option></select></div>
           </div>
         </div>
         <div class="field-group">
-          <div class="group-label">Berlin (ОРДС)</div>
+          <div class="group-label">Критерии ОРДС (Берлинские)</div>
           <div class="field-row">
             <div><label>Инфильтр.</label><select id="bilateral" onchange="previewCalc()"><option value="unknown">—</option><option value="yes">Да</option><option value="no">Нет</option></select></div>
             <div><label>≤1 нед</label><select id="timing" onchange="previewCalc()"><option value="unknown">—</option><option value="yes">Да</option><option value="no">Нет</option></select></div>
@@ -494,14 +519,20 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
 
 <section class="panel" id="panel-results">
   <div class="card" style="margin-bottom:12px"><h2>Синдромальный диагноз КОС</h2><div id="syndrome"></div></div>
-  <div id="results"></div>
-  <details style="margin-top:12px">
-    <summary>Ход анализа</summary>
+
+  <details open style="margin-top:12px">
+    <summary>Как мы считали</summary>
     <div class="diag" id="diagnosis" style="padding:14px"></div>
   </details>
+
   <details>
-    <summary>Детализация / формулы</summary>
+    <summary>Формулы и проверка</summary>
     <div id="explanations" style="padding:14px"></div>
+  </details>
+
+  <details>
+    <summary>Таблица показателей</summary>
+    <div id="results" style="padding:14px"></div>
   </details>
 </section>
 
@@ -522,8 +553,19 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
 </section>
 
 <section class="panel" id="panel-charts">
-  <div class="chart-card"><h2>Диаграмма Гэмбла</h2><div class="chart-box"><canvas id="gamble"></canvas></div></div>
-  <div class="chart-card" style="margin-top:12px"><h2>Номограмма Сиггаарда-Андерсена</h2><div class="chart-box"><canvas id="siggaard"></canvas></div></div>
+  <div class="chart-card"><h2>Диаграмма Гэмбла</h2>
+    <div id="gamble-summary" style="margin-bottom:12px"></div>
+    <div class="chart-box"><canvas id="gamble"></canvas></div>
+    <div class="small-note" style="margin-top:10px">Диаграмма показывает баланс катионов и анионов. Суммы должны совпадать. Если нет — есть скрытый анион (лактат, кетоны, токсины) или ошибка ввода.</div>
+  </div>
+  <div class="chart-card" style="margin-top:12px"><h2>Номограмма Сиггаарда-Андерсена</h2>
+    <div class="small-note" style="margin-bottom:12px">
+      <b>Оси:</b> снизу — pH (7.0–7.8), слева — HCO₃⁻ (ммоль/л).<br>
+      <b>Линии</b> — изолинии pCO₂ (мм рт.ст.).<br>
+      <b>Точка</b> — ваш пациент: по ней видно pH, HCO₃⁻ и pCO₂ одновременно.
+    </div>
+    <div class="chart-box" style="height:520px"><canvas id="siggaard"></canvas></div>
+  </div>
 </section>
 
 <section class="panel" id="panel-final">
@@ -531,15 +573,15 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
 </section>
 
 <section class="panel" id="panel-info">
-  <div class="card"><h2>Что в v25.0</h2>
+  <div class="card"><h2>Что нового в v26.2</h2>
     <ol style="line-height:1.9;font-size:13px;color:var(--txt2);padding-left:20px">
-      <li>Новое название — <b>ICU CORE</b></li>
-      <li>Интро с плавной анимацией</li>
-      <li>Quick Mode — 8 полей</li>
-      <li>Pro Mode — все 34 поля</li>
-      <li>Результаты — 3 уровня</li>
-      <li>Sticky header + плавные transitions</li>
-      <li>Все функции v24.1 сохранены</li>
+      <li>Возвращён SBP в NEWS2 и qSOFA</li>
+      <li>Номограмма Сиггаарда: pH снизу, HCO₃⁻ слева, pCO₂ линиями</li>
+      <li>Диурез — подсказка нормы (0.5–1.0 мл/кг/ч)</li>
+      <li>«Кислородная поддержка» вместо «O₂»</li>
+      <li>«Как давно нарушение Na/K» вместо «Остроты»</li>
+      <li>Плавные анимации переключения вкладок</li>
+      <li>Кнопки: микро-отклик, мягкий hover, лёгкий градиент</li>
     </ol>
   </div>
   <div class="card" style="margin-top:12px"><h2>Растворы</h2>
@@ -562,15 +604,18 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
 
 <script>
 "use strict";
-const HISTORY_KEY="icu_history_v250";
+/* ═══════════════════════════════════════════════════════════════
+   🧠 CORE DIAGNOSTIC ENGINE — НЕ ТРОГАТЬ
+   ═══════════════════════════════════════════════════════════════ */
+const HISTORY_KEY="icu_history_v262";
 let lastReport="",gChart=null,sChart=null;
 const presets={
-'4.5':{pH:7.39,pCO2:39,HCO3in:23,SBE:0,Lac:1,pO2:94,FiO2:21,PEEP:0,Na:124,Cl:100,K:3.9,Ca:1.2,Mg:.9,Alb:45,PO4:1.1,Gluc:5.5,Ur:5,Weight:70},
-'4.6':{pH:7.53,pCO2:32,HCO3in:27,SBE:4.7,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:144,Cl:93,K:4.2,Ca:1.2,Mg:.9,Alb:30,PO4:1.1,Gluc:24.9,Ur:5,Weight:70},
-'4.8':{pH:7.18,pCO2:20,HCO3in:8,SBE:-20,Lac:5,pO2:80,FiO2:21,PEEP:0,Na:130,Cl:105,K:3,Ca:1.2,Mg:.9,Alb:23,PO4:1.6,Gluc:5.5,Ur:8,Weight:70},
-'4.9':{pH:7.19,pCO2:48,HCO3in:18,SBE:-10.1,Lac:3.7,pO2:90,FiO2:21,PEEP:0,Na:145,Cl:111,K:4.5,Ca:1.17,Mg:.57,Alb:10,PO4:1.7,Gluc:5.5,Ur:5.7,Weight:70},
-'d-lactate':{pH:7.42,pCO2:38.5,HCO3in:24,SBE:.6,Lac:1,pO2:57.4,FiO2:30,PEEP:5,Na:158.4,Cl:103,K:4,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:5.5,Ur:5,Weight:80},
-'dka':{pH:6.82,pCO2:16,HCO3in:5,SBE:-28.8,Lac:1,pO2:93,FiO2:21,PEEP:0,Na:129,Cl:90,K:6.2,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:24,Ur:16.2,Weight:70}
+'4.5':{pH:7.39,pCO2:39,HCO3in:23,SBE:0,Lac:1,pO2:94,FiO2:21,PEEP:0,Na:124,Cl:100,K:3.9,Ca:1.2,Mg:0.9,Alb:45,PO4:1.1,Gluc:5.5,Ur:5,Weight:70},
+'4.6':{pH:7.53,pCO2:32,HCO3in:27,SBE:4.7,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:144,Cl:93,K:4.2,Ca:1.2,Mg:0.9,Alb:30,PO4:1.1,Gluc:24.9,Ur:5,Weight:70},
+'4.8':{pH:7.18,pCO2:20,HCO3in:8,SBE:-20,Lac:5,pO2:80,FiO2:21,PEEP:0,Na:130,Cl:105,K:3,Ca:1.2,Mg:0.9,Alb:23,PO4:1.6,Gluc:5.5,Ur:8,Weight:70},
+'4.9':{pH:7.19,pCO2:48,HCO3in:18,SBE:-10.1,Lac:3.7,pO2:90,FiO2:21,PEEP:0,Na:145,Cl:111,K:4.5,Ca:1.17,Mg:0.57,Alb:10,PO4:1.7,Gluc:5.5,Ur:5.7,Weight:70},
+'d-lactate':{pH:7.42,pCO2:38.5,HCO3in:24,SBE:.6,Lac:1,pO2:57.4,FiO2:30,PEEP:5,Na:158.4,Cl:103,K:4,Ca:1.2,Mg:0.9,Alb:40,PO4:1.1,Gluc:5.5,Ur:5,Weight:80},
+'dka':{pH:6.82,pCO2:16,HCO3in:5,SBE:-28.8,Lac:1,pO2:93,FiO2:21,PEEP:0,Na:129,Cl:90,K:6.2,Ca:1.2,Mg:0.9,Alb:40,PO4:1.1,Gluc:24,Ur:16.2,Weight:70}
 };
 const ranges={pH:[7.35,7.45],pCO2:[35,45],HCO3in:[22,26],Lac:[0,2],Na:[135,145],Cl:[98,107],K:[3.5,5],Alb:[35,50],Gluc:[3.9,5.5]};
 const physiologic={pH:[6.5,8.0],pCO2:[5,150],HCO3in:[1,50],SBE_input:[-45,45],Lac:[0,30],Na:[100,200],Cl:[60,140],K:[1,10],Ca:[.5,3],Mg:[.3,2.5],Alb:[10,80],PO4:[.1,5],Gluc:[1,60],Ur:[.5,50],pO2:[20,600],FiO2:[21,100]};
@@ -595,7 +640,7 @@ function clinicalFindings(d,b,st,p,dd,hagma){const findings=[],alerts=[];const A
 function syndrome(d,b,p,dd,st,hagma,phComp){const parts=[];const hasMetAcid = p.met==="metabolic acidosis";const hasMetAlk = p.met==="metabolic alkalosis";if(p.resp==="respiratory acidosis")parts.push("респираторный ацидоз");if(p.resp==="respiratory alkalosis")parts.push("респираторный алкалоз");if(hasMetAcid)parts.push("метаболический ацидоз");if(hasMetAlk)parts.push("метаболический алкалоз");let hagmaType="";if(hagma.hasHAGMA){if(Number.isFinite(dd.value)){if(dd.suspicion){hagmaType="HAGMA + подозрение на мет. алкалоз";}else{hagmaType=dd.classification;}}else if(b.HCO3>26){hagmaType="HAGMA (скрытый)";}else{hagmaType="HAGMA";}}let title="Расстройств КОС нет";let nComponents=parts.length;if(dd.suspicion && hasMetAcid) nComponents+=1;if(nComponents===0 && !hagma.hasHAGMA)title="Расстройств КОС нет";else if(nComponents<=1)title="Изолированное нарушение";else if(nComponents===2)title="Смешанное нарушение";else if(nComponents>=3)title="Тройное нарушение";let detail=parts.join(" · ");if(hagmaType)detail+=(detail?" · ":"")+hagmaType;if(p.respIsCompensation && (hasMetAcid||hasMetAlk)){detail+=(detail?" ":"")+"· респ. компенсация адекватна";}detail+=(detail?" · ":"")+"степень: "+phComp.status;if(!detail && b.AGcorr>14 && !hagma.hasHAGMA) detail="АП высокий без мет. ацидоза";return{title,detail,components:parts};}
 function ardsAssessment(d,b){if(!Number.isFinite(b.PF)||d.PEEP<5)return{status:"Недостаточно данных",detail:"Требуется PEEP ≥5 см H₂O"};if(d.bilateral!=="yes"||d.timing!=="yes"||d.noncardiac!=="yes")return{status:"Критерии ОРДС не подтверждены",detail:""};const sev=b.PF>200?"лёгкая":b.PF>100?"средняя":"тяжёлая";return{status:`ОРДС ${sev}`,detail:`P/F ${fixed(b.PF,0)} при PEEP ${fixed(d.PEEP,1)}`};}
 function calcBalance(d){const W=Number.isFinite(d.Weight)&&d.Weight>0?d.Weight:70;const tbwCoef=getTBWCoeff(d);const T=W*tbwCoef;const acuity=getAcuity(d);const res={W,tbwCoef,T,acuity,waterDeficit:NaN,naDeficit:NaN,kDeficit:NaN,clDeficit:NaN,naVolume:NaN,kVolume:NaN,deltaNa:NaN,deltaK:NaN,naSol:SOLUTIONS.na[getSelect("naSolution")||"0.9"],kSol:SOLUTIONS.k[getSelect("kSolution")||"4"]};if(d.Na>145){const naTarget=140;res.waterDeficit=tbwCoef*W*(d.Na-naTarget)/naTarget;}if(d.Na<135){const naTarget=140;res.naDeficit=tbwCoef*W*(naTarget-d.Na);res.naVolume=res.naDeficit/res.naSol.perMl;res.deltaNa=(res.naSol.conc-d.Na)/(T+1);}if(d.K<3.5){const kTarget=4.5;res.kDeficit=W*0.4*(kTarget-d.K);res.kVolume=res.kDeficit/res.kSol.perMl;res.deltaK=res.kDeficit/(W*0.4);}if(d.Cl<98){const clTarget=103;res.clDeficit=W*0.5*(clTarget-d.Cl);}return res;}
-function renderBalance(d,bal){const el=document.getElementById("balanceResults");if(!el)return;let html=`<div class="balance-result"><h4>Параметры</h4><div class="balance-row"><span>Вес</span><span>${fixed(bal.W,1)} кг</span></div><div class="balance-row"><span>Коэф. TBW</span><span>${bal.tbwCoef}</span></div><div class="balance-row"><span>Общая вода</span><span>${fixed(bal.T,1)} л</span></div><div class="balance-row"><span>Острота</span><span>${bal.acuity==='acute'?'Острое':'Хроническое'}</span></div></div>`;if(Number.isFinite(bal.waterDeficit)&&bal.waterDeficit>0){html+=`<div class="balance-result"><h4>Дефицит воды</h4><div class="balance-row"><span>Na / цель</span><span>${fixed(d.Na,1)} / 140</span></div><div class="balance-row"><span>Дефицит</span><span>${fixed(bal.waterDeficit,2)} л</span></div><div class="balance-row"><span>Раствор</span><span>5% глюкоза</span></div></div>`;}if(Number.isFinite(bal.naDeficit)&&bal.naDeficit>0){html+=`<div class="balance-result"><h4>Дефицит Na</h4><div class="balance-row"><span>Раствор</span><span>${bal.naSol.label}</span></div><div class="balance-row"><span>Дефицит</span><span>${fixed(bal.naDeficit,1)} ммоль</span></div><div class="balance-row"><span>Объём</span><span>${fixed(bal.naVolume,1)} мл</span></div><div class="balance-row"><span>ΔNa</span><span>${fixed(bal.deltaNa,2)} ммоль/л</span></div></div>`;}if(Number.isFinite(bal.kDeficit)&&bal.kDeficit>0){html+=`<div class="balance-result"><h4>Дефицит K</h4><div class="balance-row"><span>Раствор</span><span>${bal.kSol.label}</span></div><div class="balance-row"><span>Дефицит</span><span>${fixed(bal.kDeficit,1)} ммоль</span></div><div class="balance-row"><span>Объём</span><span>${fixed(bal.kVolume,1)} мл</span></div><div class="balance-row"><span>ΔK</span><span>${fixed(bal.deltaK,2)} ммоль/л</span></div><div class="balance-row"><span>Скорость (K&gt;2.5)</span><span>10 ммоль/ч</span></div><div class="balance-row"><span>Скорость (K&lt;2.0)</span><span>40 ммоль/ч (центр)</span></div></div>`;}if(Number.isFinite(bal.clDeficit)&&bal.clDeficit>0){html+=`<div class="balance-result"><h4>Дефицит Cl</h4><div class="balance-row"><span>Дефицит</span><span>${fixed(bal.clDeficit,1)} ммоль</span></div></div>`;}if(html.indexOf("balance-result")===html.lastIndexOf("balance-result")){html+='<div class="small-note">Электролитных нарушений нет.</div>';}el.innerHTML=html;}
+function renderBalance(d,bal){const el=document.getElementById("balanceResults");if(!el)return;let html=`<div class="balance-result"><h4>Параметры</h4><div class="balance-row"><span>Вес</span><span>${fixed(bal.W,1)} кг</span></div><div class="balance-row"><span>Коэф. TBW</span><span>${bal.tbwCoef}</span></div><div class="balance-row"><span>Общая вода</span><span>${fixed(bal.T,1)} л</span></div><div class="balance-row"><span>Темп нарушения</span><span>${bal.acuity==='acute'?'Острое':'Хроническое'}</span></div></div>`;if(Number.isFinite(bal.waterDeficit)&&bal.waterDeficit>0){html+=`<div class="balance-result"><h4>Дефицит воды</h4><div class="balance-row"><span>Na / цель</span><span>${fixed(d.Na,1)} / 140</span></div><div class="balance-row"><span>Дефицит</span><span>${fixed(bal.waterDeficit,2)} л</span></div><div class="balance-row"><span>Раствор</span><span>5% глюкоза</span></div></div>`;}if(Number.isFinite(bal.naDeficit)&&bal.naDeficit>0){html+=`<div class="balance-result"><h4>Дефицит Na</h4><div class="balance-row"><span>Раствор</span><span>${bal.naSol.label}</span></div><div class="balance-row"><span>Дефицит</span><span>${fixed(bal.naDeficit,1)} ммоль</span></div><div class="balance-row"><span>Объём</span><span>${fixed(bal.naVolume,1)} мл</span></div><div class="balance-row"><span>ΔNa</span><span>${fixed(bal.deltaNa,2)} ммоль/л</span></div></div>`;}if(Number.isFinite(bal.kDeficit)&&bal.kDeficit>0){html+=`<div class="balance-result"><h4>Дефицит K</h4><div class="balance-row"><span>Раствор</span><span>${bal.kSol.label}</span></div><div class="balance-row"><span>Дефицит</span><span>${fixed(bal.kDeficit,1)} ммоль</span></div><div class="balance-row"><span>Объём</span><span>${fixed(bal.kVolume,1)} мл</span></div><div class="balance-row"><span>ΔK</span><span>${fixed(bal.deltaK,2)} ммоль/л</span></div><div class="balance-row"><span>Скорость (K&gt;2.5)</span><span>10 ммоль/ч</span></div><div class="balance-row"><span>Скорость (K&lt;2.0)</span><span>40 ммоль/ч (центр)</span></div></div>`;}if(Number.isFinite(bal.clDeficit)&&bal.clDeficit>0){html+=`<div class="balance-result"><h4>Дефицит Cl</h4><div class="balance-row"><span>Дефицит</span><span>${fixed(bal.clDeficit,1)} ммоль</span></div></div>`;}if(html.indexOf("balance-result")===html.lastIndexOf("balance-result")){html+='<div class="small-note">Электролитных нарушений нет.</div>';}el.innerHTML=html;}
 function renderBalanceExplanations(d,bal){const el=document.getElementById("balanceExplanations");if(!el)return;let html=`<h3 style="font:600 11px 'Inter',sans-serif;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Пошаговые расчёты</h3>`;html+=`<details><summary>Дефицит воды</summary><div class="fml">Дефицит = ${bal.tbwCoef} × ${fixed(bal.W,1)} × (${fixed(d.Na,1)} − 140) / 140 = ${Number.isFinite(bal.waterDeficit)?fixed(bal.waterDeficit,2):"—"} л</div></details>`;html+=`<details><summary>Дефицит Na</summary><div class="fml">Дефицит = ${bal.tbwCoef} × ${fixed(bal.W,1)} × (140 − ${fixed(d.Na,1)}) = ${Number.isFinite(bal.naDeficit)?fixed(bal.naDeficit,1):"—"} ммоль\nОбъём = ${Number.isFinite(bal.naDeficit)?fixed(bal.naDeficit,1):"—"} / ${bal.naSol.perMl} = ${Number.isFinite(bal.naVolume)?fixed(bal.naVolume,1):"—"} мл</div></details>`;html+=`<details><summary>Дефицит K</summary><div class="fml">Дефицит = ${fixed(bal.W,1)} × 0.4 × (4.5 − ${fixed(d.K,1)}) = ${Number.isFinite(bal.kDeficit)?fixed(bal.kDeficit,1):"—"} ммоль\nОбъём = ${Number.isFinite(bal.kDeficit)?fixed(bal.kDeficit,1):"—"} / ${bal.kSol.perMl} = ${Number.isFinite(bal.kVolume)?fixed(bal.kVolume,1):"—"} мл</div></details>`;html+=`<details><summary>Дефицит Cl</summary><div class="fml">Дефицит = ${fixed(bal.W,1)} × 0.5 × (103 − ${fixed(d.Cl,1)}) = ${Number.isFinite(bal.clDeficit)?fixed(bal.clDeficit,1):"—"} ммоль</div></details>`;el.innerHTML=html;}
 function renderFinal(d,b,syn,scales,sepsis,bal){const el=document.getElementById("finalResults");if(!el)return;const news2=scales.find(s=>s.name==="NEWS2");const qsofa=scales.find(s=>s.name==="qSOFA");const sofa=scales.find(s=>s.name==="SOFA");const apache=scales.find(s=>s.name==="APACHE II");const sirs=scales.find(s=>s.name==="SIRS");let html=`<div class="final-block"><h4><span class="num">1</span>КОС</h4><div class="content"><b>${escapeHTML(syn.title)}</b><br>${escapeHTML(syn.detail||'—')}</div></div><div class="final-block"><h4><span class="num">2</span>Шкалы</h4><div class="content">NEWS2 = ${news2?news2.total:'—'} (${news2?escapeHTML(news2.interp):'—'})<br>qSOFA = ${qsofa?qsofa.total:'—'} · SIRS = ${sirs?sirs.total:'—'}<br>SOFA = ${sofa?sofa.total:'—'} (${sofa?escapeHTML(sofa.interp):'—'})<br>APACHE II = ${apache?apache.total:'—'} (${apache?escapeHTML(apache.interp):'—'})</div></div><div class="final-block"><h4><span class="num">3</span>Сепсис</h4><div class="content">${escapeHTML(sepsis.sepsisStatus)}${sepsis.shockStatus!=="—"?"<br><b>"+escapeHTML(sepsis.shockStatus)+"</b>":""}</div></div><div class="final-block"><h4><span class="num">4</span>Баланс</h4><div class="content">`;if(Number.isFinite(bal.waterDeficit)&&bal.waterDeficit>0)html+=`Дефицит воды ${fixed(bal.waterDeficit,2)} л<br>`;if(Number.isFinite(bal.naDeficit)&&bal.naDeficit>0)html+=`Дефицит Na ${fixed(bal.naDeficit,1)} ммоль → ${fixed(bal.naVolume,1)} мл<br>`;if(Number.isFinite(bal.kDeficit)&&bal.kDeficit>0)html+=`Дефицит K ${fixed(bal.kDeficit,1)} ммоль → ${fixed(bal.kVolume,1)} мл<br>`;if(Number.isFinite(bal.clDeficit)&&bal.clDeficit>0)html+=`Дефицит Cl ${fixed(bal.clDeficit,1)} ммоль<br>`;if(!Number.isFinite(bal.waterDeficit)&&!Number.isFinite(bal.naDeficit)&&!Number.isFinite(bal.kDeficit)&&!Number.isFinite(bal.clDeficit))html+=`Электролитных нарушений нет`;html+=`</div></div><div class="final-block"><h4><span class="num">5</span>Объяснение</h4><div class="content">`;const expl=[];if(syn.title.includes("КОС нет"))expl.push("КОС в норме");else expl.push(`Нарушение КОС: ${escapeHTML(syn.detail||syn.title)}`);if(news2 && news2.total>=7)expl.push(`NEWS2 ${news2.total} — высокий риск`);else if(news2 && news2.total>=5)expl.push(`NEWS2 ${news2.total} — средний риск`);if(sofa && sofa.total>=6)expl.push(`SOFA ${sofa.total} — ПОН`);else if(sofa && sofa.total>=2)expl.push(`SOFA ${sofa.total} — органная дисфункция`);if(sepsis.sepsisStatus.includes("Сепсис"))expl.push(`Критерии сепсиса`);if(sepsis.shockStatus!=="—")expl.push(`Септический шок`);if(Number.isFinite(bal.kDeficit)&&bal.kDeficit>0)expl.push(`Дефицит K ${fixed(bal.kDeficit,1)} ммоль`);if(Number.isFinite(bal.naDeficit)&&bal.naDeficit>0)expl.push(`Дефицит Na ${fixed(bal.naDeficit,1)} ммоль`);if(Number.isFinite(bal.waterDeficit)&&bal.waterDeficit>0)expl.push(`Дефицит воды ${fixed(bal.waterDeficit,2)} л`);expl.push("Автоматические назначения не выдаются");html+=expl.map(e=>`· ${e}`).join("<br>");html+=`</div></div>`;el.innerHTML=html;}
 function calcNEWS2(d){const items=[];let rr=0;if(d.RR<=8)rr=3;else if(d.RR<=11)rr=1;else if(d.RR<=20)rr=0;else if(d.RR<=24)rr=2;else rr=3;items.push({name:"ЧД",score:rr,val:d.RR});let spo=0;if(d.SpO2<=91)spo=3;else if(d.SpO2<=93)spo=2;else if(d.SpO2<=95)spo=1;else spo=0;items.push({name:"SpO2",score:spo,val:d.SpO2});items.push({name:"Кислород",score:d.O2support==="yes"?2:0,val:d.O2support==="yes"?"Да":"Нет"});let sbp=0;if(d.SBP<=90)sbp=3;else if(d.SBP<=100)sbp=2;else if(d.SBP<=110)sbp=1;else if(d.SBP<=219)sbp=0;else sbp=3;items.push({name:"АД сист",score:sbp,val:d.SBP});let hr=0;if(d.HR<=40)hr=3;else if(d.HR<=50)hr=1;else if(d.HR<=90)hr=0;else if(d.HR<=110)hr=1;else if(d.HR<=130)hr=2;else hr=3;items.push({name:"ЧСС",score:hr,val:d.HR});items.push({name:"Сознание",score:d.ACVPU==="A"?0:3,val:d.ACVPU});let t=0;if(d.Temp<=35.0)t=3;else if(d.Temp<=36.0)t=1;else if(d.Temp<=38.0)t=0;else if(d.Temp<=39.0)t=1;else t=2;items.push({name:"Температура",score:t,val:d.Temp});const total=items.reduce((s,i)=>s+i.score,0);const anyThree=items.some(i=>i.score===3);let interp, level;if(total>=7||anyThree){interp="Высокий риск";level="bad";}else if(total>=5){interp="Средний риск";level="warn";}else if(total>=1){interp="Низкий риск";level="ok";}else{interp="Норма";level="ok";}return{name:"NEWS2",total,items,interp,level};}
@@ -604,6 +649,10 @@ function calcSIRS(d){const items=[];items.push({name:"T >38 / <36",score:(d.Temp
 function calcSOFA(d,b){const items=[];let resp=0;if(b.PF>=400)resp=0;else if(b.PF>=300)resp=1;else if(b.PF>=200)resp=2;else if(b.PF>=100&&d.PEEP>=5)resp=3;else if(b.PF<100&&d.PEEP>=5)resp=4;items.push({name:"PaO2/FiO2",score:resp,val:Number.isFinite(b.PF)?fixed(b.PF,0):"—"});let coa=0;if(d.Plt>=150)coa=0;else if(d.Plt>=100)coa=1;else if(d.Plt>=50)coa=2;else if(d.Plt>=20)coa=3;else coa=4;items.push({name:"Тромбоциты",score:coa,val:d.Plt});const bilMgdl=d.Bil/17.1;let liv=0;if(bilMgdl<1.2)liv=0;else if(bilMgdl<2.0)liv=1;else if(bilMgdl<6.0)liv=2;else if(bilMgdl<12.0)liv=3;else liv=4;items.push({name:"Билирубин",score:liv,val:fixed(d.Bil,1)});const meanAP=(d.SBP+2*d.DBP)/3;let cv=0;if(d.Vaso==="none"&&meanAP<70)cv=1;else if(d.Vaso==="dopa_low")cv=2;else if(d.Vaso==="dopa_mid")cv=3;else if(d.Vaso==="dopa_high")cv=4;items.push({name:"ССС",score:cv,val:fixed(meanAP,1)});let cns=0;if(d.GCS>=15)cns=0;else if(d.GCS>=13)cns=1;else if(d.GCS>=10)cns=2;else if(d.GCS>=6)cns=3;else cns=4;items.push({name:"GCS",score:cns,val:d.GCS});const crMgdl=d.Cr/88.4;let ren=0;if(d.Urine<200)ren=4;else if(d.Urine<500)ren=3;else if(crMgdl>=5.0)ren=4;else if(crMgdl>=3.5)ren=3;else if(crMgdl>=2.0)ren=2;else if(crMgdl>=1.2)ren=1;items.push({name:"Креатинин",score:ren,val:fixed(d.Cr,0)});const total=items.reduce((s,i)=>s+i.score,0);let interp, level;if(total>=11){interp="Тяжёлая ПОН";level="bad";}else if(total>=6){interp="ПОН";level="bad";}else if(total>=2){interp="Органная дисфункция";level="warn";}else{interp="Низкий риск";level="ok";}return{name:"SOFA",total,items,interp,level};}
 function calcAPACHE2(d,b){const items=[];let t=0;if(d.Temp>=41)t=4;else if(d.Temp>=39)t=3;else if(d.Temp>=38.5)t=1;else if(d.Temp>=36)t=0;else if(d.Temp>=34)t=1;else if(d.Temp>=32)t=2;else if(d.Temp>=30)t=3;else t=4;items.push({name:"Температура",score:t,val:d.Temp});const meanAP=(d.SBP+2*d.DBP)/3;let map=0;if(meanAP>=160)map=4;else if(meanAP>=130)map=3;else if(meanAP>=110)map=2;else if(meanAP>=70)map=0;else if(meanAP>=50)map=2;else map=4;items.push({name:"Среднее АД",score:map,val:fixed(meanAP,1)});let hr=0;if(d.HR>=180)hr=4;else if(d.HR>=140)hr=3;else if(d.HR>=110)hr=2;else if(d.HR>=70)hr=0;else if(d.HR>=55)hr=2;else if(d.HR>=40)hr=3;else hr=4;items.push({name:"ЧСС",score:hr,val:d.HR});let rr=0;if(d.RR>=50)rr=4;else if(d.RR>=35)rr=3;else if(d.RR>=25)rr=1;else if(d.RR>=12)rr=0;else if(d.RR>=10)rr=1;else if(d.RR>=6)rr=2;else rr=4;items.push({name:"ЧД",score:rr,val:d.RR});let ox=0;if(b.PF>=500)ox=0;else if(b.PF>=350)ox=1;else if(b.PF>=200)ox=2;else if(b.PF>=100)ox=3;else ox=4;items.push({name:"PaO2/FiO2",score:ox,val:Number.isFinite(b.PF)?fixed(b.PF,0):"—"});let ph=0;if(d.pH>=7.7)ph=4;else if(d.pH>=7.6)ph=3;else if(d.pH>=7.5)ph=1;else if(d.pH>=7.33)ph=0;else if(d.pH>=7.25)ph=2;else if(d.pH>=7.15)ph=3;else ph=4;items.push({name:"pH",score:ph,val:d.pH});let na=0;if(d.Na>=180)na=4;else if(d.Na>=160)na=3;else if(d.Na>=155)na=2;else if(d.Na>=150)na=1;else if(d.Na>=130)na=0;else if(d.Na>=120)na=2;else if(d.Na>=111)na=3;else na=4;items.push({name:"Na",score:na,val:d.Na});let k=0;if(d.K>=7)k=4;else if(d.K>=6)k=3;else if(d.K>=5.5)k=1;else if(d.K>=3.5)k=0;else if(d.K>=3)k=1;else if(d.K>=2.5)k=2;else k=4;items.push({name:"K",score:k,val:d.K});const crMgdl=d.Cr/88.4;let cr=0;if(crMgdl>=3.5)cr=4;else if(crMgdl>=2)cr=3;else if(crMgdl>=1.5)cr=2;else if(crMgdl>=0.6)cr=0;else cr=2;items.push({name:"Креатинин",score:cr,val:fixed(crMgdl,2)});let hct=0;if(d.Hct>=60)hct=4;else if(d.Hct>=50)hct=2;else if(d.Hct>=46)hct=1;else if(d.Hct>=30)hct=0;else if(d.Hct>=20)hct=2;else hct=4;items.push({name:"Гематокрит",score:hct,val:d.Hct});let wbc=0;if(d.WBC>=40)wbc=4;else if(d.WBC>=20)wbc=2;else if(d.WBC>=15)wbc=1;else if(d.WBC>=3)wbc=0;else if(d.WBC>=1)wbc=2;else wbc=4;items.push({name:"Лейкоциты",score:wbc,val:d.WBC});const gcsScore=15-d.GCS;items.push({name:"GCS (дефицит)",score:gcsScore,val:d.GCS});let ageScore=0;if(d.Age<=44)ageScore=0;else if(d.Age<=54)ageScore=2;else if(d.Age<=64)ageScore=3;else if(d.Age<=74)ageScore=5;else ageScore=6;items.push({name:"Возраст",score:ageScore,val:d.Age});let chronicScore=0;if(d.Chronic==="severe")chronicScore=5;else if(d.Chronic==="mild")chronicScore=2;items.push({name:"Хроническое",score:chronicScore,val:d.Chronic});const total=items.reduce((s,i)=>s+i.score,0);let interp, level;if(total>=35){interp=">80%";level="bad";}else if(total>=25){interp="55–75%";level="bad";}else if(total>=15){interp="25–40%";level="warn";}else if(total>=10){interp="10–15%";level="warn";}else{interp="<10%";level="ok";}return{name:"APACHE II",total,items,interp,level};}
 function calcSepsis(d,b,sofa,qsofa){const hasInfection=d.infection==="yes";const sofaDelta=sofa.total;let sepsisStatus="—",shockStatus="—",level="ok";if(hasInfection && sofaDelta>=2){sepsisStatus="Сепсис (Sepsis-3)";level="bad";if(d.Vaso!=="none" && d.Lac>2 && d.SBP<=100){shockStatus="Септический шок";level="bad";}else if(d.Lac>2){shockStatus="Возможен септический шок";level="warn";}}else if(hasInfection && sofaDelta<2){sepsisStatus="Инфекция без дисфункции";level="warn";}else if(qsofa.total>=2){sepsisStatus="Подозрение на сепсис (qSOFA ≥ 2)";level="warn";}else{sepsisStatus="Критерии не выполнены";}return{sepsisStatus,shockStatus,level,hasInfection,sofaDelta};}
+
+/* ═══════════════════════════════════════════════════════════════
+   🧠 END CORE
+   ═══════════════════════════════════════════════════════════════ */
 
 function updateDash(d,b,syn,scales,sepsis,bal){
   const setTile=(id,val,status,statusText)=>{const tile=document.getElementById("tile-"+id);const v=document.getElementById("dash-"+id);const s=document.getElementById("dash-"+id+"-status");if(v)v.textContent=val;if(s){s.textContent=statusText;s.className="dash-status "+status;}if(tile){tile.className="dash-tile "+status;}};
@@ -633,13 +682,20 @@ function render(d,b,p,comp,dd,st,fin,hagma,syn,ards,phComp){
     {title:"Оксигенация",rows:[["P/F",Number.isFinite(b.PF)?fixed(b.PF,0):"—"],["A-a градиент",fixed(b.A_a_est,0)]]},
     {title:"Компенсация",rows:[["Степень (по pH)",phComp.status]]}
   ];
-  const resEl=document.getElementById("results");if(resEl)resEl.innerHTML=`<div class="result-grid">${rGroups.map(g=>{const rowsHTML=g.rows.map(r=>`<div class="result-row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');return `<div class="result-card"><h4>${g.title}</h4>${rowsHTML}</div>`;}).join('')}</div>`;
-  const dashFull=document.getElementById("dash-full-results");if(dashFull)dashFull.innerHTML=`<div class="result-grid">${rGroups.map(g=>{const rowsHTML=g.rows.map(r=>`<div class="result-row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');return `<div class="result-card"><h4>${g.title}</h4>${rowsHTML}</div>`;}).join('')}</div>`;
+  const resultsHTML=`<div class="result-grid">${rGroups.map(g=>{const rowsHTML=g.rows.map(r=>`<div class="result-row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');return `<div class="result-card"><h4>${g.title}</h4>${rowsHTML}</div>`;}).join('')}</div>`;
+  const resEl=document.getElementById("results");if(resEl)resEl.innerHTML=resultsHTML;
+  const dashFull=document.getElementById("dash-full-results");if(dashFull)dashFull.innerHTML=resultsHTML;
   const logs=[];logs.push(`<b>pH вектор:</b> ${fixed(d.pH,3)} → ${p.acidBase}`);if(p.resp)logs.push(`<b>Респираторный:</b> ${p.resp}`);if(p.respIsCompensation)logs.push(`<b>Респираторный (компенсация)</b>`);if(p.met)logs.push(`<b>Метаболический:</b> ${p.met}`);if(hagma.hasHAGMA)logs.push(`<b>HAGMA:</b> ${hagma.reason}`);logs.push(`<b>Степень:</b> ${phComp.status}`);
-  let diagHTML=`<h3>Ход анализа</h3><ul>${logs.map(l=>`<li>${l}</li>`).join('')}</ul>`;diagHTML+=`<h3>Компенсация</h3><div>${escapeHTML(comp.text)}</div><ul>${comp.checks.map(c=>`<li>${escapeHTML(c)}</li>`).join('')}</ul>`;if(fin.findings.length>0)diagHTML+=fin.findings.map(f=>`<div class="finding">${escapeHTML(f)}</div>`).join('');if(fin.alerts.length>0)diagHTML+=fin.alerts.map(a=>`<div class="alert">${escapeHTML(a)}</div>`).join('');
+  let diagHTML=`<h3>Что видно на входе</h3><ul>${logs.map(l=>`<li>${l}</li>`).join('')}</ul>`;
+  diagHTML+=`<h3>Как проверяли компенсацию</h3><div>${escapeHTML(comp.text)}</div><ul>${comp.checks.map(c=>`<li>${escapeHTML(c)}</li>`).join('')}</ul>`;
+  diagHTML+=`<h3>Что нашли по ходу анализа</h3>`;
+  if(fin.findings.length>0)diagHTML+=fin.findings.map(f=>`<div class="finding">${escapeHTML(f)}</div>`).join('');
+  if(fin.alerts.length>0)diagHTML+=fin.alerts.map(a=>`<div class="alert">${escapeHTML(a)}</div>`).join('');
+  if(fin.findings.length===0 && fin.alerts.length===0) diagHTML+=`<div class="small-note">Дополнительных находок нет.</div>`;
+  diagHTML+=`<h3>Итог по КОС</h3><div><b>${escapeHTML(syn.title)}</b>${syn.detail?"<br>"+escapeHTML(syn.detail):""}</div>`;
   const diagEl=document.getElementById("diagnosis");if(diagEl)diagEl.innerHTML=diagHTML;
-  const exEl=document.getElementById("explanations");if(exEl)exEl.innerHTML=`<details open><summary>АП и АП_корр</summary><div class="fml">АП = Na − (Cl + HCO3) = ${fixed(b.AG)}\nАП_корр = АП + 0.25 × (40 − Alb) = ${fixed(b.AGcorr)}\nАП (Na корр.) = ${fixed(b.AG_Na_corr)}</div></details><details><summary>ΔΔ</summary><div class="fml">ΔAG = ${fixed(b.deltaAG)}\nΔHCO3 = ${fixed(b.deltaHCO3)}\nΔΔ = ${Number.isFinite(b.deltaDelta)?fixed(b.deltaDelta,2):"—"}</div></details><details><summary>SBE + разбивка</summary><div class="fml">SBE = ${fixed(b.SBE_calc,1)}\nSBE_FW = ${fixed(b.SBE_FW)}\nSBE_Cl = ${fixed(b.SBE_Cl)}\nSBE_Alb = ${fixed(b.SBE_Alb)}\nSBE_UA = ${fixed(b.SBE_UA)}</div></details><details><summary>Stewart</summary><div class="fml">SID_a = ${fixed(st.SIDa)}\nSID_e = ${fixed(st.SIDe)}\nSIG = ${fixed(st.SIG)}</div></details><details><summary>Осмоляльность</summary><div class="fml">Осм_расч = 1.86 × Na + Gluc + Ur + 9 = ${fixed(b.Osm_calc,1)}\n${Number.isFinite(b.Osm_gap)?"Осм_gap = "+fixed(b.Osm_gap,1):""}</div></details>`;
-  const strip=s=>s.replace(/<[^>]+>/g,'');const L=["═══ ICU CORE v25.0 ═══","","Дата: "+new Date().toLocaleString('ru-RU'),""];L.push("── СИНДРОМ ──",syn.title,syn.detail||"");L.push("","── РАСЧЁТЫ ──");rGroups.forEach(g=>{g.rows.forEach(r=>L.push(`${g.title} · ${r[0]}: ${r[1]}`))});L.push("","── ХОД ──");logs.forEach(l=>L.push("· "+strip(l)));L.push("","Сформировано: ICU CORE v25.0");lastReport=L.join("\n");
+  const exEl=document.getElementById("explanations");if(exEl)exEl.innerHTML=`<details open><summary>АП и АП_корр</summary><div class="fml">АП = Na − (Cl + HCO3) = ${fixed(b.AG)}\nАП_корр = АП + 0.25 × (40 − Alb) = ${fixed(b.AGcorr)}\nАП (Na корр.) = ${fixed(b.AG_Na_corr)}</div></details><details><summary>ΔΔ</summary><div class="fml">ΔAG = ${fixed(b.deltaAG)}\nΔHCO3 = ${fixed(b.deltaHCO3)}\nΔΔ = ${Number.isFinite(b.deltaDelta)?fixed(b.deltaDelta,2):"—"}</div></details><details><summary>SBE + разбивка</summary><div class="fml">SBE = ${fixed(b.SBE_calc,1)}\nSBE_FW = ${fixed(b.SBE_FW)}\nSBE_Cl = ${fixed(b.SBE_Cl)}\nSBE_Alb = ${fixed(b.SBE_Alb)}\nSBE_UA = ${fixed(b.SBE_UA)}</div></details><details><summary>Стюарт</summary><div class="fml">SID_a = ${fixed(st.SIDa)}\nSID_e = ${fixed(st.SIDe)}\nSIG = ${fixed(st.SIG)}</div></details><details><summary>Осмоляльность</summary><div class="fml">Осм_расч = 1.86 × Na + Gluc + Ur + 9 = ${fixed(b.Osm_calc,1)}\n${Number.isFinite(b.Osm_gap)?"Осм_gap = "+fixed(b.Osm_gap,1):""}</div></details>`;
+  const strip=s=>s.replace(/<[^>]+>/g,'');const L=["═══ ICU CORE v26.2 ═══","","Дата: "+new Date().toLocaleString('ru-RU'),""];L.push("── СИНДРОМ ──",syn.title,syn.detail||"");L.push("","── РАСЧЁТЫ ──");rGroups.forEach(g=>{g.rows.forEach(r=>L.push(`${g.title} · ${r[0]}: ${r[1]}`))});L.push("","── ХОД ──");logs.forEach(l=>L.push("· "+strip(l)));L.push("","Сформировано: ICU CORE v26.2");lastReport=L.join("\n");
 }
 function renderScales(scales,sepsis,d){const scEl=document.getElementById("scalesResults");if(scEl)scEl.innerHTML=scales.map(s=>{const itemsHTML=s.items.map(i=>`<div class="score-row"><span>${escapeHTML(i.name)}${i.val!=null?" ("+escapeHTML(String(i.val))+")":""}</span><span>${i.score}</span></div>`).join('');return `<div class="score-card"><h4>${escapeHTML(s.name)}</h4><div class="score-val">${s.total}</div><div class="score-interp"><span class="badge-${s.level}">${escapeHTML(s.interp)}</span></div>${itemsHTML}</div>`;}).join('');const spEl=document.getElementById("sepsisResults");if(spEl)spEl.innerHTML=`<div class="score-card"><h4>Сепсис (Sepsis-3)</h4><div class="score-val" style="font-size:16px">${escapeHTML(sepsis.sepsisStatus)}</div><div class="score-row"><span>Инфекция</span><span>${sepsis.hasInfection?'Да':'Нет'}</span></div><div class="score-row"><span>SOFA</span><span>${sepsis.sofaDelta}</span></div>${sepsis.shockStatus!=="—"?`<div class="score-row"><span>Шок</span><span>${escapeHTML(sepsis.shockStatus)}</span></div>`:''}</div>`;}
 function makeHistory(d,syn){return{date:new Date().toLocaleString('ru-RU'),diag:syn.title+(syn.detail?": "+syn.detail:""),data:Object.fromEntries(["pH","pCO2","HCO3in","SBE","Lac","pO2","FiO2","PEEP","Na","Cl","K","Ca","Mg","Alb","PO4","Gluc","Ur","Osm_in","Weight","RR","SpO2","SBP","DBP","HR","Temp","GCS","Age","Plt","WBC","Bands","Hct","Cr","Bil","Urine"].map(k=>[k,d[k]])),notes:d.notes,sbeMode:d.sbeMode,naCorr:d.naCorr,chronic:d.chronic,sidModel:d.sidModel,O2support:d.O2support,ACVPU:d.ACVPU,Chronic:d.Chronic,Vaso:d.Vaso,Sex:d.Sex,acuity:d.acuity,bilateral:d.bilateral,timing:d.timing,noncardiac:d.noncardiac,infection:d.infection};}
@@ -647,11 +703,105 @@ function runCalculation(save=false){try{const d=readInputs(),err=validate(d);if(
 function previewCalc(){try{if(document.getElementById("pH").value)runCalculation(false)}catch(e){}}
 function liveValidate(){try{Object.entries(ranges).forEach(([id,[lo,hi]])=>{const e=document.getElementById(id);if(!e)return;const v=parseFloat(e.value);e.classList.remove("ok-field","warn-field","bad-field");if(!Number.isFinite(v))return;if(v>=lo&&v<=hi)e.classList.add("ok-field");else if(v<lo*.95||v>hi*1.05)e.classList.add("bad-field");else e.classList.add("warn-field");});}catch(e){}}
 function updateRisk(d,b,p,scales,sepsis){try{let risk=0;if(d.pH<7.2||d.pH>7.6)risk+=30;else if(d.pH<7.3||d.pH>7.5)risk+=15;if(d.Lac>4)risk+=20;else if(d.Lac>2)risk+=10;if(Number.isFinite(b.PF)){if(b.PF<100)risk+=20;else if(b.PF<200)risk+=12;else if(b.PF<300)risk+=6;}if(Math.abs(b.SBE)>10)risk+=15;else if(Math.abs(b.SBE)>5)risk+=8;const news=scales.find(s=>s.name==="NEWS2");if(news){if(news.total>=7)risk+=15;else if(news.total>=5)risk+=8;}const sofa=scales.find(s=>s.name==="SOFA");if(sofa){if(sofa.total>=11)risk+=15;else if(sofa.total>=6)risk+=8;}const apache=scales.find(s=>s.name==="APACHE II");if(apache){if(apache.total>=25)risk+=15;else if(apache.total>=15)risk+=8;}if(sepsis.level==="bad")risk+=10;risk=Math.min(98,risk);const e=document.getElementById("riskBadge");const v=document.getElementById("riskValue");if(e){e.className="risk-pill "+(risk>50?"bad":risk>20?"warn":"ok");}if(v)v.textContent=risk+"%";}catch(e){}}
-function drawCharts(b,d,st){try{const isDark=document.documentElement.dataset.theme==='dark';const txtColor=isDark?'#F5F3F0':'#1A1A1A';const mutColor=isDark?'#8E8880':'#6B6B6B';const gridColor=isDark?'#2F2C28':'#E8E6E3';const ctx=document.getElementById("gamble");if(!ctx)return;if(gChart)gChart.destroy();gChart=new Chart(ctx,{type:"bar",data:{labels:["Катионы (+)","Анионы (−)"],datasets:[{label:"Na",data:[b.NaCorr,0],backgroundColor:"#294056"},{label:"K",data:[d.K,0],backgroundColor:"#3D566E"},{label:"Ca",data:[d.Ca||0,0],backgroundColor:"#5A7690"},{label:"Mg",data:[d.Mg||0,0],backgroundColor:"#7B93A8"},{label:"Cl",data:[0,d.Cl],backgroundColor:"#A94442"},{label:"HCO3",data:[0,b.HCO3],backgroundColor:"#B8860B"},{label:"Лактат",data:[0,d.Lac],backgroundColor:"#7C6A9B"},{label:"SIG",data:[0,st.SIG>0?st.SIG:0],backgroundColor:"#8E8E8E"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:txtColor,font:{family:"Inter",size:11,weight:"500"}}}},scales:{x:{stacked:true,ticks:{color:mutColor,font:{family:"Inter"}},grid:{display:false}},y:{stacked:true,ticks:{color:mutColor,font:{family:"JetBrains Mono"}},grid:{color:gridColor},title:{display:true,text:"мЭкв/л",color:mutColor,font:{family:"Inter"}}}}}});const sctx=document.getElementById("siggaard");if(!sctx)return;if(sChart)sChart.destroy();const fn=(h,p)=>h/(.03*Math.pow(10,p-6.1));const ph=[];for(let x=7;x<=7.8;x+=.02)ph.push(+x.toFixed(3));const colors=['#D6DEE6','#B8C7D2','#9BAFBE','#7D97AA','#5F7F96','#3F6783','#294056','#1A2D3E'];const ds=[];ds.push({label:'Алкалоз',data:ph.map(x=>({x,y:fn(30,x)})).concat(ph.slice().reverse().map(x=>({x,y:fn(24,x)}))),borderColor:'transparent',backgroundColor:'rgba(169,68,66,.06)',fill:true,pointRadius:0,order:20});ds.push({label:'Ацидоз',data:ph.map(x=>({x,y:fn(15,x)})).concat(ph.slice().reverse().map(x=>({x,y:fn(24,x)}))),borderColor:'transparent',backgroundColor:'rgba(184,134,11,.06)',fill:true,pointRadius:0,order:21});[5,10,15,20,24,30,35,40].forEach((h,i)=>{const nrm=h===24;ds.push({label:"HCO3 "+h,data:ph.map(x=>({x,y:fn(h,x)})),borderColor:nrm?'#4A7C59':colors[i],borderWidth:nrm?2:1,borderDash:nrm?[]:[4,4],pointRadius:0,order:nrm?1:5})});ds.push({label:"Пациент",data:[{x:d.pH,y:d.pCO2}],borderColor:'#A94442',backgroundColor:'#A94442',pointRadius:8,pointBorderColor:'#fff',pointBorderWidth:2,showLine:false,order:0});sChart=new Chart(sctx,{type:"line",data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:txtColor,font:{family:"Inter",size:10},filter:i=>!i.text.includes('Ацидоз')&&!i.text.includes('Алкалоз')}}},scales:{x:{type:"linear",min:7,max:7.8,title:{display:true,text:"pH",color:mutColor,font:{family:"Inter"}},ticks:{color:mutColor,font:{family:"JetBrains Mono"}},grid:{color:gridColor}},y:{min:0,max:120,title:{display:true,text:"pCO₂",color:mutColor,font:{family:"Inter"}},ticks:{color:mutColor,font:{family:"JetBrains Mono"}},grid:{color:gridColor}}}}});}catch(e){console.error("drawCharts:",e);}}
+
+/* === CHARTS === */
+function drawCharts(b,d,st){try{
+  const isDark=document.documentElement.dataset.theme==='dark';
+  const txtColor=isDark?'#F2F3F5':'#1A1A1A';
+  const mutColor=isDark?'#8A8F99':'#5A5A5A';
+  const gridColor=isDark?'#2C3038':'#E8E6E3';
+
+  const ctx=document.getElementById("gamble");
+  if(ctx){
+    if(gChart)gChart.destroy();
+    const cations=b.NaCorr+(d.K||0)+(d.Ca||0)+(d.Mg||0);
+    const anions=(d.Cl||0)+b.HCO3+(d.Lac||0)+(st.SIG>0?st.SIG:0);
+    const diff=cations-anions;
+    const sumEl=document.getElementById("gamble-summary");
+    if(sumEl){
+      const ok=Math.abs(diff)<=2;
+      const cls=ok?'rec':'alert';
+      const icon=ok?'✅':'⚠';
+      sumEl.innerHTML=`<div class="${cls}" style="margin:0">${icon} Сумма катионов: <b>${fixed(cations,1)}</b> мЭкв/л · Сумма анионов: <b>${fixed(anions,1)}</b> мЭкв/л · Разница: <b>${fixed(diff,1)}</b> мЭкв/л ${ok?"— баланс сошёлся":"— есть скрытый анион или ошибка ввода"}</div>`;
+    }
+    gChart=new Chart(ctx,{type:"bar",data:{labels:["Катионы (+)","Анионы (−)"],datasets:[
+      {label:"Na⁺",data:[b.NaCorr,0],backgroundColor:"#294056"},
+      {label:"K⁺",data:[d.K,0],backgroundColor:"#3D566E"},
+      {label:"Ca²⁺",data:[d.Ca||0,0],backgroundColor:"#5A7690"},
+      {label:"Mg²⁺",data:[d.Mg||0,0],backgroundColor:"#7B93A8"},
+      {label:"Cl⁻",data:[0,d.Cl],backgroundColor:"#9E3A38"},
+      {label:"HCO₃⁻",data:[0,b.HCO3],backgroundColor:"#A87B0B"},
+      {label:"Лактат",data:[0,d.Lac],backgroundColor:"#7C6A9B"},
+      {label:"SIG",data:[0,st.SIG>0?st.SIG:0],backgroundColor:"#8A8F99"}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:txtColor,font:{family:"Inter",size:11,weight:"500"}}}},scales:{x:{stacked:true,ticks:{color:mutColor,font:{family:"Inter",size:12}},grid:{display:false}},y:{stacked:true,ticks:{color:mutColor,font:{family:"JetBrains Mono"}},grid:{color:gridColor},title:{display:true,text:"мЭкв/л",color:mutColor,font:{family:"Inter"}}}}}});
+  }
+
+  const sctx=document.getElementById("siggaard");
+  if(sctx){
+    if(sChart)sChart.destroy();
+    const pco2From=(hco3,ph)=>hco3/(0.03*Math.pow(10,ph-6.1));
+    const phRange=[];for(let x=7.0;x<=7.8;x+=.02)phRange.push(+x.toFixed(3));
+    const pco2Levels=[20,30,40,60,80,100];
+    const colors=['#B8C7D2','#9BAFBE','#7D97AA','#5F7F96','#3F6783','#294056'];
+    const ds=[];
+    pco2Levels.forEach((pco2,i)=>{
+      const isNorm=pco2===40;
+      const data=phRange.map(ph=>{
+        const hco3=0.03*pco2*Math.pow(10,ph-6.1);
+        return {x:ph,y:hco3};
+      }).filter(pt=>pt.y>=0 && pt.y<=45);
+      ds.push({
+        label:"pCO₂ "+pco2+(isNorm?" (норма)":""),
+        data,
+        borderColor:isNorm?'#3F7A4F':(isDark?'#4A5560':colors[i]),
+        borderWidth:isNorm?2.5:1,
+        borderDash:isNorm?[]:[5,4],
+        pointRadius:0,tension:.15,order:isNorm?1:5
+      });
+    });
+    ds.push({
+      label:"Зона нормы",
+      data:[{x:7.35,y:22},{x:7.45,y:22},{x:7.45,y:26},{x:7.35,y:26},{x:7.35,y:22}],
+      borderColor:'rgba(63,122,79,.5)',
+      backgroundColor:'rgba(63,122,79,.12)',
+      borderWidth:1.5,pointRadius:0,fill:true,order:10
+    });
+    ds.push({
+      label:"Пациент",
+      data:[{x:d.pH,y:b.HCO3}],
+      borderColor:'#9E3A38',backgroundColor:'#9E3A38',
+      pointRadius:9,pointBorderColor:'#fff',pointBorderWidth:2.5,
+      showLine:false,order:0
+    });
+    sChart=new Chart(sctx,{type:"line",data:{datasets:ds},options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:txtColor,font:{family:"Inter",size:10}}},
+        tooltip:{callbacks:{label:(c)=>{
+          if(c.dataset.label==="Пациент"){const pco2=pco2From(b.HCO3,d.pH);return `pH ${fixed(d.pH,3)} · HCO₃⁻ ${fixed(b.HCO3,1)} · pCO₂ ${fixed(pco2,1)}`;}
+          if(c.dataset.label==="Зона нормы")return "Зона нормы (pH 7.35–7.45, HCO₃⁻ 22–26)";
+          return `${c.dataset.label}: pH ${fixed(c.parsed.x,2)}, HCO₃⁻ ${fixed(c.parsed.y,1)}`;
+        }}}
+      },
+      scales:{
+        x:{type:"linear",min:7.0,max:7.8,
+          title:{display:true,text:"pH крови (снизу)",color:mutColor,font:{family:"Inter",size:12,weight:"600"}},
+          ticks:{color:mutColor,font:{family:"JetBrains Mono"},stepSize:.1},
+          grid:{color:gridColor}},
+        y:{min:0,max:45,
+          title:{display:true,text:"HCO₃⁻, ммоль/л (слева)",color:mutColor,font:{family:"Inter",size:12,weight:"600"}},
+          ticks:{color:mutColor,font:{family:"JetBrains Mono"}},
+          grid:{color:gridColor}}
+      }
+    }});
+  }
+}catch(e){console.error("drawCharts:",e);}}
+
 function loadPreset(n){try{const p=presets[n];if(!p)return;Object.entries(p).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});["bilateral","timing","noncardiac","infection"].forEach(k=>{const e=document.getElementById(k);if(e)e.value="unknown"});liveValidate();runCalculation(false);showToast("Пресет "+n);}catch(e){}}
-function clearAll(){try{const vals={pH:7.40,pCO2:40,HCO3in:24,SBE:0,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:140,Cl:103,K:4,Ca:1.2,Mg:.9,Alb:40,PO4:1.1,Gluc:5.5,Ur:5,Osm_in:"",Weight:70,RR:16,SpO2:98,SBP:120,DBP:80,HR:80,Temp:36.8,GCS:15,Age:50,Plt:200,WBC:7,Bands:3,Hct:40,Cr:80,Bil:15,Urine:1500};Object.entries(vals).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});const e=document.getElementById("notes");if(e)e.value="";["sbeMode","naCorr","chronic","sidModel","O2support","ACVPU","Chronic","Vaso","Sex","acuity","bilateral","timing","noncardiac","infection"].forEach(k=>{const el=document.getElementById(k);if(el)el.value=el.id==="sbeMode"?"input":el.id==="naCorr"?"off":el.id==="chronic"?"auto":el.id==="sidModel"?"charged":el.id==="O2support"?"no":el.id==="ACVPU"?"A":el.id==="Chronic"?"none":el.id==="Vaso"?"none":el.id==="Sex"?"M":el.id==="acuity"?"auto":"unknown"});liveValidate();runCalculation(false);showToast("Сброшено");}catch(e){}}
+function clearAll(){try{const vals={pH:7.40,pCO2:40,HCO3in:24,SBE:0,Lac:1,pO2:90,FiO2:21,PEEP:0,Na:140,Cl:103,K:4,Ca:1.2,Mg:0.9,Alb:40,PO4:1.1,Gluc:5.5,Ur:5,Osm_in:"",Weight:70,RR:16,SpO2:98,SBP:120,DBP:80,HR:80,Temp:36.8,GCS:15,Age:50,Plt:200,WBC:7,Bands:3,Hct:40,Cr:80,Bil:15,Urine:1500};Object.entries(vals).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});const e=document.getElementById("notes");if(e)e.value="";["sbeMode","naCorr","chronic","sidModel","O2support","ACVPU","Chronic","Vaso","Sex","acuity","bilateral","timing","noncardiac","infection"].forEach(k=>{const el=document.getElementById(k);if(el)el.value=el.id==="sbeMode"?"input":el.id==="naCorr"?"off":el.id==="chronic"?"auto":el.id==="sidModel"?"charged":el.id==="O2support"?"no":el.id==="ACVPU"?"A":el.id==="Chronic"?"none":el.id==="Vaso"?"none":el.id==="Sex"?"M":el.id==="acuity"?"auto":"unknown"});liveValidate();runCalculation(false);showToast("Сброшено");}catch(e){}}
 function showProMode(){document.getElementById("quick-card").style.display="none";document.getElementById("pro-mode").style.display="block";runCalculation(false);}
-function switchTab(n){try{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab===n));document.querySelectorAll(".panel").forEach(x=>{const isActive=x.id==="panel-"+n;x.classList.toggle("active",isActive);x.style.display=isActive?"block":"none";});if(n==="charts")setTimeout(()=>{try{gChart&&gChart.resize();sChart&&sChart.resize();}catch(e){}},50);}catch(e){}}
+function hideProMode(){document.getElementById("pro-mode").style.display="none";document.getElementById("quick-card").style.display="block";runCalculation(false);showToast("Свернуто");}
+function switchTab(n){try{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab===n));document.querySelectorAll(".panel").forEach(x=>{const isActive=x.id==="panel-"+n;x.classList.toggle("active",isActive);x.style.display=isActive?"block":"none";});if(n==="charts")setTimeout(()=>{try{gChart&&gChart.resize();sChart&&sChart.resize();}catch(e){}},80);}catch(e){}}
 function toggleTheme(){try{const next=(document.documentElement.dataset.theme||"light")==="dark"?"light":"dark";document.documentElement.dataset.theme=next;try{localStorage.setItem("icu_theme",next);}catch(e){}const d=readInputs(),bb=calcBasic(d),st=calcStewart(d,bb);drawCharts(bb,d,st);}catch(e){}}
 function initTheme(){let t="light";try{t=localStorage.getItem("icu_theme")||"light";}catch(e){}document.documentElement.dataset.theme=t;}
 function getHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]")}catch(e){return[]}}
