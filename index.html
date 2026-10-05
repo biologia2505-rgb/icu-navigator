@@ -3,21 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICU CORE v26.2</title>
+<title>ICU CORE v26.3</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-/* === INTRO === */
-#intro-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1A1F2A 0%,#1E2A38 60%,#232F40 100%);z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;pointer-events:none;animation:introFadeOut .6s ease 1.8s forwards}
-#intro-screen .intro-title{font:700 clamp(32px,7vw,64px) 'Inter',sans-serif;color:#FAF9F7;letter-spacing:-.03em;margin:0;animation:introSlide 1.2s cubic-bezier(.16,1,.3,1) both}
+/* === INTRO — дышащий градиент + пульсирующий логотип === */
+#intro-screen{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;pointer-events:none;animation:introFadeOut .6s ease 2.2s forwards;background:linear-gradient(135deg,#1A1F2A 0%,#1E2A38 60%,#232F40 100%);background-size:200% 200%;animation:introFadeOut .6s ease 2.2s forwards,introBreath 6s ease-in-out infinite}
+#intro-screen .intro-logo{width:clamp(48px,10vw,84px);height:clamp(48px,10vw,84px);color:#7BA8A0;stroke-width:1.5;margin-bottom:28px;animation:introLogoPulse 2s ease-in-out infinite,introSlide 1s cubic-bezier(.16,1,.3,1) both}
+#intro-screen .intro-title{font:700 clamp(32px,7vw,64px) 'Inter',sans-serif;color:#FAF9F7;letter-spacing:-.03em;margin:0;animation:introSlide 1.2s cubic-bezier(.16,1,.3,1) both;font-feature-settings:'cv11'}
 #intro-screen .intro-line{width:clamp(60px,15vw,120px);height:1.5px;background:linear-gradient(90deg,transparent,#7BA8A0,transparent);margin:24px 0;animation:introGrow 1.4s cubic-bezier(.16,1,.3,1) .3s both}
 #intro-screen .intro-sub{font:400 clamp(11px,2vw,14px) 'Inter',sans-serif;color:#A8B2BD;letter-spacing:.15em;text-transform:uppercase;margin:0;animation:introSlide 1s ease .5s both}
 @keyframes introFadeOut{to{opacity:0;visibility:hidden}}
 @keyframes introSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes introGrow{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+@keyframes introBreath{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes introLogoPulse{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
 
 /* === THEME === */
 :root{
@@ -49,11 +52,11 @@ body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter',-apple-s
 .header-brand{display:flex;align-items:center;gap:12px}
 .header-logo{width:28px;height:28px;color:var(--acc);stroke-width:1.5;transition:color var(--t)}
 .header h1{font-size:18px;font-weight:700;margin:0;letter-spacing:-.02em;color:var(--txt);display:flex;align-items:baseline;gap:10px}
-.version{font-size:10px;font-weight:500;color:var(--mut);padding:2px 7px;background:var(--elev);border-radius:20px;font-family:'JetBrains Mono',monospace}
+.version{font-size:10px;font-weight:500;color:var(--mut);padding:2px 7px;background:var(--elev);border-radius:20px;font-family:'JetBrains Mono',monospace;letter-spacing:0}
 .header-sub{font-size:11.5px;color:var(--mut);margin-top:2px;font-weight:400}
 .header-actions{display:flex;gap:6px;align-items:center}
 .icon-btn{width:34px;height:34px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);color:var(--txt2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--t);padding:0}
-.icon-btn:hover{background:var(--elev);color:var(--txt);border-color:var(--mut2);transform:translateY(-1px)}
+.icon-btn:hover{background:var(--elev);color:var(--txt);border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft)}
 .icon-btn:active{transform:scale(.94)}
 .icon-btn svg{width:15px;height:15px;stroke-width:1.5}
 .risk-pill{font-size:12px;padding:5px 12px;border-radius:20px;background:var(--card);border:1px solid var(--border);color:var(--txt2);font-family:'JetBrains Mono',monospace;font-weight:600;display:flex;align-items:center;gap:7px;transition:all var(--t)}
@@ -65,7 +68,7 @@ body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter',-apple-s
 /* === TABS === */
 .tabs{display:flex;gap:2px;margin-bottom:22px;padding:4px;background:var(--elev);border-radius:var(--radius);overflow-x:auto;transition:background var(--t)}
 .tab{flex:1;min-width:80px;padding:8px 12px;border:0;border-radius:6px;background:transparent;color:var(--mut);font:500 12px 'Inter',sans-serif;cursor:pointer;transition:all var(--t);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px}
-.tab:hover{color:var(--txt)}
+.tab:hover{color:var(--txt);background:rgba(41,64,86,.05)}
 .tab:active{transform:scale(.97)}
 .tab.active{background:var(--card);color:var(--txt);font-weight:600;box-shadow:var(--shadow)}
 .tab svg{width:13px;height:13px;opacity:.6;stroke-width:1.75;transition:all var(--t)}
@@ -81,7 +84,7 @@ body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter',-apple-s
 .card h2{font-size:11px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:8px}
 .card h2 svg{width:13px;height:13px;stroke-width:1.75;color:var(--acc)}
 .card h2 .toggle-mode{margin-left:auto;font-size:10px;color:var(--acc);cursor:pointer;font-weight:600;text-transform:none;letter-spacing:0;padding:3px 8px;background:var(--acc-soft);border-radius:6px;border:0;transition:all var(--t)}
-.card h2 .toggle-mode:hover{transform:translateY(-1px)}
+.card h2 .toggle-mode:hover{transform:translateY(-1px);box-shadow:0 0 0 3px var(--acc-soft)}
 .card h2 .toggle-mode:active{transform:scale(.95)}
 
 /* === GRID === */
@@ -102,35 +105,45 @@ input::placeholder,textarea::placeholder{color:var(--mut2);font-family:'Inter',s
 .hint{font:400 10px 'Inter',sans-serif;color:var(--mut2);margin-top:3px;line-height:1.35}
 textarea{font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;resize:vertical;min-height:70px}
 
+/* Убираем дефолтные стрелки у number-полей */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+
+/* Убираем автозаполнение Chrome */
+input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus,input:-webkit-autofill:active{-webkit-box-shadow:0 0 0 1000px var(--card) inset !important;-webkit-text-fill-color:var(--txt) !important;transition:background-color 5000s ease-in-out 0s;caret-color:var(--txt)}
+
 input.ok-field{border-color:var(--ok);background:var(--ok-bg)}
 input.warn-field{border-color:var(--warn);background:var(--warn-bg)}
 input.bad-field{border-color:var(--bad);background:var(--bad-bg)}
 
 .btnrow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
 button.primary{flex:1;min-width:140px;padding:12px 20px;border:0;border-radius:var(--radius-sm);background:linear-gradient(180deg,var(--acc) 0%,var(--acc-hover) 100%);color:#fff;font:600 13px 'Inter',sans-serif;cursor:pointer;transition:all var(--t);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
-button.primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(41,64,86,.22)}
-button.primary:active{transform:scale(.98) translateY(0)}
+button.primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(41,64,86,.22),0 0 0 3px var(--acc-soft)}
+button.primary:active{transform:scale(.98) translateY(0);box-shadow:0 1px 2px rgba(0,0,0,.1)}
 button.primary svg{width:14px;height:14px;stroke-width:2}
 button.ghost{background:var(--card);border:1px solid var(--border);color:var(--txt2);flex:0 0 auto;min-width:auto;padding:12px 18px;border-radius:var(--radius-sm);font:500 13px 'Inter',sans-serif;cursor:pointer;transition:all var(--t)}
-button.ghost:hover{background:var(--elev);color:var(--txt);border-color:var(--mut2);transform:translateY(-1px)}
+button.ghost:hover{background:var(--elev);color:var(--txt);border-color:var(--acc);transform:translateY(-1px);box-shadow:0 0 0 3px var(--acc-soft)}
 button.ghost:active{transform:scale(.98) translateY(0)}
 
 .preset-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .preset-btn{padding:9px 12px;border-radius:var(--radius-sm);background:var(--elev2);border:1px solid var(--border);color:var(--txt2);cursor:pointer;font:500 12px 'Inter',sans-serif;transition:all var(--t);text-align:center}
-.preset-btn:hover{background:var(--elev);color:var(--txt);border-color:var(--mut2);transform:translateY(-1px)}
+.preset-btn:hover{background:var(--elev);color:var(--txt);border-color:var(--acc);transform:translateY(-1px);box-shadow:0 0 0 3px var(--acc-soft)}
 .preset-btn:active{transform:scale(.97) translateY(0)}
 
 /* === RESULT CARDS === */
 .result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
-.result-card{padding:14px;background:var(--elev2);border-radius:var(--radius-sm);border:1px solid var(--border2)}
+.result-card{padding:14px;background:var(--elev2);border-radius:var(--radius-sm);border:1px solid var(--border2);transition:all var(--t)}
+.result-card:hover{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft)}
 .result-card h4{font:600 10px 'Inter',sans-serif;color:var(--acc);text-transform:uppercase;letter-spacing:.06em;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
 .result-row{display:flex;justify-content:space-between;padding:5px 0;font-size:12.5px;border-bottom:1px dashed var(--border2)}
 .result-row:last-child{border-bottom:none}
 .result-row span:first-child{color:var(--mut)}
 .result-row span:last-child{font:600 12.5px 'JetBrains Mono',monospace;color:var(--txt);font-variant-numeric:tabular-nums}
 
-/* === SYNDROME === */
-.syndrome-block{padding:22px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);border-left:3px solid var(--acc);box-shadow:var(--shadow)}
+/* === SYNDROME — градиент вместо полоски === */
+.syndrome-block{padding:22px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.syndrome-block::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--acc) 0%,transparent 100%);border-radius:var(--radius) 0 0 var(--radius)}
 .syn-label{font:500 10px 'Inter',sans-serif;color:var(--acc);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
 .syn-title{font:600 20px 'Inter',sans-serif;color:var(--txt);line-height:1.3;margin-bottom:8px;letter-spacing:-.015em}
 .syn-detail{font:400 13px 'Inter',sans-serif;color:var(--mut);line-height:1.6}
@@ -143,7 +156,7 @@ button.ghost:active{transform:scale(.98) translateY(0)}
 /* === DASHBOARD === */
 .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .dash-tile{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);transition:all .25s cubic-bezier(.2,0,.2,1);position:relative;overflow:hidden}
-.dash-tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.dash-tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-md),0 0 0 3px var(--acc-soft)}
 .dash-tile.ok{background:linear-gradient(135deg,var(--ok-bg) 0%,var(--card) 55%)}
 .dash-tile.warn{background:linear-gradient(135deg,var(--warn-bg) 0%,var(--card) 55%)}
 .dash-tile.bad{background:linear-gradient(135deg,var(--bad-bg) 0%,var(--card) 55%)}
@@ -160,7 +173,7 @@ button.ghost:active{transform:scale(.98) translateY(0)}
 .dash-tile.bad::after{content:'';position:absolute;top:14px;right:14px;width:8px;height:8px;border-radius:50%;background:var(--bad);animation:pulseBad 1.8s ease-in-out infinite}
 @keyframes pulseBad{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(158,58,56,.45)}50%{opacity:.75;box-shadow:0 0 0 6px rgba(158,58,56,0)}}
 
-.dash-summary{padding:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px}
+.dash-summary{padding:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;transition:all var(--t)}
 .dash-summary h3{font:600 10px 'Inter',sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin:0 0 10px}
 .dash-summary .main{font:600 17px 'Inter',sans-serif;color:var(--txt);margin-bottom:6px;letter-spacing:-.015em}
 .dash-summary .sub{font:400 13px 'Inter',sans-serif;color:var(--mut);line-height:1.6}
@@ -172,16 +185,16 @@ button.ghost:active{transform:scale(.98) translateY(0)}
 .dash-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
 .dash-actions button{flex:1;min-width:160px;padding:12px;border-radius:var(--radius-sm);font:600 13px 'Inter',sans-serif;cursor:pointer;transition:all var(--t);border:0;display:flex;align-items:center;justify-content:center;gap:8px}
 .dash-actions .primary{background:linear-gradient(180deg,var(--acc) 0%,var(--acc-hover) 100%);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.08)}
-.dash-actions .primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(41,64,86,.22)}
+.dash-actions .primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(41,64,86,.22),0 0 0 3px var(--acc-soft)}
 .dash-actions .primary:active{transform:scale(.98) translateY(0)}
 .dash-actions .ghost{background:var(--card);border:1px solid var(--border);color:var(--txt2)}
-.dash-actions .ghost:hover{background:var(--elev);border-color:var(--mut2);color:var(--txt);transform:translateY(-1px)}
+.dash-actions .ghost:hover{background:var(--elev);border-color:var(--acc);color:var(--txt);transform:translateY(-1px);box-shadow:0 0 0 3px var(--acc-soft)}
 .dash-actions .ghost:active{transform:scale(.98) translateY(0)}
 .dash-actions svg{width:14px;height:14px;stroke-width:2}
 
 /* === SCALES === */
 .score-card{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:10px;transition:all var(--t)}
-.score-card:hover{border-color:var(--mut2)}
+.score-card:hover{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft)}
 .score-card h4{font:600 12px 'Inter',sans-serif;color:var(--txt);margin:0 0 8px;text-transform:uppercase;letter-spacing:.05em}
 .score-val{font:600 28px 'JetBrains Mono',monospace;color:var(--txt);margin:4px 0;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 .score-interp{font-size:12.5px;color:var(--mut);line-height:1.5;margin-bottom:10px}
@@ -205,18 +218,20 @@ button.ghost:active{transform:scale(.98) translateY(0)}
 /* === DETAILS === */
 details{margin:8px 0;padding:0;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;transition:all var(--t)}
 details[open]{background:var(--elev2)}
+details:hover{border-color:var(--acc)}
 summary{cursor:pointer;font:500 13px 'Inter',sans-serif;padding:11px 14px;color:var(--txt);list-style:none;display:flex;justify-content:space-between;align-items:center;transition:all var(--t);user-select:none}
 summary::-webkit-details-marker{display:none}
 summary::after{content:'+';font-family:'JetBrains Mono',monospace;color:var(--mut);font-size:16px;transition:transform .25s cubic-bezier(.2,0,.2,1)}
 details[open] summary::after{content:'−'}
-summary:hover{background:var(--elev2)}
+summary:hover{background:var(--elev2);color:var(--acc)}
 summary:active{transform:scale(.99)}
 .fml{background:var(--card);padding:14px 18px;margin:0;font:12px 'JetBrains Mono',monospace;color:var(--txt2);overflow-x:auto;white-space:pre-wrap;line-height:1.7;border-top:1px solid var(--border);font-variant-numeric:tabular-nums}
 
 .alert,.rec,.finding{margin-top:10px;padding:11px 14px;border-radius:var(--radius-sm);font-size:12.5px;line-height:1.55;border:1px solid;border-left-width:3px}
 .alert{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
 .rec{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
-.finding{background:var(--elev2);border-color:var(--border);color:var(--txt2);border-left-color:var(--acc)}
+.finding{background:var(--elev2);border-color:var(--border);color:var(--txt2);border-left-color:var(--acc);position:relative}
+.finding::before{content:'';position:absolute;top:0;left:-3px;width:3px;height:100%;background:linear-gradient(180deg,var(--acc) 0%,transparent 100%)}
 
 .chart-box{height:420px;position:relative}
 
@@ -225,7 +240,7 @@ summary:active{transform:scale(.99)}
 .history-header{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border2);margin-bottom:4px}
 .history-header b{font:600 11px 'Inter',sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
 .history-item{padding:11px 13px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--t)}
-.history-item:hover{background:var(--elev2);transform:translateX(2px)}
+.history-item:hover{background:var(--elev2);transform:translateX(2px);box-shadow:0 0 0 3px var(--acc-soft)}
 .hi-date{font:400 11px 'JetBrains Mono',monospace;color:var(--mut2);margin-bottom:4px}
 .hi-main{font:600 12px 'JetBrains Mono',monospace;color:var(--txt);margin-bottom:3px}
 .hi-diag{font:400 11px 'Inter',sans-serif;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -279,6 +294,7 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
 <body>
 
 <div id="intro-screen">
+  <svg class="intro-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
   <h1 class="intro-title">ICU CORE</h1>
   <div class="intro-line"></div>
   <p class="intro-sub">Acid-Base · Stewart · Scales · Balance</p>
@@ -289,7 +305,7 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
   <div class="header-brand">
     <svg class="header-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
     <div>
-      <h1>ICU CORE <span class="version">v26.2</span></h1>
+      <h1>ICU CORE <span class="version">v26.3</span></h1>
       <div class="header-sub">Acid-Base · Stewart · Scales · Balance</div>
     </div>
   </div>
@@ -573,15 +589,13 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
 </section>
 
 <section class="panel" id="panel-info">
-  <div class="card"><h2>Что нового в v26.2</h2>
+  <div class="card"><h2>Что нового в v26.3</h2>
     <ol style="line-height:1.9;font-size:13px;color:var(--txt2);padding-left:20px">
-      <li>Возвращён SBP в NEWS2 и qSOFA</li>
-      <li>Номограмма Сиггаарда: pH снизу, HCO₃⁻ слева, pCO₂ линиями</li>
-      <li>Диурез — подсказка нормы (0.5–1.0 мл/кг/ч)</li>
-      <li>«Кислородная поддержка» вместо «O₂»</li>
-      <li>«Как давно нарушение Na/K» вместо «Остроты»</li>
-      <li>Плавные анимации переключения вкладок</li>
-      <li>Кнопки: микро-отклик, мягкий hover, лёгкий градиент</li>
+      <li>Интро — дышащий градиент + пульсирующий логотип</li>
+      <li>Убраны синие дефолтные полоски у number-полей</li>
+      <li>Убрано автозаполнение Chrome (жёлтый/синий фон)</li>
+      <li>Карточки КОС — градиент вместо синей полоски</li>
+      <li>Hover-эффект — мягкое свечение + тонкая обводка</li>
     </ol>
   </div>
   <div class="card" style="margin-top:12px"><h2>Растворы</h2>
@@ -607,7 +621,7 @@ td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums
 /* ═══════════════════════════════════════════════════════════════
    🧠 CORE DIAGNOSTIC ENGINE — НЕ ТРОГАТЬ
    ═══════════════════════════════════════════════════════════════ */
-const HISTORY_KEY="icu_history_v262";
+const HISTORY_KEY="icu_history_v263";
 let lastReport="",gChart=null,sChart=null;
 const presets={
 '4.5':{pH:7.39,pCO2:39,HCO3in:23,SBE:0,Lac:1,pO2:94,FiO2:21,PEEP:0,Na:124,Cl:100,K:3.9,Ca:1.2,Mg:0.9,Alb:45,PO4:1.1,Gluc:5.5,Ur:5,Weight:70},
@@ -695,7 +709,7 @@ function render(d,b,p,comp,dd,st,fin,hagma,syn,ards,phComp){
   diagHTML+=`<h3>Итог по КОС</h3><div><b>${escapeHTML(syn.title)}</b>${syn.detail?"<br>"+escapeHTML(syn.detail):""}</div>`;
   const diagEl=document.getElementById("diagnosis");if(diagEl)diagEl.innerHTML=diagHTML;
   const exEl=document.getElementById("explanations");if(exEl)exEl.innerHTML=`<details open><summary>АП и АП_корр</summary><div class="fml">АП = Na − (Cl + HCO3) = ${fixed(b.AG)}\nАП_корр = АП + 0.25 × (40 − Alb) = ${fixed(b.AGcorr)}\nАП (Na корр.) = ${fixed(b.AG_Na_corr)}</div></details><details><summary>ΔΔ</summary><div class="fml">ΔAG = ${fixed(b.deltaAG)}\nΔHCO3 = ${fixed(b.deltaHCO3)}\nΔΔ = ${Number.isFinite(b.deltaDelta)?fixed(b.deltaDelta,2):"—"}</div></details><details><summary>SBE + разбивка</summary><div class="fml">SBE = ${fixed(b.SBE_calc,1)}\nSBE_FW = ${fixed(b.SBE_FW)}\nSBE_Cl = ${fixed(b.SBE_Cl)}\nSBE_Alb = ${fixed(b.SBE_Alb)}\nSBE_UA = ${fixed(b.SBE_UA)}</div></details><details><summary>Стюарт</summary><div class="fml">SID_a = ${fixed(st.SIDa)}\nSID_e = ${fixed(st.SIDe)}\nSIG = ${fixed(st.SIG)}</div></details><details><summary>Осмоляльность</summary><div class="fml">Осм_расч = 1.86 × Na + Gluc + Ur + 9 = ${fixed(b.Osm_calc,1)}\n${Number.isFinite(b.Osm_gap)?"Осм_gap = "+fixed(b.Osm_gap,1):""}</div></details>`;
-  const strip=s=>s.replace(/<[^>]+>/g,'');const L=["═══ ICU CORE v26.2 ═══","","Дата: "+new Date().toLocaleString('ru-RU'),""];L.push("── СИНДРОМ ──",syn.title,syn.detail||"");L.push("","── РАСЧЁТЫ ──");rGroups.forEach(g=>{g.rows.forEach(r=>L.push(`${g.title} · ${r[0]}: ${r[1]}`))});L.push("","── ХОД ──");logs.forEach(l=>L.push("· "+strip(l)));L.push("","Сформировано: ICU CORE v26.2");lastReport=L.join("\n");
+  const strip=s=>s.replace(/<[^>]+>/g,'');const L=["═══ ICU CORE v26.3 ═══","","Дата: "+new Date().toLocaleString('ru-RU'),""];L.push("── СИНДРОМ ──",syn.title,syn.detail||"");L.push("","── РАСЧЁТЫ ──");rGroups.forEach(g=>{g.rows.forEach(r=>L.push(`${g.title} · ${r[0]}: ${r[1]}`))});L.push("","── ХОД ──");logs.forEach(l=>L.push("· "+strip(l)));L.push("","Сформировано: ICU CORE v26.3");lastReport=L.join("\n");
 }
 function renderScales(scales,sepsis,d){const scEl=document.getElementById("scalesResults");if(scEl)scEl.innerHTML=scales.map(s=>{const itemsHTML=s.items.map(i=>`<div class="score-row"><span>${escapeHTML(i.name)}${i.val!=null?" ("+escapeHTML(String(i.val))+")":""}</span><span>${i.score}</span></div>`).join('');return `<div class="score-card"><h4>${escapeHTML(s.name)}</h4><div class="score-val">${s.total}</div><div class="score-interp"><span class="badge-${s.level}">${escapeHTML(s.interp)}</span></div>${itemsHTML}</div>`;}).join('');const spEl=document.getElementById("sepsisResults");if(spEl)spEl.innerHTML=`<div class="score-card"><h4>Сепсис (Sepsis-3)</h4><div class="score-val" style="font-size:16px">${escapeHTML(sepsis.sepsisStatus)}</div><div class="score-row"><span>Инфекция</span><span>${sepsis.hasInfection?'Да':'Нет'}</span></div><div class="score-row"><span>SOFA</span><span>${sepsis.sofaDelta}</span></div>${sepsis.shockStatus!=="—"?`<div class="score-row"><span>Шок</span><span>${escapeHTML(sepsis.shockStatus)}</span></div>`:''}</div>`;}
 function makeHistory(d,syn){return{date:new Date().toLocaleString('ru-RU'),diag:syn.title+(syn.detail?": "+syn.detail:""),data:Object.fromEntries(["pH","pCO2","HCO3in","SBE","Lac","pO2","FiO2","PEEP","Na","Cl","K","Ca","Mg","Alb","PO4","Gluc","Ur","Osm_in","Weight","RR","SpO2","SBP","DBP","HR","Temp","GCS","Age","Plt","WBC","Bands","Hct","Cr","Bil","Urine"].map(k=>[k,d[k]])),notes:d.notes,sbeMode:d.sbeMode,naCorr:d.naCorr,chronic:d.chronic,sidModel:d.sidModel,O2support:d.O2support,ACVPU:d.ACVPU,Chronic:d.Chronic,Vaso:d.Vaso,Sex:d.Sex,acuity:d.acuity,bilateral:d.bilateral,timing:d.timing,noncardiac:d.noncardiac,infection:d.infection};}
